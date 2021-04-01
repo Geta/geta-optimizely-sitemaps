@@ -1,18 +1,18 @@
 ﻿// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
+using EPiServer.ServiceLocation;
+using Geta.SEO.Sitemaps.Compression;
+using Geta.SEO.Sitemaps.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using System.IO;
-using System.IO.Compression;
 using System.Text;
-using System.Web.Mvc;
 using System.Xml;
 using System.Xml.Linq;
-using EPiServer.ServiceLocation;
-using Geta.SEO.Sitemaps.Repositories;
-using Geta.SEO.Sitemaps.Compression;
 
 namespace Geta.SEO.Sitemaps.Controllers
 {
+    [Route("sitemapindex.xml")]
     public class GetaSitemapIndexController : Controller
     {
         private readonly ISitemapRepository _sitemapRepository;
@@ -31,6 +31,7 @@ namespace Geta.SEO.Sitemaps.Controllers
             _sitemapRepository = sitemapRepository;
         }
 
+        [Route("", Name = "Sitemap index")]
         public ActionResult Index()
         {
             var doc = new XDocument(new XDeclaration("1.0", "utf-8", null));

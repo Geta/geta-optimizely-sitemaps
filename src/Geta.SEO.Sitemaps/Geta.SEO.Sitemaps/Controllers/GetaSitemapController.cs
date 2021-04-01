@@ -1,49 +1,57 @@
 ﻿// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
-using System;
-using System.IO.Compression;
-using System.Reflection;
-using System.Web.Caching;
-using System.Web.Mvc;
 using EPiServer;
+using EPiServer.Core;
 using EPiServer.Framework.Cache;
 using EPiServer.Logging.Compatibility;
 using EPiServer.ServiceLocation;
+using Geta.SEO.Sitemaps.Compression;
 using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.Repositories;
 using Geta.SEO.Sitemaps.Utils;
-using Geta.SEO.Sitemaps.Compression;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Reflection;
 
 namespace Geta.SEO.Sitemaps.Controllers
 {
+    [Route("sitemap.xml")]
     public class GetaSitemapController : Controller
     {
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
+        private readonly IContentCacheKeyCreator _contentCacheKeyCreator;
 
         // This constructor was added to support web forms projects without dependency injection configured.
-        public GetaSitemapController() : this(ServiceLocator.Current.GetInstance<ISitemapRepository>(), ServiceLocator.Current.GetInstance<SitemapXmlGeneratorFactory>())
+        public GetaSitemapController(IContentCacheKeyCreator contentCacheKeyCreator) : this(ServiceLocator.Current.GetInstance<ISitemapRepository>(), ServiceLocator.Current.GetInstance<SitemapXmlGeneratorFactory>(), contentCacheKeyCreator)
         {
         }
 
-        public GetaSitemapController(ISitemapRepository sitemapRepository, SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory)
+        public GetaSitemapController(ISitemapRepository sitemapRepository, SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory, IContentCacheKeyCreator contentCacheKeyCreator)
         {
             _sitemapRepository = sitemapRepository;
             _sitemapXmlGeneratorFactory = sitemapXmlGeneratorFactory;
+            _contentCacheKeyCreator = contentCacheKeyCreator;
         }
 
+        [Route("", Name = "Sitemap without path")]
+        [Route("{path}sitemap.xml", Name = "Sitemap with path")]
+        [Route("{language}/sitemap.xml", Name = "Sitemap with language")]
+        [Route("{language}/{path}sitemap.xml", Name = "Sitemap with language and path")]
         public ActionResult Index()
         {
-            SitemapData sitemapData = _sitemapRepository.GetSitemapData(Request.Url.ToString());
+            var sitemapData = _sitemapRepository.GetSitemapData(Request.GetDisplayUrl());
 
             if (sitemapData == null)
             {
                 Log.Error("Xml sitemap data not found!");
-                return new HttpNotFoundResult();
+                return new NotFoundResult();
             }
 
             if (sitemapData.Data == null || (SitemapSettings.Instance.EnableRealtimeSitemap))
@@ -51,7 +59,7 @@ namespace Geta.SEO.Sitemaps.Controllers
                 if (!GetSitemapData(sitemapData))
                 {
                     Log.Error("Xml sitemap data not found!");
-                    return new HttpNotFoundResult();
+                    return new NotFoundResult();
                 }
             }
 
@@ -63,16 +71,16 @@ namespace Geta.SEO.Sitemaps.Controllers
         private bool GetSitemapData(SitemapData sitemapData)
         {
             int entryCount;
-            string userAgent = Request.ServerVariables["USER_AGENT"];
+            var userAgent = Request.HttpContext.GetServerVariable("USER_AGENT");
 
             var isGoogleBot = userAgent != null &&
                               userAgent.IndexOf("Googlebot", StringComparison.InvariantCultureIgnoreCase) > -1;
 
-            string googleBotCacheKey = isGoogleBot ? "Google-" : string.Empty;
+            var googleBotCacheKey = isGoogleBot ? "Google-" : string.Empty;
 
             if (SitemapSettings.Instance.EnableRealtimeSitemap)
             {
-                string cacheKey = googleBotCacheKey + _sitemapRepository.GetSitemapUrl(sitemapData);
+                var cacheKey = googleBotCacheKey + _sitemapRepository.GetSitemapUrl(sitemapData);
 
                 var sitemapDataData = CacheManager.Get(cacheKey) as byte[];
 
@@ -88,14 +96,9 @@ namespace Geta.SEO.Sitemaps.Controllers
                     {
                         CacheEvictionPolicy cachePolicy;
 
-                        if (isGoogleBot)
-                        {
-                            cachePolicy = new CacheEvictionPolicy(null, new[] {DataFactoryCache.VersionKey}, null, Cache.NoSlidingExpiration, CacheTimeoutType.Sliding);
-                        }
-                        else
-                        {
-                            cachePolicy = null;
-                        }
+                        cachePolicy = isGoogleBot
+                            ? new CacheEvictionPolicy(TimeSpan.Zero, CacheTimeoutType.Sliding, new[] { _contentCacheKeyCreator.VersionKey })
+                            : null;
 
                         CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
                     }
