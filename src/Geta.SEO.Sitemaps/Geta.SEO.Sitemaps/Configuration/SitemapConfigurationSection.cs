@@ -2,7 +2,6 @@
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System.Configuration;
-using System.Web.Configuration;
 
 namespace Geta.SEO.Sitemaps.Configuration
 {
@@ -24,7 +23,7 @@ namespace Geta.SEO.Sitemaps.Configuration
 
         public static SitemapConfigurationSection GetSection()
         {
-            var section = WebConfigurationManager.GetSection("Geta.SEO.Sitemaps") as SitemapConfigurationSection;
+            var section = ConfigurationManager.GetSection("Geta.SEO.Sitemaps") as SitemapConfigurationSection;
 
             if (section == null)
             {
@@ -35,12 +34,6 @@ namespace Geta.SEO.Sitemaps.Configuration
         }
 
         [ConfigurationProperty("settings", IsRequired = true)]
-        public SitemapSettings Settings
-        {
-            get
-            {
-                return (SitemapSettings)base["settings"];
-            }
-        }
+        public SitemapSettings Settings => (SitemapSettings)base["settings"];
     }
 }
