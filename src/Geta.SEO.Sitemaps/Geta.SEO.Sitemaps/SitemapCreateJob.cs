@@ -16,7 +16,7 @@ using Geta.SEO.Sitemaps.XML;
 
 namespace Geta.SEO.Sitemaps
 {
-    [ScheduledPlugIn(DisplayName = "Generate search engine sitemaps")]
+    [ScheduledPlugIn(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
     public class SitemapCreateJob : ScheduledJobBase
     {
         private readonly ISitemapRepository _sitemapRepository;
@@ -95,7 +95,7 @@ namespace Geta.SEO.Sitemaps
                 IncludeDebugInfo = false,
                 SitemapFormat = SitemapFormat.Standard
             };
-            
+
             return blankConfig;
         }
 
