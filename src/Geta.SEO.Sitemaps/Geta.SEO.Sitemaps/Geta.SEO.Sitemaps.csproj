@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.admin\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\EPiServer.Admin\EPiServer.Admin.zip" />
-    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.cms.ui.settings\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\EPiServer.Cms.UI.Settings\EPiServer.Cms.UI.Settings.zip" />
-    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.cms.ui\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\CMS\CMS.zip" />
-    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.cms.ui\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\Shell\Shell.zip" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EPiServer.CMS.AspNetCore" Version="12.0.0-inte-020092" />
     <PackageReference Include="EPiServer.CMS.AspNetCore.HtmlHelpers" Version="12.0.0-inte-020092" />
     <PackageReference Include="EPiServer.CMS.AspNetCore.Mvc" Version="12.0.0-inte-020092" />
