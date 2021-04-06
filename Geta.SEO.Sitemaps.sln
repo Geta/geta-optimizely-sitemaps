@@ -5,7 +5,11 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geta.SEO.Sitemaps", "src\Geta.SEO.Sitemaps\Geta.SEO.Sitemaps\Geta.SEO.Sitemaps.csproj", "{85A02CE6-F520-4D9F-AC1A-D4DFA89A7CB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geta.SEO.Sitemaps.Admin", "src\Geta.SEO.Sitemaps.Admin\Geta.SEO.Sitemaps.Admin.csproj", "{8CE0407E-2C6D-422E-8BDE-255EC386E260}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geta.SEO.Sitemaps.Admin", "src\Geta.SEO.Sitemaps.Admin\Geta.SEO.Sitemaps.Admin.csproj", "{8CE0407E-2C6D-422E-8BDE-255EC386E260}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sandbox", "Sandbox", "{9003527C-5B4F-48DB-8946-E6E6773B2EDF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlloyMvcTemplates", "sandbox\Episerver\Alloy\AlloyMvcTemplates.csproj", "{16D27298-E5A4-4B63-936F-2602C937DCE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,9 +25,16 @@ Global
 		{8CE0407E-2C6D-422E-8BDE-255EC386E260}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8CE0407E-2C6D-422E-8BDE-255EC386E260}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8CE0407E-2C6D-422E-8BDE-255EC386E260}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16D27298-E5A4-4B63-936F-2602C937DCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16D27298-E5A4-4B63-936F-2602C937DCE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16D27298-E5A4-4B63-936F-2602C937DCE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16D27298-E5A4-4B63-936F-2602C937DCE1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{16D27298-E5A4-4B63-936F-2602C937DCE1} = {9003527C-5B4F-48DB-8946-E6E6773B2EDF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7726B88-56CE-4817-8E7C-0EC0B74F1431}
