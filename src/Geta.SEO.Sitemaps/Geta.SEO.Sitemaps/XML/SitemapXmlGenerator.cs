@@ -8,8 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Caching;
 using System.Xml;
 using System.Xml.Linq;
 using EPiServer;
@@ -24,6 +22,7 @@ using Geta.SEO.Sitemaps.Models;
 using Geta.SEO.Sitemaps.Repositories;
 using Geta.SEO.Sitemaps.SpecializedProperties;
 using Geta.SEO.Sitemaps.Utils;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Geta.SEO.Sitemaps.XML
 {
@@ -48,6 +47,8 @@ namespace Geta.SEO.Sitemaps.XML
         protected IEnumerable<LanguageBranch> EnabledLanguages { get; set; }
         protected IEnumerable<CurrentLanguageContent> HrefLanguageContents { get; set; }
 
+        private IMemoryCache _cache;
+
         protected XNamespace SitemapXmlNamespace
         {
             get { return @"http://www.sitemaps.org/schemas/sitemap/0.9"; }
@@ -61,7 +62,7 @@ namespace Geta.SEO.Sitemaps.XML
         public bool IsDebugMode { get; set; }
 
         protected SitemapXmlGenerator(ISitemapRepository sitemapRepository, IContentRepository contentRepository, IUrlResolver urlResolver, ISiteDefinitionRepository siteDefinitionRepository, ILanguageBranchRepository languageBranchRepository,
-            IContentFilter contentFilter)
+            IContentFilter contentFilter, IMemoryCache cache)
         {
             this.SitemapRepository = sitemapRepository;
             this.ContentRepository = contentRepository;
@@ -71,6 +72,7 @@ namespace Geta.SEO.Sitemaps.XML
             this.EnabledLanguages = this.LanguageBranchRepository.ListEnabled();
             this.UrlSet = new HashSet<string>();
             this.ContentFilter = contentFilter;
+            _cache = cache;
         }
 
         protected virtual XElement GenerateRootElement()
@@ -308,9 +310,9 @@ namespace Geta.SEO.Sitemaps.XML
             if (this.SitemapData.EnableSimpleAddressSupport && content is PageData pageData && !string.IsNullOrWhiteSpace(pageData.ExternalURL))
             {
                 languageUrl = pageData.ExternalURL;
-                
+
                 TryGet(content.ContentLink, out IContent masterContent, new LanguageSelector(masterLanguage.Name));
-                
+
                 masterLanguageUrl = string.Empty;
                 if (masterContent is PageData masterPageData && !string.IsNullOrWhiteSpace(masterPageData.ExternalURL))
                 {
@@ -542,7 +544,7 @@ namespace Geta.SEO.Sitemaps.XML
         protected bool HostDefinitionExistsForLanguage(string languageBranch)
         {
             var cacheKey = string.Format("HostDefinitionExistsFor{0}-{1}", this.SitemapData.SiteUrl, languageBranch);
-            object cachedObject = HttpRuntime.Cache.Get(cacheKey);
+            object cachedObject = _cache.Get(cacheKey);
 
             if (cachedObject == null)
             {
@@ -552,7 +554,7 @@ namespace Geta.SEO.Sitemaps.XML
                         x.Language != null &&
                         x.Language.ToString().Equals(languageBranch, StringComparison.InvariantCultureIgnoreCase));
 
-                HttpRuntime.Cache.Insert(cacheKey, cachedObject, null, DateTime.Now.AddMinutes(10), Cache.NoSlidingExpiration);
+                _cache.Set(cacheKey, cachedObject, DateTime.Now.AddMinutes(10));
             }
 
             return (bool)cachedObject;
