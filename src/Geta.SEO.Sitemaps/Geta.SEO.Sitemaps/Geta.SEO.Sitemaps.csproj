@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.admin\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\EPiServer.Admin\EPiServer.Admin.zip" />
+    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.cms.ui.settings\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\EPiServer.Cms.UI.Settings\EPiServer.Cms.UI.Settings.zip" />
+    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.cms.ui\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\CMS\CMS.zip" />
+    <None Remove="C:\Users\Luka Devic\.nuget\packages\episerver.cms.ui\12.0.0-inte-020292\contentFiles\any\any\modules\_protected\Shell\Shell.zip" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EPiServer.CMS.AspNetCore" Version="12.0.0-inte-020092" />
+    <PackageReference Include="EPiServer.CMS.AspNetCore.HtmlHelpers" Version="12.0.0-inte-020092" />
+    <PackageReference Include="EPiServer.CMS.AspNetCore.Mvc" Version="12.0.0-inte-020092" />
+    <PackageReference Include="EPiServer.CMS.Core" Version="12.0.0-inte-020092" />
+    <PackageReference Include="EPiServer.CMS.UI" Version="12.0.0-inte-020292" />
+    <PackageReference Include="EPiServer.CMS.UI.Core" Version="12.0.0-inte-020292" />
+    <PackageReference Include="EPiServer.Framework" Version="12.0.0-inte-020092" />
+    <PackageReference Include="EPiServer.Framework.AspNetCore" Version="12.0.0-inte-020092" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="System.Runtime.Caching" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
