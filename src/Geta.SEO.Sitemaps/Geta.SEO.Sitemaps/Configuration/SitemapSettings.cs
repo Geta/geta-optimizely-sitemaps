@@ -5,6 +5,7 @@ using System.Configuration;
 
 namespace Geta.SEO.Sitemaps.Configuration
 {
+    // TODO: Move to .NET Core startup extensions and .config
     public class SitemapSettings : ConfigurationElement
     {
         private static SitemapSettings _instance;

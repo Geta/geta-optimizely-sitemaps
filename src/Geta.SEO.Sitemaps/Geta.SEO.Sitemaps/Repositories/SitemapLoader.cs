@@ -10,7 +10,7 @@ using Geta.SEO.Sitemaps.Entities;
 
 namespace Geta.SEO.Sitemaps.Repositories
 {
-    [ServiceConfiguration(typeof(ISitemapLoader))]
+    [ServiceConfiguration(typeof(ISitemapLoader))] // TODO: Remove this one, use extensions to register services.
     public class SitemapLoader : ISitemapLoader
     {
         private static DynamicDataStore SitemapStore

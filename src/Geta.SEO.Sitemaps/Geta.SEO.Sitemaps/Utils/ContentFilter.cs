@@ -14,7 +14,7 @@ using Geta.SEO.Sitemaps.XML;
 
 namespace Geta.SEO.Sitemaps.Utils
 {
-    [ServiceConfiguration(typeof(IContentFilter))]
+    [ServiceConfiguration(typeof(IContentFilter))]  // TODO: Remove this one, use extensions to register services.
     public class ContentFilter : IContentFilter
     {
         protected static Injected<TemplateResolver> TemplateResolver { get; set; }

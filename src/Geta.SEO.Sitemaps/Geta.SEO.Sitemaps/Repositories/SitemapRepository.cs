@@ -13,7 +13,7 @@ using Geta.SEO.Sitemaps.Entities;
 
 namespace Geta.SEO.Sitemaps.Repositories
 {
-    [ServiceConfiguration(typeof(ISitemapRepository))]
+    [ServiceConfiguration(typeof(ISitemapRepository))]  // TODO: Remove this one, use extensions to register services.
     public class SitemapRepository : ISitemapRepository
     {
         private readonly ILanguageBranchRepository _languageBranchRepository;

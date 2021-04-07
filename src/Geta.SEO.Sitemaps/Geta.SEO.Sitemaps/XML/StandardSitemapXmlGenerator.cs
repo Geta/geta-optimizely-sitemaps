@@ -12,7 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Geta.SEO.Sitemaps.XML
 {
-    [ServiceConfiguration(typeof(IStandardSitemapXmlGenerator))]
+    [ServiceConfiguration(typeof(IStandardSitemapXmlGenerator))]  // TODO: Remove this one, use extensions to register services.
     public class StandardSitemapXmlGenerator : SitemapXmlGenerator, IStandardSitemapXmlGenerator
     {
         public StandardSitemapXmlGenerator(ISitemapRepository sitemapRepository, IContentRepository contentRepository, IUrlResolver urlResolver, ISiteDefinitionRepository siteDefinitionRepository, ILanguageBranchRepository languageBranchRepository, IContentFilter contentFilter, IMemoryCache cache)
