@@ -14,7 +14,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Geta.SEO.Sitemaps.XML
 {
-    [ServiceConfiguration(typeof(IMobileSitemapXmlGenerator))]
+    [ServiceConfiguration(typeof(IMobileSitemapXmlGenerator))]  // TODO: Remove this one, use extensions to register services.
     public class MobileSitemapXmlGenerator : SitemapXmlGenerator, IMobileSitemapXmlGenerator
     {
         public MobileSitemapXmlGenerator(ISitemapRepository sitemapRepository, IContentRepository contentRepository, UrlResolver urlResolver, ISiteDefinitionRepository siteDefinitionRepository, ILanguageBranchRepository languageBranchRepository, IContentFilter contentFilter, IMemoryCache cache)

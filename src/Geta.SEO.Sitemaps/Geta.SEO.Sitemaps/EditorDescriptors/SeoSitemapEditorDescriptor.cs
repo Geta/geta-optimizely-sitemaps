@@ -5,6 +5,7 @@ using EPiServer.Shell.ObjectEditing.EditorDescriptors;
 
 namespace Geta.SEO.Sitemaps.EditorDescriptors
 {
+    // TODO: Check how this works.
     [EditorDescriptorRegistration(TargetType = typeof(string), UIHint = "SeoSitemap")]
     public class SeoSitemapEditorDescriptor : EditorDescriptor
     {

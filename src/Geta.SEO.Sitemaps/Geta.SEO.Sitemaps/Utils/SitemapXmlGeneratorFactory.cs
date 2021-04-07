@@ -7,7 +7,7 @@ using Geta.SEO.Sitemaps.XML;
 
 namespace Geta.SEO.Sitemaps.Utils
 {
-    [ServiceConfiguration(typeof(SitemapXmlGeneratorFactory))]
+    [ServiceConfiguration(typeof(SitemapXmlGeneratorFactory))]  // TODO: Remove this one, use extensions to register services.
     public class SitemapXmlGeneratorFactory
     {
         public virtual ISitemapXmlGenerator GetSitemapXmlGenerator(SitemapData sitemapData)

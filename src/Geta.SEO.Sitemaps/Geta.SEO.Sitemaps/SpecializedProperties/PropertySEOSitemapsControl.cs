@@ -14,6 +14,8 @@
 //using EPiServer.Web.PropertyControls;
 //using EPiServer.Cms.AspNetCore;
 
+// TODO: check how this control works
+
 //namespace Geta.SEO.Sitemaps.SpecializedProperties
 //{
 //    public class PropertySEOSitemapsControl : PropertyStringControl
