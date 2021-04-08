@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
-using EPiServer.ServiceLocation;
 using Geta.SEO.Sitemaps.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
@@ -19,10 +18,6 @@ namespace Geta.SEO.Sitemaps.Controllers
         protected XNamespace SitemapXmlNamespace
         {
             get { return @"http://www.sitemaps.org/schemas/sitemap/0.9"; }
-        }
-
-        public GetaSitemapIndexController() : this(ServiceLocator.Current.GetInstance<ISitemapRepository>())
-        {
         }
 
         public GetaSitemapIndexController(ISitemapRepository sitemapRepository)
