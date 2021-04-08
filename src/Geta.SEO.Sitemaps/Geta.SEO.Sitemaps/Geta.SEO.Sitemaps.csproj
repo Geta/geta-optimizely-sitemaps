@@ -9,7 +9,6 @@
     <PackageReference Include="EPiServer.CMS.AspNetCore.HtmlHelpers" Version="12.0.0-inte-020092" />
     <PackageReference Include="EPiServer.CMS.AspNetCore.Mvc" Version="12.0.0-inte-020092" />
     <PackageReference Include="EPiServer.CMS.Core" Version="12.0.0-inte-020092" />
-    <PackageReference Include="EPiServer.CMS.UI" Version="12.0.0-inte-020292" />
     <PackageReference Include="EPiServer.CMS.UI.Core" Version="12.0.0-inte-020292" />
     <PackageReference Include="EPiServer.Framework" Version="12.0.0-inte-020092" />
     <PackageReference Include="EPiServer.Framework.AspNetCore" Version="12.0.0-inte-020092" />
