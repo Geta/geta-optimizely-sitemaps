@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Reflection;
+using Microsoft.Extensions.Options;
 
 namespace Geta.SEO.Sitemaps.Controllers
 {
@@ -26,17 +27,18 @@ namespace Geta.SEO.Sitemaps.Controllers
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
         private readonly IContentCacheKeyCreator _contentCacheKeyCreator;
+        private SitemapOptions _configuration;
 
-        // This constructor was added to support web forms projects without dependency injection configured.
-        public GetaSitemapController(IContentCacheKeyCreator contentCacheKeyCreator) : this(ServiceLocator.Current.GetInstance<ISitemapRepository>(), ServiceLocator.Current.GetInstance<SitemapXmlGeneratorFactory>(), contentCacheKeyCreator)
-        {
-        }
-
-        public GetaSitemapController(ISitemapRepository sitemapRepository, SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory, IContentCacheKeyCreator contentCacheKeyCreator)
+        public GetaSitemapController(
+            ISitemapRepository sitemapRepository,
+            SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory,
+            IContentCacheKeyCreator contentCacheKeyCreator,
+            IOptions<SitemapOptions> options)
         {
             _sitemapRepository = sitemapRepository;
             _sitemapXmlGeneratorFactory = sitemapXmlGeneratorFactory;
             _contentCacheKeyCreator = contentCacheKeyCreator;
+            _configuration = options.Value;
         }
 
         [Route("", Name = "Sitemap without path")]
@@ -53,7 +55,7 @@ namespace Geta.SEO.Sitemaps.Controllers
                 return new NotFoundResult();
             }
 
-            if (sitemapData.Data == null || (SitemapSettings.Instance.EnableRealtimeSitemap))
+            if (sitemapData.Data == null || (_configuration.EnableRealtimeSitemap))
             {
                 if (!GetSitemapData(sitemapData))
                 {
@@ -75,7 +77,7 @@ namespace Geta.SEO.Sitemaps.Controllers
 
             var googleBotCacheKey = isGoogleBot ? "Google-" : string.Empty;
 
-            if (SitemapSettings.Instance.EnableRealtimeSitemap)
+            if (_configuration.EnableRealtimeSitemap)
             {
                 var cacheKey = googleBotCacheKey + _sitemapRepository.GetSitemapUrl(sitemapData);
 
@@ -89,7 +91,7 @@ namespace Geta.SEO.Sitemaps.Controllers
 
                 if (_sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, false, out entryCount))
                 {
-                    if (SitemapSettings.Instance.EnableRealtimeCaching)
+                    if (_configuration.EnableRealtimeCaching)
                     {
                         CacheEvictionPolicy cachePolicy;
 
@@ -106,7 +108,7 @@ namespace Geta.SEO.Sitemaps.Controllers
                 return false;
             }
 
-            return _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, !SitemapSettings.Instance.EnableRealtimeSitemap, out entryCount);
+            return _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, !_configuration.EnableRealtimeSitemap, out entryCount);
         }
     }
 }
