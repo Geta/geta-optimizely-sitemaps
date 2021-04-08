@@ -6,7 +6,6 @@ using EPiServer.Core;
 using EPiServer.Framework.Cache;
 using EPiServer.Logging.Compatibility;
 using EPiServer.ServiceLocation;
-using Geta.SEO.Sitemaps.Compression;
 using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.Repositories;
@@ -62,8 +61,6 @@ namespace Geta.SEO.Sitemaps.Controllers
                     return new NotFoundResult();
                 }
             }
-
-            CompressionHandler.ChooseSuitableCompression(Request.Headers, Response);
 
             return new FileContentResult(sitemapData.Data, "text/xml; charset=utf-8");
         }

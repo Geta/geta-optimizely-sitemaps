@@ -2,7 +2,6 @@
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using EPiServer.ServiceLocation;
-using Geta.SEO.Sitemaps.Compression;
 using Geta.SEO.Sitemaps.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
@@ -49,8 +48,6 @@ namespace Geta.SEO.Sitemaps.Controllers
             }
 
             doc.Add(indexElement);
-
-            CompressionHandler.ChooseSuitableCompression(Request.Headers, Response);
 
             byte[] sitemapIndexData;
 
