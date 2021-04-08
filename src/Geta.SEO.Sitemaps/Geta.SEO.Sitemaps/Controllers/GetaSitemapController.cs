@@ -5,7 +5,6 @@ using EPiServer;
 using EPiServer.Core;
 using EPiServer.Framework.Cache;
 using EPiServer.Logging.Compatibility;
-using EPiServer.ServiceLocation;
 using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.Repositories;
