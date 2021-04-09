@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Geta.SEO.Sitemaps.Admin
+namespace Geta.SEO.Sitemaps
 {
     public class ContainerController : Controller
     {

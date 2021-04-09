@@ -1,8 +1,8 @@
-﻿using EPiServer.Shell;
+﻿using System.Collections.Generic;
+using EPiServer.Shell;
 using EPiServer.Shell.Navigation;
-using System.Collections.Generic;
 
-namespace Geta.SEO.Sitemaps.Admin
+namespace Geta.SEO.Sitemaps
 {
     [MenuProvider]
     public class MenuProvider : IMenuProvider

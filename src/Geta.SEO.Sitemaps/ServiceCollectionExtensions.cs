@@ -1,15 +1,15 @@
-﻿using EPiServer.DependencyInjection;
-using EPiServer.Shell.Modules;
-using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
 using System.Linq;
+using EPiServer.DependencyInjection;
+using EPiServer.Shell.Modules;
 using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Repositories;
 using Geta.SEO.Sitemaps.Utils;
 using Geta.SEO.Sitemaps.XML;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Geta.SEO.Sitemaps.Admin
+namespace Geta.SEO.Sitemaps
 {
     public static class ServiceCollectionExtensions
     {
