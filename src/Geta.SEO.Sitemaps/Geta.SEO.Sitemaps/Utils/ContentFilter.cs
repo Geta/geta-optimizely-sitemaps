@@ -4,23 +4,23 @@
 using System;
 using EPiServer.Core;
 using EPiServer.Framework.Web;
-using EPiServer.Logging.Compatibility;
 using EPiServer.Security;
 using EPiServer.Web;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.SpecializedProperties;
-using Geta.SEO.Sitemaps.XML;
+using Microsoft.Extensions.Logging;
 
 namespace Geta.SEO.Sitemaps.Utils
 {
     public class ContentFilter : IContentFilter
     {
         private readonly TemplateResolver _templateResolver;
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SitemapXmlGenerator));  // TODO: Replace with MS logging
+        private readonly ILogger<ContentFilter> _logger;
 
-        public ContentFilter(TemplateResolver templateResolver)
+        public ContentFilter(TemplateResolver templateResolver, ILogger<ContentFilter> logger)
         {
             _templateResolver = templateResolver;
+            _logger = logger;
         }
 
         public virtual bool ShouldExcludeContent(IContent content)
@@ -120,7 +120,7 @@ namespace Geta.SEO.Sitemaps.Utils
             return true;
         }
 
-        private static bool IsAccessibleToEveryone(IContent content)
+        private bool IsAccessibleToEveryone(IContent content)
         {
             try
             {
@@ -135,7 +135,7 @@ namespace Geta.SEO.Sitemaps.Utils
             }
             catch (Exception e)
             {
-                Log.Error("Error on content parent " + content.ContentLink.ID + Environment.NewLine + e);
+                _logger.LogError("Error on content parent " + content.ContentLink.ID + Environment.NewLine + e);
             }
 
             return false;

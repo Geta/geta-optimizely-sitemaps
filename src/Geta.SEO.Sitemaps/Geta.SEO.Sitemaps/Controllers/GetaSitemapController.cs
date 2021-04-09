@@ -4,7 +4,6 @@
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.Framework.Cache;
-using EPiServer.Logging.Compatibility;
 using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.Repositories;
@@ -13,7 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Reflection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Geta.SEO.Sitemaps.Controllers
@@ -21,22 +20,23 @@ namespace Geta.SEO.Sitemaps.Controllers
     [Route("sitemap.xml")]
     public class GetaSitemapController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);  // TODO: Replace with MS logging
-
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
         private readonly IContentCacheKeyCreator _contentCacheKeyCreator;
-        private SitemapOptions _configuration;
+        private readonly ILogger<GetaSitemapController> _logger;
+        private readonly SitemapOptions _configuration;
 
         public GetaSitemapController(
             ISitemapRepository sitemapRepository,
             SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory,
             IContentCacheKeyCreator contentCacheKeyCreator,
-            IOptions<SitemapOptions> options)
+            IOptions<SitemapOptions> options,
+            ILogger<GetaSitemapController> logger)
         {
             _sitemapRepository = sitemapRepository;
             _sitemapXmlGeneratorFactory = sitemapXmlGeneratorFactory;
             _contentCacheKeyCreator = contentCacheKeyCreator;
+            _logger = logger;
             _configuration = options.Value;
         }
 
@@ -50,7 +50,7 @@ namespace Geta.SEO.Sitemaps.Controllers
 
             if (sitemapData == null)
             {
-                Log.Error("Xml sitemap data not found!");
+                _logger.LogError("Xml sitemap data not found!");
                 return new NotFoundResult();
             }
 
@@ -58,7 +58,7 @@ namespace Geta.SEO.Sitemaps.Controllers
             {
                 if (!GetSitemapData(sitemapData))
                 {
-                    Log.Error("Xml sitemap data not found!");
+                    _logger.LogError("Xml sitemap data not found!");
                     return new NotFoundResult();
                 }
             }
@@ -68,7 +68,6 @@ namespace Geta.SEO.Sitemaps.Controllers
 
         private bool GetSitemapData(SitemapData sitemapData)
         {
-            int entryCount;
             var userAgent = Request.HttpContext.GetServerVariable("USER_AGENT");
 
             var isGoogleBot = userAgent != null &&
@@ -88,13 +87,11 @@ namespace Geta.SEO.Sitemaps.Controllers
                     return true;
                 }
 
-                if (_sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, false, out entryCount))
+                if (_sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, false, out _))
                 {
                     if (_configuration.EnableRealtimeCaching)
                     {
-                        CacheEvictionPolicy cachePolicy;
-
-                        cachePolicy = isGoogleBot
+                        var cachePolicy = isGoogleBot
                             ? new CacheEvictionPolicy(TimeSpan.Zero, CacheTimeoutType.Sliding, new[] { _contentCacheKeyCreator.VersionKey })
                             : null;
 
@@ -107,7 +104,7 @@ namespace Geta.SEO.Sitemaps.Controllers
                 return false;
             }
 
-            return _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, !_configuration.EnableRealtimeSitemap, out entryCount);
+            return _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, !_configuration.EnableRealtimeSitemap, out _);
         }
     }
 }
