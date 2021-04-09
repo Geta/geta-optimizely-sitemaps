@@ -5,21 +5,13 @@ using System.Collections.Generic;
 using System.Linq;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
-using EPiServer.ServiceLocation;
 using Geta.SEO.Sitemaps.Entities;
 
 namespace Geta.SEO.Sitemaps.Repositories
 {
-    [ServiceConfiguration(typeof(ISitemapLoader))] // TODO: Remove this one, use extensions to register services.
     public class SitemapLoader : ISitemapLoader
     {
-        private static DynamicDataStore SitemapStore
-        {
-            get
-            {
-                return typeof(SitemapData).GetStore();
-            }
-        }
+        private static DynamicDataStore SitemapStore => typeof(SitemapData).GetStore();
 
         public void Delete(Identity id)
         {

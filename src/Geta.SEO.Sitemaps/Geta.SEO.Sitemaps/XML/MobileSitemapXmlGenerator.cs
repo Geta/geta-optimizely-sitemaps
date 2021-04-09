@@ -5,7 +5,6 @@ using System.Xml.Linq;
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
-using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.SEO.Sitemaps.Repositories;
@@ -14,18 +13,21 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Geta.SEO.Sitemaps.XML
 {
-    [ServiceConfiguration(typeof(IMobileSitemapXmlGenerator))]  // TODO: Remove this one, use extensions to register services.
     public class MobileSitemapXmlGenerator : SitemapXmlGenerator, IMobileSitemapXmlGenerator
     {
-        public MobileSitemapXmlGenerator(ISitemapRepository sitemapRepository, IContentRepository contentRepository, UrlResolver urlResolver, ISiteDefinitionRepository siteDefinitionRepository, ILanguageBranchRepository languageBranchRepository, IContentFilter contentFilter, IMemoryCache cache)
+        public MobileSitemapXmlGenerator(
+            ISitemapRepository sitemapRepository,
+            IContentRepository contentRepository,
+            UrlResolver urlResolver,
+            ISiteDefinitionRepository siteDefinitionRepository,
+            ILanguageBranchRepository languageBranchRepository,
+            IContentFilter contentFilter,
+            IMemoryCache cache)
             : base(sitemapRepository, contentRepository, urlResolver, siteDefinitionRepository, languageBranchRepository, contentFilter, cache)
         {
         }
 
-        protected XNamespace MobileNamespace
-        {
-            get { return @"http://www.google.com/schemas/sitemap-mobile/1.0"; }
-        }
+        protected XNamespace MobileNamespace => @"http://www.google.com/schemas/sitemap-mobile/1.0";
 
         protected override XElement GenerateSiteElement(IContent contentData, string url)
         {

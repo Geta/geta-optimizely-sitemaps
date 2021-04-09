@@ -21,7 +21,7 @@ namespace Geta.SEO.Sitemaps.Controllers
     [Route("sitemap.xml")]
     public class GetaSitemapController : Controller
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);  // TODO: Replace with MS logging
 
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;

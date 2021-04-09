@@ -6,7 +6,6 @@ using EPiServer.Core;
 using EPiServer.Framework.Web;
 using EPiServer.Logging.Compatibility;
 using EPiServer.Security;
-using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.SpecializedProperties;
@@ -14,11 +13,15 @@ using Geta.SEO.Sitemaps.XML;
 
 namespace Geta.SEO.Sitemaps.Utils
 {
-    [ServiceConfiguration(typeof(IContentFilter))]  // TODO: Remove this one, use extensions to register services.
     public class ContentFilter : IContentFilter
     {
-        protected static Injected<TemplateResolver> TemplateResolver { get; set; }
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SitemapXmlGenerator));
+        private readonly TemplateResolver _templateResolver;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SitemapXmlGenerator));  // TODO: Replace with MS logging
+
+        public ContentFilter(TemplateResolver templateResolver)
+        {
+            _templateResolver = templateResolver;
+        }
 
         public virtual bool ShouldExcludeContent(IContent content)
         {
@@ -79,9 +82,9 @@ namespace Geta.SEO.Sitemaps.Utils
             return ShouldExcludeContent(languageContentInfo.Content);
         }
 
-        private static bool IsVisibleOnSite(IContent content)
+        private bool IsVisibleOnSite(IContent content)
         {
-            return TemplateResolver.Service.HasTemplate(content, TemplateTypeCategories.Page);
+            return _templateResolver.HasTemplate(content, TemplateTypeCategories.Request);
         }
 
         private static bool IsLink(PageData page)
