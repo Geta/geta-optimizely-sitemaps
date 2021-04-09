@@ -7,13 +7,11 @@ using System.Linq;
 using EPiServer;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
-using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using Geta.SEO.Sitemaps.Entities;
 
 namespace Geta.SEO.Sitemaps.Repositories
 {
-    [ServiceConfiguration(typeof(ISitemapRepository))]  // TODO: Remove this one, use extensions to register services.
     public class SitemapRepository : ISitemapRepository
     {
         private readonly ILanguageBranchRepository _languageBranchRepository;
@@ -21,15 +19,14 @@ namespace Geta.SEO.Sitemaps.Repositories
         private readonly ISitemapLoader _sitemapLoader;
 
 
-        public SitemapRepository(ILanguageBranchRepository languageBranchRepository, ISiteDefinitionResolver siteDefinitionResolver, ISitemapLoader sitemapLoader)
+        public SitemapRepository(
+            ILanguageBranchRepository languageBranchRepository,
+            ISiteDefinitionResolver siteDefinitionResolver,
+            ISitemapLoader sitemapLoader)
         {
-            if (languageBranchRepository == null) throw new ArgumentNullException(nameof(languageBranchRepository));
-            if (siteDefinitionResolver == null) throw new ArgumentNullException(nameof(siteDefinitionResolver));
-            if (sitemapLoader == null) throw new ArgumentNullException(nameof(sitemapLoader));
-
-            _languageBranchRepository = languageBranchRepository;
-            _siteDefinitionResolver = siteDefinitionResolver;
-            _sitemapLoader = sitemapLoader;
+            _languageBranchRepository = languageBranchRepository ?? throw new ArgumentNullException(nameof(languageBranchRepository));
+            _siteDefinitionResolver = siteDefinitionResolver ?? throw new ArgumentNullException(nameof(siteDefinitionResolver));
+            _sitemapLoader = sitemapLoader ?? throw new ArgumentNullException(nameof(sitemapLoader));
         }
 
         public void Delete(Identity id)
@@ -91,7 +88,7 @@ namespace Geta.SEO.Sitemaps.Repositories
 
             if (languageBranch != null)
             {
-                return string.Format("{0}/{1}", languageBranch.CurrentUrlSegment, sitemapData.Host).ToLowerInvariant();
+                return $"{languageBranch.URLSegment}/{sitemapData.Host}".ToLowerInvariant();
             }
             return sitemapData.Host.ToLowerInvariant();
         }

@@ -28,7 +28,7 @@ namespace Geta.SEO.Sitemaps.XML
 {
     public abstract class SitemapXmlGenerator : ISitemapXmlGenerator
     {
-        private static readonly ILog Log = LogManager.GetLogger(typeof(SitemapXmlGenerator));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(SitemapXmlGenerator)); // TODO: Replace with MS logging
         protected const int MaxSitemapEntryCount = 50000;
         protected ISet<string> UrlSet { get; private set; }
         protected bool StopGeneration { get; private set; }
