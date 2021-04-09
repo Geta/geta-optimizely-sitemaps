@@ -41,7 +41,8 @@ namespace Geta.SEO.Sitemaps.XML
         protected readonly ISiteDefinitionRepository SiteDefinitionRepository;
         protected readonly ILanguageBranchRepository LanguageBranchRepository;
         protected readonly IContentFilter ContentFilter;
-        private readonly IMemoryCache _cache;
+        private readonly ISynchronizedObjectInstanceCache _objectCache;
+        private readonly IMemoryCache _memoryCache;
         private readonly ILogger<SitemapXmlGenerator> _logger;
 
         protected SitemapData SitemapData { get; set; }
@@ -61,8 +62,9 @@ namespace Geta.SEO.Sitemaps.XML
             IUrlResolver urlResolver, 
             ISiteDefinitionRepository siteDefinitionRepository, 
             ILanguageBranchRepository languageBranchRepository,
-            IContentFilter contentFilter, 
-            IMemoryCache cache,
+            IContentFilter contentFilter,
+            ISynchronizedObjectInstanceCache objectCache,
+            IMemoryCache memoryCache,
             ILogger<SitemapXmlGenerator> logger)
         {
             SitemapRepository = sitemapRepository;
@@ -73,7 +75,8 @@ namespace Geta.SEO.Sitemaps.XML
             EnabledLanguages = LanguageBranchRepository.ListEnabled();
             UrlSet = new HashSet<string>();
             ContentFilter = contentFilter;
-            _cache = cache;
+            _objectCache = objectCache;
+            _memoryCache = memoryCache;
             _logger = logger;
         }
 
@@ -268,13 +271,13 @@ namespace Geta.SEO.Sitemaps.XML
         protected virtual IEnumerable<HrefLangData> GetHrefLangDataFromCache(ContentReference contentLink)
         {
             var cacheKey = $"HrefLangData-{contentLink.ToReferenceWithoutVersion()}";
-            var cachedObject = CacheManager.Get(cacheKey) as IEnumerable<HrefLangData>;
+            var cachedObject = _objectCache.Get(cacheKey) as IEnumerable<HrefLangData>;
 
-            if (cachedObject == null)
-            {
-                cachedObject = GetHrefLangData(contentLink);
-                CacheManager.Insert(cacheKey, cachedObject, new CacheEvictionPolicy(null, new[] { "SitemapGenerationKey" }, TimeSpan.FromMinutes(10), CacheTimeoutType.Absolute));
-            }
+            if (cachedObject != null) return cachedObject;
+
+            cachedObject = GetHrefLangData(contentLink);
+            var policy = new CacheEvictionPolicy(TimeSpan.FromMinutes(10), CacheTimeoutType.Absolute, new[] {"SitemapGenerationKey"});
+            _objectCache.Insert(cacheKey, cachedObject, policy);
 
             return cachedObject;
         }
@@ -543,7 +546,7 @@ namespace Geta.SEO.Sitemaps.XML
         protected bool HostDefinitionExistsForLanguage(string languageBranch)
         {
             var cacheKey = $"HostDefinitionExistsFor{SitemapData.SiteUrl}-{languageBranch}";
-            var cachedObject = _cache.Get(cacheKey);
+            var cachedObject = _memoryCache.Get(cacheKey);
 
             if (cachedObject == null)
             {
@@ -553,7 +556,7 @@ namespace Geta.SEO.Sitemaps.XML
                         x.Language != null &&
                         x.Language.ToString().Equals(languageBranch, StringComparison.InvariantCultureIgnoreCase));
 
-                _cache.Set(cacheKey, cachedObject, DateTime.Now.AddMinutes(10));
+                _memoryCache.Set(cacheKey, cachedObject, DateTime.Now.AddMinutes(10));
             }
 
             return (bool)cachedObject;
@@ -577,18 +580,12 @@ namespace Geta.SEO.Sitemaps.XML
 
         protected string GetAbsoluteUrl(string url)
         {
-            // if the URL is relative we add the base site URL (protocol and hostname)
-            if (!IsAbsoluteUrl(url, out var absoluteUri))
+            if (IsAbsoluteUrl(url, out var absoluteUri))
             {
-                url = UriUtil.Combine(SitemapData.SiteUrl, url);
-            }
-            // Force the SiteUrl
-            else
-            {
-                url = UriUtil.Combine(SitemapData.SiteUrl, absoluteUri.AbsolutePath);
+                return UriUtil.Combine(SitemapData.SiteUrl, absoluteUri.AbsolutePath);
             }
 
-            return url;
+            return UriUtil.Combine(SitemapData.SiteUrl, url);
         }
 
         protected bool IsAbsoluteUrl(string url, out Uri absoluteUri)
@@ -604,7 +601,7 @@ namespace Geta.SEO.Sitemaps.XML
                 T local;
                 var status = settings != null
                     ? ContentRepository.TryGet(contentLink, settings, out local)
-                    : ContentRepository.TryGet<T>(contentLink, out local);
+                    : ContentRepository.TryGet(contentLink, out local);
                 content = local;
                 return status;
             }

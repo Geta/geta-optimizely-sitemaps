@@ -3,6 +3,7 @@
 
 using EPiServer;
 using EPiServer.DataAbstraction;
+using EPiServer.Framework.Cache;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.SEO.Sitemaps.Repositories;
@@ -21,9 +22,19 @@ namespace Geta.SEO.Sitemaps.XML
             ISiteDefinitionRepository siteDefinitionRepository,
             ILanguageBranchRepository languageBranchRepository,
             IContentFilter contentFilter,
+            ISynchronizedObjectInstanceCache objectCache,
             IMemoryCache cache,
             ILogger<SitemapXmlGenerator> logger)
-            : base(sitemapRepository, contentRepository, urlResolver, siteDefinitionRepository, languageBranchRepository, contentFilter, cache, logger)
+            : base(
+                sitemapRepository,
+                contentRepository, 
+                urlResolver, 
+                siteDefinitionRepository, 
+                languageBranchRepository, 
+                contentFilter, 
+                objectCache,
+                cache,
+                logger)
         {
         }
     }

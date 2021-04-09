@@ -1,10 +1,11 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System.Xml.Linq;
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
+using EPiServer.Framework.Cache;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.SEO.Sitemaps.Repositories;
@@ -23,9 +24,19 @@ namespace Geta.SEO.Sitemaps.XML
             ISiteDefinitionRepository siteDefinitionRepository,
             ILanguageBranchRepository languageBranchRepository,
             IContentFilter contentFilter,
+            ISynchronizedObjectInstanceCache objectCache,
             IMemoryCache cache,
             ILogger<SitemapXmlGenerator> logger)
-            : base(sitemapRepository, contentRepository, urlResolver, siteDefinitionRepository, languageBranchRepository, contentFilter, cache, logger)
+            : base(
+                sitemapRepository,
+                contentRepository,
+                urlResolver,
+                siteDefinitionRepository,
+                languageBranchRepository,
+                contentFilter,
+                objectCache,
+                cache,
+                logger)
         {
         }
 
