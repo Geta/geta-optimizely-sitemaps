@@ -10,6 +10,7 @@ using EPiServer.Web.Routing;
 using Geta.SEO.Sitemaps.Repositories;
 using Geta.SEO.Sitemaps.Utils;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Logging;
 
 namespace Geta.SEO.Sitemaps.XML
 {
@@ -22,8 +23,9 @@ namespace Geta.SEO.Sitemaps.XML
             ISiteDefinitionRepository siteDefinitionRepository,
             ILanguageBranchRepository languageBranchRepository,
             IContentFilter contentFilter,
-            IMemoryCache cache)
-            : base(sitemapRepository, contentRepository, urlResolver, siteDefinitionRepository, languageBranchRepository, contentFilter, cache)
+            IMemoryCache cache,
+            ILogger<SitemapXmlGenerator> logger)
+            : base(sitemapRepository, contentRepository, urlResolver, siteDefinitionRepository, languageBranchRepository, contentFilter, cache, logger)
         {
         }
 

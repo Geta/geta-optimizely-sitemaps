@@ -22,6 +22,6 @@
     <None Include="wwwroot\**\*.*" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\src\Geta.SEO.Sitemaps.Admin\Geta.SEO.Sitemaps.Admin.csproj" />
+    <ProjectReference Include="..\..\..\src\Geta.SEO.Sitemaps\Geta.SEO.Sitemaps\Geta.SEO.Sitemaps.csproj" />
   </ItemGroup>
 </Project>

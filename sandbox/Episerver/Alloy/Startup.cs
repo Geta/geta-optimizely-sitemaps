@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
-using Geta.SEO.Sitemaps.Admin;
+using Geta.SEO.Sitemaps;
 
 namespace EPiServer.Templates.Alloy.Mvc
 {
