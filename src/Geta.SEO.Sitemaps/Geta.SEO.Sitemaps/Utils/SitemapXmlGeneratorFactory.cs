@@ -1,15 +1,22 @@
 ﻿// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
-using EPiServer.ServiceLocation;
+using System;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.XML;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Geta.SEO.Sitemaps.Utils
 {
-    [ServiceConfiguration(typeof(SitemapXmlGeneratorFactory))]  // TODO: Remove this one, use extensions to register services.
     public class SitemapXmlGeneratorFactory
     {
+        private readonly IServiceProvider _serviceProvider;
+
+        public SitemapXmlGeneratorFactory(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
         public virtual ISitemapXmlGenerator GetSitemapXmlGenerator(SitemapData sitemapData)
         {
             ISitemapXmlGenerator xmlGenerator;
@@ -17,16 +24,16 @@ namespace Geta.SEO.Sitemaps.Utils
             switch (sitemapData.SitemapFormat)
             {
                 case SitemapFormat.Mobile:
-                    xmlGenerator = ServiceLocator.Current.GetInstance<IMobileSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetService<IMobileSitemapXmlGenerator>();
                     break;
                 case SitemapFormat.Commerce:
-                    xmlGenerator = ServiceLocator.Current.GetInstance<ICommerceSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetService<ICommerceSitemapXmlGenerator>();
                     break;
                 case SitemapFormat.StandardAndCommerce:
-                    xmlGenerator = ServiceLocator.Current.GetInstance<ICommerceAndStandardSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetService<ICommerceAndStandardSitemapXmlGenerator>();
                     break;
                 default:
-                    xmlGenerator = ServiceLocator.Current.GetInstance<IStandardSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetService<IStandardSitemapXmlGenerator>();
                     break;
             }
 
