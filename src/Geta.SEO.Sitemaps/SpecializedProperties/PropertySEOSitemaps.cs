@@ -29,68 +29,47 @@ namespace Geta.SEO.Sitemaps.SpecializedProperties
 
         public string ChangeFreq
         {
-            get
-            {
-                return this.changeFrequency;
-            }
+            get => changeFrequency;
 
-            set
-            {
-                this.changeFrequency = value;
-            }
+            set => changeFrequency = value;
         }
 
         public bool Enabled
         {
-            get
-            {
-                return this.enabled;
-            }
+            get => enabled;
 
-            set
-            {
-                this.enabled = value;
-            }
+            set => enabled = value;
         }
 
         public string Priority
         {
-            get
-            {
-                return this.priority;
-            }
+            get => priority;
 
-            set
-            {
-                this.priority = value;
-            }
+            set => priority = value;
         }
 
         [XmlIgnore]
         protected override string String
         {
-            get
-            {
-                return base.String;
-            }
+            get => base.String;
 
             set
             {
-                this.Deserialize(value);
+                Deserialize(value);
                 base.String = value;
             }
         }
 
         public void Deserialize(string xml)
         {
-            StringReader s = new StringReader(xml);
-            XmlTextReader reader = new XmlTextReader(s);
+            var s = new StringReader(xml);
+            var reader = new XmlTextReader(s);
 
             reader.ReadStartElement(PropertyName);
 
-            this.enabled = bool.Parse(reader.ReadElementString("enabled"));
-            this.changeFrequency = reader.ReadElementString("changefreq");
-            this.priority = reader.ReadElementString("priority");
+            enabled = bool.Parse(reader.ReadElementString("enabled"));
+            changeFrequency = reader.ReadElementString("changefreq");
+            priority = reader.ReadElementString("priority");
 
             reader.ReadEndElement();
 
@@ -104,21 +83,21 @@ namespace Geta.SEO.Sitemaps.SpecializedProperties
 
         public void Serialize()
         {
-            StringWriter s = new StringWriter();
-            XmlTextWriter writer = new XmlTextWriter(s);
+            var s = new StringWriter();
+            var writer = new XmlTextWriter(s);
 
             writer.WriteStartElement(PropertyName);
 
-            writer.WriteElementString("enabled", this.enabled.ToString());
-            writer.WriteElementString("changefreq", this.changeFrequency);
-            writer.WriteElementString("priority", this.priority);
+            writer.WriteElementString("enabled", enabled.ToString());
+            writer.WriteElementString("changefreq", changeFrequency);
+            writer.WriteElementString("priority", priority);
 
             writer.WriteEndElement();
 
             writer.Flush();
             writer.Close();
 
-            this.String = s.GetStringBuilder().ToString();
+            String = s.GetStringBuilder().ToString();
         }
     }
 }
