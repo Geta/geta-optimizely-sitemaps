@@ -2,8 +2,9 @@
 using EPiServer.DataAbstraction;
 using EPiServer.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
+ using Geta.SEO.Sitemaps.SpecializedProperties;
 
-namespace AlloyTemplates.Models.Pages
+ namespace AlloyTemplates.Models.Pages
 {
     /// <summary>
     /// Used for the pages mainly consisting of manually created content such as text, images, and blocks
@@ -22,5 +23,9 @@ namespace AlloyTemplates.Models.Pages
             GroupName = SystemTabNames.Content,
             Order = 320)]
         public virtual ContentArea MainContentArea { get; set; }
+
+        [UIHint("SeoSitemap")]
+        [BackingType(typeof(PropertySEOSitemaps))]
+        public virtual string SEOSitemaps { get; set; }
     }
 }
