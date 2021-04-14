@@ -1,10 +1,7 @@
 using EPiServer.ServiceLocation;
 using EPiServer.Shell.Security;
 using EPiServer.Templates.Alloy.Mvc.Extensions;
-using EPiServer.Web;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AlloyMvcTemplates.Infrastructure
@@ -17,7 +14,7 @@ namespace AlloyMvcTemplates.Infrastructure
         private const string RegisterUrl = "/Register";
 
         public static bool? IsEnabled { get; set; }
-       
+
         public AdministratorRegistrationPageMiddleware(RequestDelegate next)
         {
             _next = next;
