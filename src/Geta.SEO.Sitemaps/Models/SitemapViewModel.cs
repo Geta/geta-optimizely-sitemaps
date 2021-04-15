@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Castle.Core.Internal;
-using EPiServer.Validation.Internal;
+﻿using Castle.Core.Internal;
 using Geta.Mapping;
 using Geta.SEO.Sitemaps.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace Geta.SEO.Sitemaps.Models
 {
@@ -76,22 +76,19 @@ namespace Geta.SEO.Sitemaps.Models
 
             private SitemapFormat GetSitemapFormat(string format)
             {
-                if (format == SitemapFormat.Mobile.ToString())
+                if (format == null)
                 {
-                    return SitemapFormat.Mobile;
+                    return SitemapFormat.Standard;
                 }
 
-                if (format == SitemapFormat.Commerce.ToString())
+                var sitemapFormat = Enum.Parse<SitemapFormat>(format);
+                return sitemapFormat switch
                 {
-                    return SitemapFormat.Commerce;
-                }
-
-                if (format == SitemapFormat.StandardAndCommerce.ToString())
-                {
-                    return SitemapFormat.StandardAndCommerce;
-                }
-
-                return SitemapFormat.Standard;
+                    SitemapFormat.Mobile => SitemapFormat.Mobile,
+                    SitemapFormat.Commerce => SitemapFormat.Commerce,
+                    SitemapFormat.StandardAndCommerce => SitemapFormat.StandardAndCommerce,
+                    _ => SitemapFormat.Standard
+                };
             }
 
             private int TryParse(string id)
