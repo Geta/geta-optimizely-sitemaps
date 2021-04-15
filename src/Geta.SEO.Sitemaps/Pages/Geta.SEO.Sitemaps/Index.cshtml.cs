@@ -172,6 +172,11 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             return RedirectToPage();
         }
 
+        public bool IsEditing(string id)
+        {
+            return id == EditItemId;
+        }
+
         private void MapDataToModel(SitemapData data)
         {
             SitemapViewModel.Host = data.Host;
