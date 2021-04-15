@@ -3,6 +3,21 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+    <Version>1.0.0</Version>
+    <PackageId>Geta.SEO.Sitemaps</PackageId>
+    <Title>Search Engine Sitemap generator for EPiServer</Title>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>Geta Digital</Authors>
+    <Company>Geta Digital</Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Geta/geta-optimizely-sitemaps</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageIconUrl>https://cdn.geta.no/opensource/icons/Geta-logo-3.png</PackageIconUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Description>Search Engine Sitemap generator for EPiServer</Description>
+    <PackageReleaseNotes>https://github.com/Geta/geta-optimizely-sitemaps/blob/master/CHANGELOG.md</PackageReleaseNotes>
+    <PackageTags>Sitemap SEO EPiServer EPiServerModulePackage ThirdPartyAddOn</PackageTags>
+    <RepositoryUrl>https://github.com/Geta/geta-optimizely-sitemaps</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +38,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" />
+    <Content Remove="module\module.config" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\images\icon.png" Pack="true" PackagePath="\" />
+    <None Include="module\module.config" />
+    <None Include="msbuild\Main.proj" />
+  </ItemGroup>
+
+  <Import Project="$(SolutionDir)\src\Geta.SEO.Sitemaps\msbuild\Main.proj" Condition="Exists('$(SolutionDir)\src\Geta.SEO.Sitemaps\msbuild\Main.proj')" />
 
 </Project>
