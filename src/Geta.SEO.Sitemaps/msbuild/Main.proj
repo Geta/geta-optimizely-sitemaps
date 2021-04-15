@@ -6,6 +6,7 @@
              AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.Core.dll">
     <ParameterGroup>
       <InputPath ParameterType="System.String" Required="true" />
+      <OutputPath ParameterType="System.String" Required="true" />
       <OutputFileName ParameterType="System.String" Required="true" />
       <OverwriteExistingFile ParameterType="System.Boolean" Required="false" />
     </ParameterGroup>
@@ -14,10 +15,11 @@
       <Using Namespace="System.IO.Compression" />
       <Code Type="Fragment" Language="cs">
         <![CDATA[        
-          if(this.OverwriteExistingFile) {
-            File.Delete(this.OutputFileName);
+          if(this.OverwriteExistingFile && File.Exists(this.OutputPath + this.OutputFileName)) {
+            File.Delete(this.OutputPath + this.OutputFileName);
           }
-          ZipFile.CreateFromDirectory(this.InputPath, this.OutputFileName);
+          Directory.CreateDirectory(this.OutputPath);
+          ZipFile.CreateFromDirectory(this.InputPath, this.OutputPath + this.OutputFileName);
         ]]>
       </Code>
     </Task>
@@ -48,7 +50,8 @@
 
     <ZipDirectory
       InputPath="$(TmpOutDir)\content"
-      OutputFileName="$(OutDir)\Geta.SEO.Sitemaps.zip"
+      OutputPath="$(SolutionDir)\src\Geta.SEO.Sitemaps\modules\_protected\Geta.SEO.Sitemaps\"
+      OutputFileName="Geta.SEO.Sitemaps.zip"
       OverwriteExistingFile="true" />
 
     <!-- Cleanup -->
@@ -56,9 +59,8 @@
   </Target>
 
   <ItemGroup>
-    <Content Include="$(OutDir)\Geta.SEO.Sitemaps.zip" >
+    <Content Include="modules\_protected\Geta.SEO.Sitemaps\Geta.SEO.Sitemaps.zip" >
       <Pack>true</Pack>
-      <PackagePath>content\modules\_protected\Geta.SEO.Sitemaps\;contentFiles\any\net5.0\modules\_protected\Geta.SEO.Sitemaps\</PackagePath>
     </Content>
   </ItemGroup>
 </Project>
