@@ -1,7 +1,7 @@
-using Castle.Core.Internal;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
 using EPiServer.Web;
+using Geta.Mapping;
 using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.Models;
@@ -20,18 +20,19 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         private readonly ISitemapRepository _sitemapRepository;
         private readonly ISiteDefinitionRepository _siteDefinitionRepository;
         private readonly ILanguageBranchRepository _languageBranchRepository;
+        private readonly IMapper<SitemapViewModel, SitemapData> _modelToEntityMapper;
 
         public IndexModel(
             ISiteDefinitionRepository siteDefinitionRepository,
             ILanguageBranchRepository languageBranchRepository,
-            ISitemapRepository sitemapRepository)
+            ISitemapRepository sitemapRepository,
+            IMapper<SitemapViewModel, SitemapData> modelToEntityMapper)
         {
             _siteDefinitionRepository = siteDefinitionRepository;
             _languageBranchRepository = languageBranchRepository;
             _sitemapRepository = sitemapRepository;
+            _modelToEntityMapper = modelToEntityMapper;
         }
-
-        protected const string SitemapHostPostfix = "Sitemap.xml";
 
         public bool CreateMenuIsVisible { get; set; }
         public string EditItemId { get; set; }
@@ -48,8 +49,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         protected int EditIndex { get; set; }
         protected InsertItemPosition InsertItemPosition { get; set; }
 
-        [BindProperty]
-        public SitemapViewModel SitemapViewModel { get; set; }
+        [BindProperty] public SitemapViewModel SitemapViewModel { get; set; }
 
         [BindProperty]
         public IList<SitemapData> SitemapDataList { get; set; }
@@ -96,8 +96,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         public IActionResult OnPostCreate()
         {
             var sitemap = new SitemapData();
-            MapDtoToEntity(sitemap);
-
+            _modelToEntityMapper.Map(SitemapViewModel, sitemap);
             _sitemapRepository.Save(sitemap);
 
             CloseInsert();
@@ -105,25 +104,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             EmptyDto();
 
             return RedirectToPage();
-        }
-
-        private void MapDtoToEntity(SitemapData sitemap)
-        {
-            var host = sitemap.Host.IsNullOrEmpty()
-                ? SitemapViewModel.Host + SitemapHostPostfix
-                : SitemapViewModel.Host;
-
-            sitemap.SiteUrl = SitemapViewModel.SiteUrl;
-            sitemap.Host = host;
-            sitemap.Language = SitemapViewModel.LanguageBranch;
-            sitemap.EnableLanguageFallback = SitemapViewModel.EnableLanguageFallback;
-            sitemap.IncludeAlternateLanguagePages = SitemapViewModel.IncludeAlternateLanguagePages;
-            sitemap.EnableSimpleAddressSupport = SitemapViewModel.EnableSimpleAddressSupport;
-            sitemap.PathsToAvoid = GetList(SitemapViewModel.PathsToAvoid);
-            sitemap.PathsToInclude = GetList(SitemapViewModel.PathsToAvoid);
-            sitemap.IncludeDebugInfo = SitemapViewModel.IncludeDebugInfo;
-            sitemap.SitemapFormat = GetSitemapFormat(SitemapViewModel.SitemapFormFormat);
-            sitemap.RootPageId = TryParse(SitemapViewModel.RootPageId);
         }
 
         private void EmptyDto()
@@ -135,7 +115,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         {
             EditItemId = id;
             var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
-            MapDataToModel(sitemapData);
+            SitemapViewModel.MapToViewModel(sitemapData);
             LoadLanguageBranches();
             BindSitemapDataList();
             PopulateHostListControl();
@@ -151,8 +131,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
                 return NotFound();
             }
 
-            MapDtoToEntity(sitemap);
-
+            _modelToEntityMapper.Map(SitemapViewModel, sitemap);
             _sitemapRepository.Save(sitemap);
 
             EditIndex = -1;
@@ -172,19 +151,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         public bool IsEditing(string id)
         {
             return id == EditItemId;
-        }
-
-        private void MapDataToModel(SitemapData data)
-        {
-            SitemapViewModel.Host = data.Host;
-            SitemapViewModel.EnableLanguageFallback = data.EnableLanguageFallback;
-            SitemapViewModel.IncludeAlternateLanguagePages = data.IncludeAlternateLanguagePages;
-            SitemapViewModel.EnableSimpleAddressSupport = data.EnableSimpleAddressSupport;
-            SitemapViewModel.PathsToAvoid = data.PathsToAvoid != null ? string.Join("; ", data.PathsToAvoid) : string.Empty;
-            SitemapViewModel.PathsToInclude = data.PathsToInclude != null ? string.Join("; ", data.PathsToInclude) : string.Empty;
-            SitemapViewModel.IncludeDebugInfo = data.IncludeDebugInfo;
-            SitemapViewModel.RootPageId = data.RootPageId.ToString();
-            SitemapViewModel.SitemapFormFormat = data.SitemapFormat.ToString();
         }
 
         private void PopulateHostListControl()
@@ -209,51 +175,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         private void CloseInsert()
         {
             InsertItemPosition = InsertItemPosition.None;
-        }
-
-        private int TryParse(string id)
-        {
-            int rootId;
-            int.TryParse(id, out rootId);
-
-            return rootId;
-        }
-
-        private SitemapFormat GetSitemapFormat(string format)
-        {
-            if (format == SitemapFormat.Mobile.ToString())
-            {
-                return SitemapFormat.Mobile;
-            }
-
-            if (format == SitemapFormat.Commerce.ToString())
-            {
-                return SitemapFormat.Commerce;
-            }
-
-            if (format == SitemapFormat.StandardAndCommerce.ToString())
-            {
-                return SitemapFormat.StandardAndCommerce;
-            }
-
-            return SitemapFormat.Standard;
-        }
-
-        private IList<string> GetList(string input)
-        {
-            if (input == null)
-            {
-                return null;
-            }
-
-            var strValue = input.Trim();
-
-            if (string.IsNullOrEmpty(strValue))
-            {
-                return null;
-            }
-
-            return new List<string>(strValue.Split(';'));
         }
 
         public IActionResult OnPostCancel(string id)
