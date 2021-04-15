@@ -1,6 +1,6 @@
+using Castle.Core.Internal;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
-using EPiServer.Security;
 using EPiServer.Web;
 using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Entities;
@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
-using Castle.Core.Internal;
 
 namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
 {
@@ -22,7 +21,10 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         private readonly ISiteDefinitionRepository _siteDefinitionRepository;
         private readonly ILanguageBranchRepository _languageBranchRepository;
 
-        public IndexModel(ISiteDefinitionRepository siteDefinitionRepository, ILanguageBranchRepository languageBranchRepository, ISitemapRepository sitemapRepository)
+        public IndexModel(
+            ISiteDefinitionRepository siteDefinitionRepository,
+            ILanguageBranchRepository languageBranchRepository,
+            ISitemapRepository sitemapRepository)
         {
             _siteDefinitionRepository = siteDefinitionRepository;
             _languageBranchRepository = languageBranchRepository;
@@ -58,11 +60,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             ShowLanguageDropDown = ShouldShowLanguageDropDown();
 
             LoadLanguageBranches();
-
-            if (!PrincipalInfo.CurrentPrincipal.IsInRole("admin"))
-            {
-                /*return Unauthorized();*/
-            }
 
             BindSitemapDataList();
         }
