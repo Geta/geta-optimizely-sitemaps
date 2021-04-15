@@ -203,8 +203,8 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             SitemapViewModel.EnableLanguageFallback = data.EnableLanguageFallback;
             SitemapViewModel.IncludeAlternateLanguagePages = data.IncludeAlternateLanguagePages;
             SitemapViewModel.EnableSimpleAddressSupport = data.EnableSimpleAddressSupport;
-            SitemapViewModel.PathsToAvoid = string.Join("; ", data.PathsToAvoid);
-            SitemapViewModel.PathsToInclude = string.Join("; ", data.PathsToInclude);
+            SitemapViewModel.PathsToAvoid = data.PathsToAvoid != null ? string.Join("; ", data.PathsToAvoid) : string.Empty;
+            SitemapViewModel.PathsToInclude = data.PathsToInclude != null ? string.Join("; ", data.PathsToInclude) : string.Empty;
             SitemapViewModel.IncludeDebugInfo = data.IncludeDebugInfo;
             SitemapViewModel.RootPageId = data.RootPageId.ToString();
             SitemapViewModel.SitemapFormFormat = data.SitemapFormat.ToString();

@@ -38,10 +38,20 @@
                             <td>
                                 @sitemapData.Host
                             </td>
-                            <td></td>
-                            <td></td>
-                            @*<td>@(sitemapData.PathsToInclude.Any() ? string.Join(",", sitemapData.PathsToInclude) : "")</td>
-                                <td>@(sitemapData.PathsToInclude.Any() ? string.Join(",", sitemapData.PathsToAvoid) : "")</td>*@
+                            <td>
+                                @if (sitemapData.PathsToInclude != null)
+                                {
+                                    var paths = string.Join(",", sitemapData.PathsToInclude);
+                                    <p>@paths</p>
+                                }
+                            </td>
+                            <td>
+                                @if (sitemapData.PathsToAvoid != null)
+                                {
+                                    var paths = string.Join(",", sitemapData.PathsToAvoid);
+                                    <p>@paths</p>
+                                }
+                            </td>
                             <td>@sitemapData.RootPageId</td>
                             <td>@sitemapData.IncludeDebugInfo</td>
                             <td>@sitemapData.SitemapFormat</td>
