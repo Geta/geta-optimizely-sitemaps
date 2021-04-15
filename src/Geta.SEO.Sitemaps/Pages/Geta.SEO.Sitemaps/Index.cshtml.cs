@@ -1,18 +1,18 @@
-using Geta.SEO.Sitemaps.Entities;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using System.Linq;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
 using EPiServer.Security;
 using EPiServer.Web;
 using Geta.SEO.Sitemaps.Configuration;
+using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.Models;
 using Geta.SEO.Sitemaps.Repositories;
 using Geta.SEO.Sitemaps.Utils;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
+using System.Linq;
+using Castle.Core.Internal;
 
 namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
 {
@@ -48,9 +48,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
 
         [BindProperty]
         public SitemapViewModel SitemapViewModel { get; set; }
-
-        //[BindProperty]
-        //public EditSitemapModel EditSitemapModel { get; set; }
 
         [BindProperty]
         public IList<SitemapData> SitemapDataList { get; set; }
@@ -103,20 +100,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         {
             var sitemap = new SitemapData();
             MapDtoToEntity(sitemap);
-            //var sitemapData = new SitemapData
-            //{
-            //    SiteUrl = SitemapDto.SiteUrl,
-            //    Host = SitemapDto.Host + SitemapHostPostfix,
-            //    Language = SitemapDto.LanguageBranche,
-            //    EnableLanguageFallback = SitemapDto.EnableLanguageFallback,
-            //    IncludeAlternateLanguagePages = SitemapDto.IncludeAlternateLanguagePages,
-            //    EnableSimpleAddressSupport = SitemapDto.EnableSimpleAddressSupport,
-            //    PathsToAvoid = GetList(SitemapDto.PathsToAvoid),
-            //    PathsToInclude = GetList(SitemapDto.PathsToInclude),
-            //    IncludeDebugInfo = SitemapDto.IncludeDebugInfo,
-            //    SitemapFormat = GetSitemapFormat(SitemapDto.SitemapFormFormat),
-            //    RootPageId = TryParse(SitemapDto.RootPageId)
-            //};
 
             _sitemapRepository.Save(sitemap);
 
@@ -129,9 +112,13 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
 
         private void MapDtoToEntity(SitemapData sitemap)
         {
+            var host = sitemap.Host.IsNullOrEmpty()
+                ? SitemapViewModel.Host + SitemapHostPostfix
+                : SitemapViewModel.Host;
+
             sitemap.SiteUrl = SitemapViewModel.SiteUrl;
-            sitemap.Host = SitemapViewModel.Host;
-            sitemap.Language = SitemapViewModel.LanguageBranche;
+            sitemap.Host = host;
+            sitemap.Language = SitemapViewModel.LanguageBranch;
             sitemap.EnableLanguageFallback = SitemapViewModel.EnableLanguageFallback;
             sitemap.IncludeAlternateLanguagePages = SitemapViewModel.IncludeAlternateLanguagePages;
             sitemap.EnableSimpleAddressSupport = SitemapViewModel.EnableSimpleAddressSupport;
@@ -168,18 +155,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             }
 
             MapDtoToEntity(sitemap);
-
-            //sitemap.SiteUrl = SitemapDto.SiteUrl;
-            //sitemap.Host = SitemapDto.Host;
-            //sitemap.Language = SitemapDto.LanguageBranche;
-            //sitemap.EnableLanguageFallback = SitemapDto.EnableLanguageFallback;
-            //sitemap.IncludeAlternateLanguagePages = SitemapDto.IncludeAlternateLanguagePages;
-            //sitemap.EnableSimpleAddressSupport = SitemapDto.EnableSimpleAddressSupport;
-            //sitemap.PathsToAvoid = GetList(SitemapDto.PathsToAvoid);
-            //sitemap.PathsToInclude = GetList(SitemapDto.PathsToAvoid);
-            //sitemap.IncludeDebugInfo = SitemapDto.IncludeDebugInfo;
-            //sitemap.SitemapFormat = GetSitemapFormat(SitemapDto.SitemapFormFormat);
-            //sitemap.RootPageId = TryParse(SitemapDto.RootPageId);
 
             _sitemapRepository.Save(sitemap);
 

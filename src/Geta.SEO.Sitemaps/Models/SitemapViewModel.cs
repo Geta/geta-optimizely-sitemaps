@@ -3,7 +3,7 @@
     public class SitemapViewModel
     {
         public string SiteUrl { get; set; }
-        public string LanguageBranche { get; set; }
+        public string LanguageBranch { get; set; }
         public string Host { get; set; }
         public bool EnableLanguageFallback { get; set; }
         public bool IncludeAlternateLanguagePages { get; set; }
