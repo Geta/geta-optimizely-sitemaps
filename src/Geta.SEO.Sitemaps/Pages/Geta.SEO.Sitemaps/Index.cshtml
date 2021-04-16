@@ -29,40 +29,31 @@
 
         <tbody>
             <form method="post">
-                @foreach (var sitemapData in Model.SitemapDataList)
+                @foreach (var sitemapViewModel in Model.SitemapViewModels)
                 {
-                    var sitemapId = sitemapData.Id.ToString();
-                    @if (!Model.IsEditing(sitemapId))
+                    @if (!Model.IsEditing(sitemapViewModel.Id))
                     {
                         <tr>
                             <td>
-                                @sitemapData.Host
+                                @sitemapViewModel.SiteUrl
                             </td>
                             <td>
-                                @if (sitemapData.PathsToInclude != null)
-                                {
-                                    var paths = string.Join(",", sitemapData.PathsToInclude);
-                                    <p>@paths</p>
-                                }
+                                @sitemapViewModel.PathsToInclude
                             </td>
                             <td>
-                                @if (sitemapData.PathsToAvoid != null)
-                                {
-                                    var paths = string.Join(",", sitemapData.PathsToAvoid);
-                                    <p>@paths</p>
-                                }
+                                @sitemapViewModel.PathsToAvoid
                             </td>
-                            <td>@sitemapData.RootPageId</td>
-                            <td>@sitemapData.IncludeDebugInfo</td>
-                            <td>@sitemapData.SitemapFormat</td>
+                            <td>@sitemapViewModel.RootPageId</td>
+                            <td>@sitemapViewModel.IncludeDebugInfo</td>
+                            <td>@sitemapViewModel.SitemapFormat</td>
 
                             <td>
                                 <button type="submit" class="btn btn-secondary"
-                                        asp-page-handler="edit" asp-route-id="@sitemapId">
+                                        asp-page-handler="edit" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="edit"></span> Edit
                                 </button>
                                 <button type="submit" class="btn btn-danger"
-                                        asp-page-handler="delete" asp-route-id="@sitemapId">
+                                        asp-page-handler="delete" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="trash-2"></span> Delete
                                 </button>
                                 <button type="submit" class="btn btn-light"
@@ -80,13 +71,13 @@
                             <td class="sitemap-name">
                                 @if (Model.ShowHostsLabel)
                                 {
-                                    <label asp-for="SitemapViewModel.Host"></label>
+                                    <label>@Model.HostLabel</label>
                                 }
                                 @if (Model.ShowHostsDropDown)
                                 {
                                     <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
                                 }
-                                <input type="text" class="form-control" asp-for="SitemapViewModel.Host" />Sitemap.xml
+                                <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePathEditPart" />Sitemap.xml
                                 <br /><br />
                                 Language:
                                 <select asp-for="SitemapViewModel.LanguageBranch" asp-items="Model.LanguageBranches"></select>
@@ -114,21 +105,21 @@
                             </td>
                             <td>
                                 <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="Standard" type="radio" />Standard</label>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Standard" type="radio" />Standard</label>
                                 </div>
                                 <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="Mobile" type="radio" />Mobile</label>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Mobile" type="radio" />Mobile</label>
                                 </div>
                                 <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="Commerce" type="radio" />Commerce</label>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Commerce" type="radio" />Commerce</label>
                                 </div>
                                 <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="StandardAndCommerce" type="radio" />Standard and commerce</label>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="StandardAndCommerce" type="radio" />Standard and commerce</label>
                                 </div>
                             </td>
                             <td>
                                 <button type="submit" class="btn btn-secondary"
-                                        asp-page-handler="update" asp-route-id="@sitemapData.Id.ToString()">
+                                        asp-page-handler="update" asp-route-id="@Model.SitemapViewModel.Id">
                                     <span data-feather="edit-2"></span> Update
                                 </button>
                                 <button type="submit" class="btn btn-danger"
@@ -149,14 +140,14 @@
                         <td class="sitemap-name">
                             @if (Model.ShowHostsLabel)
                             {
-                                <label asp-for="SitemapViewModel.Host"></label>
+                                <label asp-for="SitemapViewModel.RelativePath"></label>
                             }
                             @if (Model.ShowHostsDropDown)
                             {
                                 <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
                             }
 
-                            <input type="text" class="form-control" asp-for="SitemapViewModel.Host" />Sitemap.xml
+                            <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePath" />Sitemap.xml
                             <br /><br />
                             Language:
                             <select asp-for="SitemapViewModel.LanguageBranch" asp-items="Model.LanguageBranches"></select>
@@ -184,16 +175,16 @@
                         </td>
                         <td>
                             <div>
-                                <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="Standard" type="radio" />Standard</label>
+                                <label><input asp-for="SitemapViewModel.SitemapFormat" value="Standard" type="radio" />Standard</label>
                             </div>
                             <div>
-                                <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="Mobile" type="radio" />Mobile</label>
+                                <label><input asp-for="SitemapViewModel.SitemapFormat" value="Mobile" type="radio" />Mobile</label>
                             </div>
                             <div>
-                                <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="Commerce" type="radio" />Commerce</label>
+                                <label><input asp-for="SitemapViewModel.SitemapFormat" value="Commerce" type="radio" />Commerce</label>
                             </div>
                             <div>
-                                <label><input asp-for="SitemapViewModel.SitemapFormFormat" value="StandardAndCommerce" type="radio" />Standard and commerce</label>
+                                <label><input asp-for="SitemapViewModel.SitemapFormat" value="StandardAndCommerce" type="radio" />Standard and commerce</label>
                             </div>
                         </td>
                         <td>
