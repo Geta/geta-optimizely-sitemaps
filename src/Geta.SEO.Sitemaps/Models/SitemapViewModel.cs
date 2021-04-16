@@ -1,4 +1,5 @@
 ﻿using Castle.Core.Internal;
+using EPiServer.Web;
 using Geta.Mapping;
 using Geta.SEO.Sitemaps.Entities;
 using System;
@@ -10,9 +11,11 @@ namespace Geta.SEO.Sitemaps.Models
     {
         protected const string SitemapHostPostfix = "Sitemap.xml";
 
+        public string Id { get; set; }
         public string SiteUrl { get; set; }
         public string LanguageBranch { get; set; }
-        public string Host { get; set; }
+        public string RelativePath { get; set; }
+        public string RelativePathEditPart { get; set; }
         public bool EnableLanguageFallback { get; set; }
         public bool IncludeAlternateLanguagePages { get; set; }
         public bool EnableSimpleAddressSupport { get; set; }
@@ -20,11 +23,15 @@ namespace Geta.SEO.Sitemaps.Models
         public string PathsToInclude { get; set; }
         public bool IncludeDebugInfo { get; set; }
         public string RootPageId { get; set; }
-        public string SitemapFormFormat { get; set; }
+        public string SitemapFormat { get; set; }
 
-        public void MapToViewModel(SitemapData from)
+
+        public void MapToViewModel(SitemapData from, string language)
         {
-            Host = from.Host;
+            Id = from.Id.ToString();
+            SiteUrl = GetSiteUrl(from, language);
+            RelativePath = from.Host;
+            RelativePathEditPart = GetRelativePathEditPart(from.Host);
             EnableLanguageFallback = from.EnableLanguageFallback;
             IncludeAlternateLanguagePages = from.IncludeAlternateLanguagePages;
             EnableSimpleAddressSupport = from.EnableSimpleAddressSupport;
@@ -32,7 +39,7 @@ namespace Geta.SEO.Sitemaps.Models
             PathsToInclude = from.PathsToInclude != null ? string.Join("; ", from.PathsToInclude) : string.Empty;
             IncludeDebugInfo = from.IncludeDebugInfo;
             RootPageId = from.RootPageId.ToString();
-            SitemapFormFormat = from.SitemapFormat.ToString();
+            SitemapFormat = from.SitemapFormat.ToString();
 
         }
 
@@ -40,12 +47,12 @@ namespace Geta.SEO.Sitemaps.Models
         {
             public override void Map(SitemapViewModel @from, SitemapData to)
             {
-                var host = to.Host.IsNullOrEmpty()
-                    ? from.Host + SitemapHostPostfix
-                    : from.Host;
+                var relativePart = !from.RelativePath.IsNullOrEmpty()
+                    ? from.RelativePath + SitemapHostPostfix
+                    : from.RelativePathEditPart + SitemapHostPostfix;
 
                 to.SiteUrl = from.SiteUrl;
-                to.Host = host;
+                to.Host = relativePart;
                 to.Language = from.LanguageBranch;
                 to.EnableLanguageFallback = from.EnableLanguageFallback;
                 to.IncludeAlternateLanguagePages = from.IncludeAlternateLanguagePages;
@@ -53,8 +60,8 @@ namespace Geta.SEO.Sitemaps.Models
                 to.PathsToAvoid = GetList(from.PathsToAvoid);
                 to.PathsToInclude = GetList(from.PathsToInclude);
                 to.IncludeDebugInfo = from.IncludeDebugInfo;
-                to.SitemapFormat = GetSitemapFormat(from.SitemapFormFormat);
                 to.RootPageId = TryParse(from.RootPageId);
+                to.SitemapFormat = GetSitemapFormat(from.SitemapFormat);
             }
 
             private IList<string> GetList(string input)
@@ -75,23 +82,6 @@ namespace Geta.SEO.Sitemaps.Models
                 return new List<string>(strValue.Split(';'));
             }
 
-            private SitemapFormat GetSitemapFormat(string format)
-            {
-                if (format == null)
-                {
-                    return SitemapFormat.Standard;
-                }
-
-                var sitemapFormat = Enum.Parse<SitemapFormat>(format);
-                return sitemapFormat switch
-                {
-                    SitemapFormat.Mobile => SitemapFormat.Mobile,
-                    SitemapFormat.Commerce => SitemapFormat.Commerce,
-                    SitemapFormat.StandardAndCommerce => SitemapFormat.StandardAndCommerce,
-                    _ => SitemapFormat.Standard
-                };
-            }
-
             private int TryParse(string id)
             {
                 int rootId;
@@ -99,6 +89,45 @@ namespace Geta.SEO.Sitemaps.Models
 
                 return rootId;
             }
+
+            private SitemapFormat GetSitemapFormat(string format)
+            {
+                if (format == null)
+                {
+                    return Entities.SitemapFormat.Standard;
+                }
+
+                var sitemapFormat = Enum.Parse<SitemapFormat>(format);
+                return sitemapFormat switch
+                {
+                    Entities.SitemapFormat.Mobile => Entities.SitemapFormat.Mobile,
+                    Entities.SitemapFormat.Commerce => Entities.SitemapFormat.Commerce,
+                    Entities.SitemapFormat.StandardAndCommerce => Entities.SitemapFormat.StandardAndCommerce,
+                    _ => Entities.SitemapFormat.Standard
+                };
+            }
+        }
+
+        private string GetSiteUrl(SitemapData sitemapData, string language)
+        {
+            if (sitemapData.SiteUrl != null)
+            {
+                return $"{sitemapData.SiteUrl}{language}{sitemapData.Host}";
+            }
+
+            var site = SiteDefinition.Current.SiteUrl.ToString();
+
+            return $"{site}{language}{sitemapData.Host}";
+        }
+
+        private string GetRelativePathEditPart(string hostName)
+        {
+            if (hostName == null)
+            {
+                return string.Empty;
+            }
+
+            return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCulture));
         }
     }
 }
