@@ -23,14 +23,14 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         private readonly IMapper<SitemapViewModel, SitemapData> _modelToEntityMapper;
 
         public IndexModel(
+            ISitemapRepository sitemapRepository,
             ISiteDefinitionRepository siteDefinitionRepository,
             ILanguageBranchRepository languageBranchRepository,
-            ISitemapRepository sitemapRepository,
             IMapper<SitemapViewModel, SitemapData> modelToEntityMapper)
         {
+            _sitemapRepository = sitemapRepository;
             _siteDefinitionRepository = siteDefinitionRepository;
             _languageBranchRepository = languageBranchRepository;
-            _sitemapRepository = sitemapRepository;
             _modelToEntityMapper = modelToEntityMapper;
         }
 
@@ -39,55 +39,32 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         [BindProperty]
         public IList<SelectListItem> SiteHosts { get; set; }
         public bool ShowHostsDropDown { get; set; }
+        public string HostLabel { get; set; }
         public bool ShowHostsLabel { get; set; }
-
-        protected bool ShowLanguageDropDown { get; set; }
-
         [BindProperty]
         public IList<SelectListItem> LanguageBranches { get; set; }
-
         protected int EditIndex { get; set; }
         protected InsertItemPosition InsertItemPosition { get; set; }
-
-        [BindProperty] public SitemapViewModel SitemapViewModel { get; set; }
-
         [BindProperty]
-        public IList<SitemapData> SitemapDataList { get; set; }
+        public SitemapViewModel SitemapViewModel { get; set; }
+        [BindProperty]
+        public IList<SitemapViewModel> SitemapViewModels { get; set; }
 
         public void OnGet()
         {
-            GetSiteHosts();
-            ShowLanguageDropDown = ShouldShowLanguageDropDown();
-
-            LoadLanguageBranches();
-
             BindSitemapDataList();
-        }
-
-        private void LoadLanguageBranches()
-        {
-            LanguageBranches = _languageBranchRepository.ListEnabled().Select(x => new SelectListItem
-            {
-                Text = x.Name,
-                Value = x.Culture.Name
-            }).ToList();
-
-            LanguageBranches.Insert(0, new SelectListItem
-            {
-                Text = "*",
-                Value = ""
-            });
         }
 
         public IActionResult OnPostNew()
         {
+            GetSiteHosts();
+
             CreateMenuIsVisible = true;
             EditIndex = -1;
             InsertItemPosition = InsertItemPosition.LastItem;
 
             LoadLanguageBranches();
             BindSitemapDataList();
-
             PopulateHostListControl();
 
             return Page();
@@ -106,16 +83,19 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             return RedirectToPage();
         }
 
-        private void EmptyDto()
+        public IActionResult OnPostCancelCreate()
         {
-            SitemapViewModel = new SitemapViewModel();
+            CreateMenuIsVisible = false;
+            return RedirectToPage();
         }
 
         public IActionResult OnPostEdit(string id)
         {
+            GetSiteHosts();
             EditItemId = id;
             var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
-            SitemapViewModel.MapToViewModel(sitemapData);
+            var language = GetLanguage(sitemapData.Language);
+            SitemapViewModel.MapToViewModel(sitemapData, language);
             LoadLanguageBranches();
             BindSitemapDataList();
             PopulateHostListControl();
@@ -140,6 +120,12 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             return RedirectToPage();
         }
 
+        public IActionResult OnPostCancel(string id)
+        {
+            EditItemId = string.Empty;
+            return RedirectToPage();
+        }
+
         public IActionResult OnPostDelete(string id)
         {
             _sitemapRepository.Delete(Identity.Parse(id));
@@ -148,45 +134,32 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             return RedirectToPage();
         }
 
-        public bool IsEditing(string id)
+        private void LoadLanguageBranches()
         {
-            return id == EditItemId;
-        }
-
-        private void PopulateHostListControl()
-        {
-            if (SiteHosts.Any())
+            LanguageBranches = _languageBranchRepository.ListEnabled().Select(x => new SelectListItem
             {
-                ShowHostsDropDown = true;
+                Text = x.Name,
+                Value = x.Culture.Name
+            }).ToList();
 
-            }
-            else
+            LanguageBranches.Insert(0, new SelectListItem
             {
-                ShowHostsLabel = true;
-            }
-
+                Text = "*",
+                Value = ""
+            });
         }
 
         private void BindSitemapDataList()
         {
-            SitemapDataList = _sitemapRepository.GetAllSitemapData();
-        }
-
-        private void CloseInsert()
-        {
-            InsertItemPosition = InsertItemPosition.None;
-        }
-
-        public IActionResult OnPostCancel(string id)
-        {
-            EditItemId = string.Empty;
-            return RedirectToPage();
-        }
-
-        public IActionResult OnPostCancelCreate()
-        {
-            CreateMenuIsVisible = false;
-            return RedirectToPage();
+            SitemapViewModels = new List<SitemapViewModel>();
+            var sitemapsData = _sitemapRepository.GetAllSitemapData();
+            foreach (var sitemap in sitemapsData)
+            {
+                var language = GetLanguage(sitemap.Language);
+                var model = new SitemapViewModel();
+                model.MapToViewModel(sitemap, language);
+                SitemapViewModels.Add(model);
+            }
         }
 
         private void GetSiteHosts()
@@ -226,9 +199,43 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             return !UriComparer.SchemeAndServerEquals(host.GetUri(), siteInformation.SiteUrl);
         }
 
-        private bool ShouldShowLanguageDropDown()
+        private void PopulateHostListControl()
         {
-            return new SitemapOptions().EnableLanguageDropDownInAdmin;
+            if (SiteHosts.Count > 1)
+            {
+                ShowHostsDropDown = true;
+            }
+            else
+            {
+                HostLabel = SiteHosts.ElementAt(0).Value;
+                ShowHostsLabel = true;
+            }
+        }
+
+        private void CloseInsert()
+        {
+            InsertItemPosition = InsertItemPosition.None;
+        }
+
+        private void EmptyDto()
+        {
+            SitemapViewModel = new SitemapViewModel();
+        }
+
+        private string GetLanguage(string language)
+        {
+            if (!string.IsNullOrWhiteSpace(language) && SiteDefinition.WildcardHostName.Equals(language) == false)
+            {
+                var languageBranch = _languageBranchRepository.Load(language);
+                return string.Format("{0}/", languageBranch.URLSegment);
+            }
+
+            return string.Empty;
+        }
+
+        public bool IsEditing(string id)
+        {
+            return id == EditItemId;
         }
     }
 }
