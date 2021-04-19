@@ -31,7 +31,71 @@
             <form method="post">
                 @foreach (var sitemapViewModel in Model.SitemapViewModels)
                 {
-                    @if (!Model.IsEditing(sitemapViewModel.Id))
+                    @if (Model.IsEditing(sitemapViewModel.Id))
+                    {
+                        <tr>
+                            <td class="sitemap-name">
+                                @if (Model.ShowHostsLabel)
+                                {
+                                    <label>@Model.HostLabel</label>
+                                }
+                                @if (Model.ShowHostsDropDown)
+                                {
+                                    <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
+                                }
+                                <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePathEditPart"/>Sitemap.xml
+                                <br/><br/>
+                                Language:
+                                <select asp-for="SitemapViewModel.LanguageBranch" asp-items="Model.LanguageBranches"></select>
+                                <br/>
+                                Language fallback:
+                                <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.EnableLanguageFallback">
+                                <br/><br/>
+                                Include alternate language pages:
+                                <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.IncludeAlternateLanguagePages">
+                                <br/><br/>
+                                Enable simple address support:
+                                <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.EnableSimpleAddressSupport">
+                            </td>
+                            <td class="align-middle">
+                                <input type="text" class="form-control align-middle" asp-for="SitemapViewModel.PathsToInclude"/>
+                            </td>
+                            <td class="align-middle">
+                                <input type="text" class="form-control align-middle" asp-for="SitemapViewModel.PathsToAvoid"/>
+                            </td>
+                            <td class="align-middle">
+                                <input type="text" class="form-control align-middle" asp-for="SitemapViewModel.RootPageId"/>
+                            </td>
+                            <td class="align-middle">
+                                <input type="checkbox" class="form-check-input align-middle" asp-for="SitemapViewModel.IncludeDebugInfo">
+                            </td>
+                            <td>
+                                <div>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Standard" type="radio"/>Standard</label>
+                                </div>
+                                <div>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Mobile" type="radio"/>Mobile</label>
+                                </div>
+                                <div>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Commerce" type="radio"/>Commerce</label>
+                                </div>
+                                <div>
+                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="StandardAndCommerce" type="radio"/>Standard and commerce</label>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="submit" class="btn btn-secondary"
+                                        asp-page-handler="update" asp-route-id="@Model.SitemapViewModel.Id">
+                                    <span data-feather="edit-2"></span> Update
+                                </button>
+                                <button type="submit" class="btn btn-danger"
+                                        asp-page-handler="cancel">
+                                    <span data-feather="x-circle"></span> Cancel
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    else
                     {
                         <tr>
                             <td>
@@ -59,72 +123,6 @@
                                 <button type="submit" class="btn btn-light"
                                         asp-page-handler="view">
                                     <span data-feather="eye"></span> View
-                                </button>
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-
-
-                        <tr>
-                            <td class="sitemap-name">
-                                @if (Model.ShowHostsLabel)
-                                {
-                                    <label>@Model.HostLabel</label>
-                                }
-                                @if (Model.ShowHostsDropDown)
-                                {
-                                    <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
-                                }
-                                <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePathEditPart" />Sitemap.xml
-                                <br /><br />
-                                Language:
-                                <select asp-for="SitemapViewModel.LanguageBranch" asp-items="Model.LanguageBranches"></select>
-                                <br />
-                                Language fallback:
-                                <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.EnableLanguageFallback">
-                                <br /><br />
-                                Include alternate language pages:
-                                <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.IncludeAlternateLanguagePages">
-                                <br /><br />
-                                Enable simple address support:
-                                <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.EnableSimpleAddressSupport">
-                            </td>
-                            <td class="align-middle">
-                                <input type="text" class="form-control align-middle" asp-for="SitemapViewModel.PathsToInclude" />
-                            </td>
-                            <td class="align-middle">
-                                <input type="text" class="form-control align-middle" asp-for="SitemapViewModel.PathsToAvoid" />
-                            </td>
-                            <td class="align-middle">
-                                <input type="text" class="form-control align-middle" asp-for="SitemapViewModel.RootPageId" />
-                            </td>
-                            <td class="align-middle">
-                                <input type="checkbox" class="form-check-input align-middle" asp-for="SitemapViewModel.IncludeDebugInfo">
-                            </td>
-                            <td>
-                                <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Standard" type="radio" />Standard</label>
-                                </div>
-                                <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Mobile" type="radio" />Mobile</label>
-                                </div>
-                                <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="Commerce" type="radio" />Commerce</label>
-                                </div>
-                                <div>
-                                    <label><input asp-for="SitemapViewModel.SitemapFormat" value="StandardAndCommerce" type="radio" />Standard and commerce</label>
-                                </div>
-                            </td>
-                            <td>
-                                <button type="submit" class="btn btn-secondary"
-                                        asp-page-handler="update" asp-route-id="@Model.SitemapViewModel.Id">
-                                    <span data-feather="edit-2"></span> Update
-                                </button>
-                                <button type="submit" class="btn btn-danger"
-                                        asp-page-handler="cancel">
-                                    <span data-feather="x-circle"></span> Cancel
                                 </button>
                             </td>
                         </tr>
