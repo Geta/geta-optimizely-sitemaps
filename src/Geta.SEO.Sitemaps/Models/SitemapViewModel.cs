@@ -84,27 +84,15 @@ namespace Geta.SEO.Sitemaps.Models
 
             private int TryParse(string id)
             {
-                int rootId;
-                int.TryParse(id, out rootId);
-
+                int.TryParse(id, out var rootId);
                 return rootId;
             }
 
             private SitemapFormat GetSitemapFormat(string format)
             {
-                if (format == null)
-                {
-                    return Entities.SitemapFormat.Standard;
-                }
-
-                var sitemapFormat = Enum.Parse<SitemapFormat>(format);
-                return sitemapFormat switch
-                {
-                    Entities.SitemapFormat.Mobile => Entities.SitemapFormat.Mobile,
-                    Entities.SitemapFormat.Commerce => Entities.SitemapFormat.Commerce,
-                    Entities.SitemapFormat.StandardAndCommerce => Entities.SitemapFormat.StandardAndCommerce,
-                    _ => Entities.SitemapFormat.Standard
-                };
+                return Enum.TryParse<SitemapFormat>(format, out var sitemapFormat)
+                    ? sitemapFormat
+                    : Entities.SitemapFormat.Standard;
             }
         }
 
