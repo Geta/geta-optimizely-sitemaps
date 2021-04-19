@@ -17,6 +17,39 @@
 <div class="container-fluid">
     <div class="row">
         <main class="col-md-9 col-lg-10 px-md-4 gy-3">
+            <div class="mb-3">List of sitemap configurations:</div>
+
+            <div class="mb-3">
+                <div>
+                    <span class="fw-bold">Host:</span>
+                    The host name to access the sitemap
+                </div>
+                <div>
+                    <span class="fw-bold">Include alternate languages:</span>
+                    If your site targets users in many languages and you can provide Google with rel="alternate" hreflang="x". These attributes help Google serve the correct language or regional URL to searchers.
+                </div>
+                <div>
+                    <span class="fw-bold">Path to include:</span>
+                    Sitemap will contain only pages from this virtual directory url. Separate multiple with ";".
+                </div>
+                <div>
+                    <span class="fw-bold">Path to avoid:</span>
+                    Sitemap will not contain pages from this virtual directory url (works only if "Directory to include" left blank). Separate multiple with ";".
+                </div>
+                <div>
+                    <span class="fw-bold">Root page ID:</span>
+                    Sitemap will contain entries for descendant pages of the specified page (-1 means root page).
+                </div>
+                <div>
+                    <span class="fw-bold">Debug info:</span>
+                    Check this to include data about each page entry as an xml comment
+                </div>
+                <div>
+                    <span class="fw-bold">Format:</span>
+                    Standard/Mobile/Commerce/Standard and commere
+                </div>
+            </div>
+
             @RenderBody()
         </main>
     </div>

@@ -2,7 +2,10 @@
 using System.Linq;
 using EPiServer.DependencyInjection;
 using EPiServer.Shell.Modules;
+using Geta.Mapping;
 using Geta.SEO.Sitemaps.Configuration;
+using Geta.SEO.Sitemaps.Entities;
+using Geta.SEO.Sitemaps.Models;
 using Geta.SEO.Sitemaps.Repositories;
 using Geta.SEO.Sitemaps.Utils;
 using Geta.SEO.Sitemaps.XML;
@@ -30,6 +33,8 @@ namespace Geta.SEO.Sitemaps
             services.AddSingleton<IContentFilter, ContentFilter>();
             services.AddTransient<IMobileSitemapXmlGenerator, MobileSitemapXmlGenerator>();
             services.AddTransient<IStandardSitemapXmlGenerator, StandardSitemapXmlGenerator>();
+            services.AddTransient(typeof(IMapper<SitemapViewModel, SitemapData>), typeof(SitemapViewModel.MapperToEntity));
+            services.AddTransient(typeof(ICreateFrom<SitemapData, SitemapViewModel>), typeof(SitemapViewModel.MapperFromEntity));
 
             services.AddOptions<SitemapOptions>().Configure<IConfiguration>((options, configuration) =>
             {
