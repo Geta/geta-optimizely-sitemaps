@@ -2,7 +2,6 @@ using EPiServer.Data;
 using EPiServer.DataAbstraction;
 using EPiServer.Web;
 using Geta.Mapping;
-using Geta.SEO.Sitemaps.Configuration;
 using Geta.SEO.Sitemaps.Entities;
 using Geta.SEO.Sitemaps.Models;
 using Geta.SEO.Sitemaps.Repositories;
@@ -57,7 +56,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
 
         public IActionResult OnPostNew()
         {
-            GetSiteHosts();
+            LoadSiteHosts();
 
             CreateMenuIsVisible = true;
             EditIndex = -1;
@@ -91,7 +90,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
 
         public IActionResult OnPostEdit(string id)
         {
-            GetSiteHosts();
+            LoadSiteHosts();
             EditItemId = id;
             var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
             var language = GetLanguage(sitemapData.Language);
@@ -162,7 +161,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             }
         }
 
-        private void GetSiteHosts()
+        private void LoadSiteHosts()
         {
             var hosts = _siteDefinitionRepository.List().ToList();
 
