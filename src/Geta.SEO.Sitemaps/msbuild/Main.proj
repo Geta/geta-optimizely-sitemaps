@@ -58,7 +58,7 @@
   <ItemGroup>
     <Content Include="$(OutDir)\Geta.SEO.Sitemaps.zip" >
       <Pack>true</Pack>
-      <PackagePath>content\modules\_protected\Geta.SEO.Sitemaps\;contentFiles\any\net5.0\modules\_protected\Geta.SEO.Sitemaps\</PackagePath>
+      <PackagePath>content\modules\_protected\Geta.SEO.Sitemaps\;contentFiles\any\any\modules\_protected\Geta.SEO.Sitemaps\</PackagePath>
     </Content>
   </ItemGroup>
 </Project>
