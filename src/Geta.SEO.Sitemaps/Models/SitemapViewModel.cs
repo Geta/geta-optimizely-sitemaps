@@ -4,6 +4,7 @@ using Geta.Mapping;
 using Geta.SEO.Sitemaps.Entities;
 using System;
 using System.Collections.Generic;
+using EPiServer.DataAbstraction;
 
 namespace Geta.SEO.Sitemaps.Models
 {
@@ -25,25 +26,68 @@ namespace Geta.SEO.Sitemaps.Models
         public string RootPageId { get; set; }
         public string SitemapFormat { get; set; }
 
-
-        public void MapToViewModel(SitemapData from, string language)
+        public class MapperFromEntity : Mapper<SitemapData, SitemapViewModel>
         {
-            Id = from.Id.ToString();
-            SiteUrl = GetSiteUrl(from, language);
-            RelativePath = from.Host;
-            RelativePathEditPart = GetRelativePathEditPart(from.Host);
-            EnableLanguageFallback = from.EnableLanguageFallback;
-            IncludeAlternateLanguagePages = from.IncludeAlternateLanguagePages;
-            EnableSimpleAddressSupport = from.EnableSimpleAddressSupport;
-            PathsToAvoid = from.PathsToAvoid != null ? string.Join("; ", from.PathsToAvoid) : string.Empty;
-            PathsToInclude = from.PathsToInclude != null ? string.Join("; ", from.PathsToInclude) : string.Empty;
-            IncludeDebugInfo = from.IncludeDebugInfo;
-            RootPageId = from.RootPageId.ToString();
-            SitemapFormat = from.SitemapFormat.ToString();
+            private readonly ILanguageBranchRepository _languageBranchRepository;
 
+            public MapperFromEntity(ILanguageBranchRepository languageBranchRepository)
+            {
+                _languageBranchRepository = languageBranchRepository;
+            }
+
+            public override void Map(SitemapData @from, SitemapViewModel to)
+            {
+                to.Id = from.Id.ToString();
+                to.SiteUrl = GetSiteUrl(from);
+                to.RelativePath = from.Host;
+                to.RelativePathEditPart = GetRelativePathEditPart(from.Host);
+                to.EnableLanguageFallback = from.EnableLanguageFallback;
+                to.IncludeAlternateLanguagePages = from.IncludeAlternateLanguagePages;
+                to.EnableSimpleAddressSupport = from.EnableSimpleAddressSupport;
+                to.PathsToAvoid = from.PathsToAvoid != null ? string.Join("; ", from.PathsToAvoid) : string.Empty;
+                to.PathsToInclude = from.PathsToInclude != null ? string.Join("; ", from.PathsToInclude) : string.Empty;
+                to.IncludeDebugInfo = from.IncludeDebugInfo;
+                to.RootPageId = from.RootPageId.ToString();
+                to.SitemapFormat = from.SitemapFormat.ToString();
+            }
+
+            private string GetLanguage(string language)
+            {
+                if (string.IsNullOrWhiteSpace(language) || SiteDefinition.WildcardHostName.Equals(language))
+                {
+                    return string.Empty;
+                }
+
+                var languageBranch = _languageBranchRepository.Load(language);
+                return $"{languageBranch.URLSegment}/";
+            }
+
+            private string GetSiteUrl(SitemapData sitemapData)
+            {
+                var language = GetLanguage(sitemapData.Language);
+
+                if (sitemapData.SiteUrl != null)
+                {
+                    return $"{sitemapData.SiteUrl}{language}{sitemapData.Host}";
+                }
+
+                var site = SiteDefinition.Current.SiteUrl.ToString();
+
+                return $"{site}{language}{sitemapData.Host}";
+            }
+
+            private string GetRelativePathEditPart(string hostName)
+            {
+                if (hostName == null)
+                {
+                    return string.Empty;
+                }
+
+                return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCulture));
+            }
         }
 
-        public class Mapper : Mapper<SitemapViewModel, SitemapData>
+        public class MapperToEntity : Mapper<SitemapViewModel, SitemapData>
         {
             public override void Map(SitemapViewModel @from, SitemapData to)
             {
@@ -85,28 +129,6 @@ namespace Geta.SEO.Sitemaps.Models
                     ? sitemapFormat
                     : Entities.SitemapFormat.Standard;
             }
-        }
-
-        private string GetSiteUrl(SitemapData sitemapData, string language)
-        {
-            if (sitemapData.SiteUrl != null)
-            {
-                return $"{sitemapData.SiteUrl}{language}{sitemapData.Host}";
-            }
-
-            var site = SiteDefinition.Current.SiteUrl.ToString();
-
-            return $"{site}{language}{sitemapData.Host}";
-        }
-
-        private string GetRelativePathEditPart(string hostName)
-        {
-            if (hostName == null)
-            {
-                return string.Empty;
-            }
-
-            return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCulture));
         }
     }
 }

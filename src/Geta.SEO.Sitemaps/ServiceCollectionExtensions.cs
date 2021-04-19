@@ -33,7 +33,8 @@ namespace Geta.SEO.Sitemaps
             services.AddSingleton<IContentFilter, ContentFilter>();
             services.AddTransient<IMobileSitemapXmlGenerator, MobileSitemapXmlGenerator>();
             services.AddTransient<IStandardSitemapXmlGenerator, StandardSitemapXmlGenerator>();
-            services.AddTransient(typeof(IMapper<SitemapViewModel, SitemapData>), typeof(SitemapViewModel.Mapper));
+            services.AddTransient(typeof(IMapper<SitemapViewModel, SitemapData>), typeof(SitemapViewModel.MapperToEntity));
+            services.AddTransient(typeof(ICreateFrom<SitemapData, SitemapViewModel>), typeof(SitemapViewModel.MapperFromEntity));
 
             services.AddOptions<SitemapOptions>().Configure<IConfiguration>((options, configuration) =>
             {

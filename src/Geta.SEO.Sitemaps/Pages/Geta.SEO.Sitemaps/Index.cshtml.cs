@@ -20,34 +20,33 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
         private readonly ISiteDefinitionRepository _siteDefinitionRepository;
         private readonly ILanguageBranchRepository _languageBranchRepository;
         private readonly IMapper<SitemapViewModel, SitemapData> _modelToEntityMapper;
+        private readonly ICreateFrom<SitemapData, SitemapViewModel> _entityToModelCreator;
 
         public IndexModel(
             ISitemapRepository sitemapRepository,
             ISiteDefinitionRepository siteDefinitionRepository,
             ILanguageBranchRepository languageBranchRepository,
-            IMapper<SitemapViewModel, SitemapData> modelToEntityMapper)
+            IMapper<SitemapViewModel, SitemapData> modelToEntityMapper,
+            ICreateFrom<SitemapData, SitemapViewModel> entityToModelCreator)
         {
             _sitemapRepository = sitemapRepository;
             _siteDefinitionRepository = siteDefinitionRepository;
             _languageBranchRepository = languageBranchRepository;
             _modelToEntityMapper = modelToEntityMapper;
+            _entityToModelCreator = entityToModelCreator;
         }
 
         public bool CreateMenuIsVisible { get; set; }
         public string EditItemId { get; set; }
-        [BindProperty]
-        public IList<SelectListItem> SiteHosts { get; set; }
+        [BindProperty] public IList<SelectListItem> SiteHosts { get; set; }
         public bool ShowHostsDropDown { get; set; }
         public string HostLabel { get; set; }
         public bool ShowHostsLabel { get; set; }
-        [BindProperty]
-        public IList<SelectListItem> LanguageBranches { get; set; }
+        [BindProperty] public IList<SelectListItem> LanguageBranches { get; set; }
         protected int EditIndex { get; set; }
         protected InsertItemPosition InsertItemPosition { get; set; }
-        [BindProperty]
-        public SitemapViewModel SitemapViewModel { get; set; }
-        [BindProperty]
-        public IList<SitemapViewModel> SitemapViewModels { get; set; }
+        [BindProperty] public SitemapViewModel SitemapViewModel { get; set; }
+        [BindProperty] public IList<SitemapViewModel> SitemapViewModels { get; set; }
 
         public void OnGet()
         {
@@ -93,8 +92,7 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             LoadSiteHosts();
             EditItemId = id;
             var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
-            var language = GetLanguage(sitemapData.Language);
-            SitemapViewModel.MapToViewModel(sitemapData, language);
+            SitemapViewModel = _entityToModelCreator.Create(sitemapData);
             LoadLanguageBranches();
             BindSitemapDataList();
             PopulateHostListControl();
@@ -150,15 +148,8 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
 
         private void BindSitemapDataList()
         {
-            SitemapViewModels = new List<SitemapViewModel>();
             var sitemapsData = _sitemapRepository.GetAllSitemapData();
-            foreach (var sitemap in sitemapsData)
-            {
-                var language = GetLanguage(sitemap.Language);
-                var model = new SitemapViewModel();
-                model.MapToViewModel(sitemap, language);
-                SitemapViewModels.Add(model);
-            }
+            SitemapViewModels = sitemapsData.Select(entity => _entityToModelCreator.Create(entity)).ToList();
         }
 
         private void LoadSiteHosts()
@@ -221,16 +212,6 @@ namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
             SitemapViewModel = new SitemapViewModel();
         }
 
-        private string GetLanguage(string language)
-        {
-            if (!string.IsNullOrWhiteSpace(language) && SiteDefinition.WildcardHostName.Equals(language) == false)
-            {
-                var languageBranch = _languageBranchRepository.Load(language);
-                return string.Format("{0}/", languageBranch.URLSegment);
-            }
-
-            return string.Empty;
-        }
 
         public bool IsEditing(string id)
         {
