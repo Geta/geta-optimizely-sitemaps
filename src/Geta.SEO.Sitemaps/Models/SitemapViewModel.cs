@@ -66,20 +66,11 @@ namespace Geta.SEO.Sitemaps.Models
 
             private IList<string> GetList(string input)
             {
-                var emptyList = new List<string>();
-                if (input == null)
-                {
-                    return emptyList;
-                }
+                var value = input?.Trim();
 
-                var strValue = input.Trim();
-
-                if (string.IsNullOrEmpty(strValue))
-                {
-                    return emptyList;
-                }
-
-                return new List<string>(strValue.Split(';'));
+                return string.IsNullOrEmpty(value)
+                    ? new List<string>()
+                    : new List<string>(value.Split(';'));
             }
 
             private int TryParse(string id)
