@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
-using Geta.SEO.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 
-namespace Geta.SEO.Sitemaps.Controllers
+namespace Geta.Optimizely.Sitemaps.Controllers
 {
     [Route("sitemapindex.xml")]
     public class GetaSitemapIndexController : Controller

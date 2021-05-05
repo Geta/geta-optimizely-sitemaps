@@ -2,17 +2,17 @@ using EPiServer.Data;
 using EPiServer.DataAbstraction;
 using EPiServer.Web;
 using Geta.Mapping;
-using Geta.SEO.Sitemaps.Entities;
-using Geta.SEO.Sitemaps.Models;
-using Geta.SEO.Sitemaps.Repositories;
-using Geta.SEO.Sitemaps.Utils;
+using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Models;
+using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Geta.SEO.Sitemaps.Pages.Geta.SEO.Sitemaps
+namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
 {
     public class IndexModel : PageModel
     {

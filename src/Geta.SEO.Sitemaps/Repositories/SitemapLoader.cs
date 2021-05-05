@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
-using Geta.SEO.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Entities;
 
-namespace Geta.SEO.Sitemaps.Repositories
+namespace Geta.Optimizely.Sitemaps.Repositories
 {
     public class SitemapLoader : ISitemapLoader
     {

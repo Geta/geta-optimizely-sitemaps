@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Geta.SEO.Sitemaps.Utils
+namespace Geta.Optimizely.Sitemaps.Utils
 {
     public static class UriComparer
     {

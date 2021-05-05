@@ -1,7 +1,7 @@
-﻿namespace Geta.SEO.Sitemaps
+﻿namespace Geta.Optimizely.Sitemaps
 {
     public static class Constants
     {
-        public const string ModuleName = "Geta.SEO.Sitemaps";
+        public const string ModuleName = "Geta.Optimizely.Sitemaps";
     }
 }

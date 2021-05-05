@@ -9,12 +9,12 @@ using EPiServer;
 using EPiServer.PlugIn;
 using EPiServer.Scheduler;
 using EPiServer.ServiceLocation;
-using Geta.SEO.Sitemaps.Entities;
-using Geta.SEO.Sitemaps.Repositories;
-using Geta.SEO.Sitemaps.Utils;
-using Geta.SEO.Sitemaps.XML;
+using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Utils;
+using Geta.Optimizely.Sitemaps.XML;
 
-namespace Geta.SEO.Sitemaps
+namespace Geta.Optimizely.Sitemaps
 {
     [ScheduledPlugIn(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
     public class SitemapCreateJob : ScheduledJobBase

@@ -4,7 +4,7 @@
 using System;
 using EPiServer.Web;
 
-namespace Geta.SEO.Sitemaps.Utils
+namespace Geta.Optimizely.Sitemaps.Utils
 {
     public static class HostDefinitionExtensions
     {

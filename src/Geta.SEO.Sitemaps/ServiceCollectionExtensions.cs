@@ -3,16 +3,16 @@ using System.Linq;
 using EPiServer.DependencyInjection;
 using EPiServer.Shell.Modules;
 using Geta.Mapping;
-using Geta.SEO.Sitemaps.Configuration;
-using Geta.SEO.Sitemaps.Entities;
-using Geta.SEO.Sitemaps.Models;
-using Geta.SEO.Sitemaps.Repositories;
-using Geta.SEO.Sitemaps.Utils;
-using Geta.SEO.Sitemaps.XML;
+using Geta.Optimizely.Sitemaps.Configuration;
+using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Models;
+using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Utils;
+using Geta.Optimizely.Sitemaps.XML;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Geta.SEO.Sitemaps
+namespace Geta.Optimizely.Sitemaps
 {
     public static class ServiceCollectionExtensions
     {

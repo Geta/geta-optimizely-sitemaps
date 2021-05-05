@@ -4,10 +4,10 @@
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.Framework.Cache;
-using Geta.SEO.Sitemaps.Configuration;
-using Geta.SEO.Sitemaps.Entities;
-using Geta.SEO.Sitemaps.Repositories;
-using Geta.SEO.Sitemaps.Utils;
+using Geta.Optimizely.Sitemaps.Configuration;
+using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +15,7 @@ using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Geta.SEO.Sitemaps.Controllers
+namespace Geta.Optimizely.Sitemaps.Controllers
 {
     [Route("sitemap.xml")]
     public class GetaSitemapController : Controller

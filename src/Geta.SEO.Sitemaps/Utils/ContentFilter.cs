@@ -6,11 +6,11 @@ using EPiServer.Core;
 using EPiServer.Framework.Web;
 using EPiServer.Security;
 using EPiServer.Web;
-using Geta.SEO.Sitemaps.Entities;
-using Geta.SEO.Sitemaps.SpecializedProperties;
+using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.SpecializedProperties;
 using Microsoft.Extensions.Logging;
 
-namespace Geta.SEO.Sitemaps.Utils
+namespace Geta.Optimizely.Sitemaps.Utils
 {
     public class ContentFilter : IContentFilter
     {

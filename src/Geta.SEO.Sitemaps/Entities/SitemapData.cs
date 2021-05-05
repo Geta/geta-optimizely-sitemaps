@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
 
-namespace Geta.SEO.Sitemaps.Entities
+namespace Geta.Optimizely.Sitemaps.Entities
 {
     [EPiServerDataStore(AutomaticallyCreateStore = true, AutomaticallyRemapStore = true)]
     public class SitemapData

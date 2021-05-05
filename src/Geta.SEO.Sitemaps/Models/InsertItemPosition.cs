@@ -1,4 +1,4 @@
-﻿namespace Geta.SEO.Sitemaps.Models
+﻿namespace Geta.Optimizely.Sitemaps.Models
 {
     public enum InsertItemPosition
     {

@@ -4,7 +4,7 @@
 using System.Globalization;
 using EPiServer.Core;
 
-namespace Geta.SEO.Sitemaps
+namespace Geta.Optimizely.Sitemaps
 {
     public class CurrentLanguageContent
     {

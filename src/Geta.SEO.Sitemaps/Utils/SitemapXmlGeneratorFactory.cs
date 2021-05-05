@@ -2,11 +2,11 @@
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System;
-using Geta.SEO.Sitemaps.Entities;
-using Geta.SEO.Sitemaps.XML;
+using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.XML;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Geta.SEO.Sitemaps.Utils
+namespace Geta.Optimizely.Sitemaps.Utils
 {
     public class SitemapXmlGeneratorFactory
     {

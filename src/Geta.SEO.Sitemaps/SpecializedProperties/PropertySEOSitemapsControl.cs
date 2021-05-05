@@ -16,7 +16,7 @@
 
 // TODO: check how this control works
 
-//namespace Geta.SEO.Sitemaps.SpecializedProperties
+//namespace Geta.Optimizely.Sitemaps.SpecializedProperties
 //{
 //    public class PropertySEOSitemapsControl : PropertyStringControl
 //    {

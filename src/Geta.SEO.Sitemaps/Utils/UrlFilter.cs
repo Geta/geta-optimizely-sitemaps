@@ -3,9 +3,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Geta.SEO.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Entities;
 
-namespace Geta.SEO.Sitemaps.Utils
+namespace Geta.Optimizely.Sitemaps.Utils
 {
     /// <summary>
     /// Administrators are able to specify specific paths to exclude (blacklist) or include (whitelist) in sitemaps.

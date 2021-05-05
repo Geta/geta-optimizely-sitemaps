@@ -12,7 +12,7 @@ using System.Xml.Serialization;
 using EPiServer.Core;
 using EPiServer.PlugIn;
 
-namespace Geta.SEO.Sitemaps.SpecializedProperties
+namespace Geta.Optimizely.Sitemaps.SpecializedProperties
 {
     // TODO: Check how these properties work
 

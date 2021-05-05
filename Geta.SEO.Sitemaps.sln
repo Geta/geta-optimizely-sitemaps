@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sandbox", "Sandbox", "{9003
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlloyMvcTemplates", "sandbox\Episerver\Alloy\AlloyMvcTemplates.csproj", "{16D27298-E5A4-4B63-936F-2602C937DCE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geta.SEO.Sitemaps", "src\Geta.SEO.Sitemaps\Geta.SEO.Sitemaps.csproj", "{03B8E879-8D51-4CFF-BCC3-CF2325BC5396}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geta.Optimizely.Sitemaps", "src\Geta.SEO.Sitemaps\Geta.Optimizely.Sitemaps.csproj", "{03B8E879-8D51-4CFF-BCC3-CF2325BC5396}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

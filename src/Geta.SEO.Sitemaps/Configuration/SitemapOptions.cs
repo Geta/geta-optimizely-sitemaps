@@ -1,4 +1,4 @@
-﻿namespace Geta.SEO.Sitemaps.Configuration
+﻿namespace Geta.Optimizely.Sitemaps.Configuration
 {
     public class SitemapOptions
     {

@@ -2,7 +2,7 @@
 using EPiServer.Shell;
 using EPiServer.Shell.Navigation;
 
-namespace Geta.SEO.Sitemaps
+namespace Geta.Optimizely.Sitemaps
 {
     [MenuProvider]
     public class MenuProvider : IMenuProvider

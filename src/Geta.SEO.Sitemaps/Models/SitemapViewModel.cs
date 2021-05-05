@@ -1,12 +1,12 @@
 ﻿using Castle.Core.Internal;
 using EPiServer.Web;
 using Geta.Mapping;
-using Geta.SEO.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Entities;
 using System;
 using System.Collections.Generic;
 using EPiServer.DataAbstraction;
 
-namespace Geta.SEO.Sitemaps.Models
+namespace Geta.Optimizely.Sitemaps.Models
 {
     public class SitemapViewModel
     {

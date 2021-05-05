@@ -3,7 +3,7 @@
 
 using EPiServer.Shell.ObjectEditing.EditorDescriptors;
 
-namespace Geta.SEO.Sitemaps.EditorDescriptors
+namespace Geta.Optimizely.Sitemaps.EditorDescriptors
 {
     [EditorDescriptorRegistration(TargetType = typeof(string), UIHint = "SeoSitemap")]
     public class SeoSitemapEditorDescriptor : EditorDescriptor

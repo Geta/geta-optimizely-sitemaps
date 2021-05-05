@@ -3,9 +3,9 @@
 
 using EPiServer.Core;
 using EPiServer.Web;
-using Geta.SEO.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Entities;
 
-namespace Geta.SEO.Sitemaps.Utils
+namespace Geta.Optimizely.Sitemaps.Utils
 {
     public interface IContentFilter
     {

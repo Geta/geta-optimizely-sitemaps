@@ -16,15 +16,15 @@ using EPiServer.DataAbstraction;
 using EPiServer.Framework.Cache;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
-using Geta.SEO.Sitemaps.Entities;
-using Geta.SEO.Sitemaps.Models;
-using Geta.SEO.Sitemaps.Repositories;
-using Geta.SEO.Sitemaps.SpecializedProperties;
-using Geta.SEO.Sitemaps.Utils;
+using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Models;
+using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.SpecializedProperties;
+using Geta.Optimizely.Sitemaps.Utils;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace Geta.SEO.Sitemaps.XML
+namespace Geta.Optimizely.Sitemaps.XML
 {
     public abstract class SitemapXmlGenerator : ISitemapXmlGenerator
     {
