@@ -2,7 +2,7 @@
 using EPiServer.DataAbstraction;
 using EPiServer.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
- using Geta.SEO.Sitemaps.SpecializedProperties;
+ using Geta.Optimizely.Sitemaps.SpecializedProperties;
 
  namespace AlloyTemplates.Models.Pages
 {
