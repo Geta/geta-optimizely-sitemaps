@@ -14,9 +14,9 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://cdn.geta.no/opensource/icons/Geta-logo-3.png</PackageIconUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Search Engine Sitemap generator for EPiServer</Description>
+    <Description>Search Engine Sitemap generator for Optimizely</Description>
     <PackageReleaseNotes>https://github.com/Geta/geta-optimizely-sitemaps/blob/master/CHANGELOG.md</PackageReleaseNotes>
-    <PackageTags>Sitemap SEO EPiServer EPiServerModulePackage ThirdPartyAddOn</PackageTags>
+    <PackageTags>Sitemap SEO Optimizely OptimizelyModulePackage ThirdPartyAddOn</PackageTags>
     <RepositoryUrl>https://github.com/Geta/geta-optimizely-sitemaps</RepositoryUrl>
   </PropertyGroup>
 
