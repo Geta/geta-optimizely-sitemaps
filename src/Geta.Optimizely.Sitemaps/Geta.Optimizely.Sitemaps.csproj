@@ -14,9 +14,9 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageIconUrl>https://cdn.geta.no/opensource/icons/Geta-logo-3.png</PackageIconUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Description>Search Engine Sitemap generator for EPiServer</Description>
+    <Description>Search Engine Sitemap generator for Optimizely</Description>
     <PackageReleaseNotes>https://github.com/Geta/geta-optimizely-sitemaps/blob/master/CHANGELOG.md</PackageReleaseNotes>
-    <PackageTags>Sitemap SEO EPiServer EPiServerModulePackage ThirdPartyAddOn</PackageTags>
+    <PackageTags>Sitemap SEO Optimizely OptimizelyModulePackage ThirdPartyAddOn</PackageTags>
     <RepositoryUrl>https://github.com/Geta/geta-optimizely-sitemaps</RepositoryUrl>
   </PropertyGroup>
 
@@ -26,16 +26,11 @@
 
   <ItemGroup>
     <PackageReference Include="EPiServer.CMS.AspNetCore" Version="12.0.0-inte-020092" />
-    <PackageReference Include="EPiServer.CMS.AspNetCore.HtmlHelpers" Version="12.0.0-inte-020092" />
     <PackageReference Include="EPiServer.CMS.AspNetCore.Mvc" Version="12.0.0-inte-020092" />
-    <PackageReference Include="EPiServer.CMS.Core" Version="12.0.0-inte-020092" />
     <PackageReference Include="EPiServer.CMS.UI.Core" Version="12.0.0-inte-020292" />
     <PackageReference Include="EPiServer.Framework" Version="12.0.0-inte-020092" />
-    <PackageReference Include="EPiServer.Framework.AspNetCore" Version="12.0.0-inte-020092" />
     <PackageReference Include="Geta.Mapping" Version="1.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
-    <PackageReference Include="System.Runtime.Caching" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
