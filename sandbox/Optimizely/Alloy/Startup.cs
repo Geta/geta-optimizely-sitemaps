@@ -51,7 +51,7 @@ namespace EPiServer.Templates.Alloy.Mvc
             services.AddMvc();
             services.AddAlloy();
             services.AddCms();
-            services.AddSeoSitemaps();
+            services.AddSitemaps();
 
             services.Configure<UIOptions>(uiOptions =>
             {

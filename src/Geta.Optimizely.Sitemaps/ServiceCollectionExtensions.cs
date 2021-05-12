@@ -16,12 +16,12 @@ namespace Geta.Optimizely.Sitemaps
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSeoSitemaps(this IServiceCollection services)
+        public static IServiceCollection AddSitemaps(this IServiceCollection services)
         {
-            return AddSeoSitemaps(services, o => { });
+            return AddSitemaps(services, o => { });
         }
 
-        public static IServiceCollection AddSeoSitemaps(
+        public static IServiceCollection AddSitemaps(
             this IServiceCollection services,
             Action<SitemapOptions> setupAction)
         {
