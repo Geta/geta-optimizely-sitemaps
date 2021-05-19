@@ -4,11 +4,11 @@
 [![Platform](https://img.shields.io/badge/Platform-.NET%205-blue.svg?style=flat)](https://docs.microsoft.com/en-us/dotnet/)
 [![Platform](https://img.shields.io/badge/Episerver-%2012-orange.svg?style=flat)](http://world.episerver.com/cms/)
 
-Search engine sitemaps.xml for Optimizely CMS 11 and Commerce 13
+Search engine sitemaps.xml for Optimizely CMS 12 and Commerce 14
 
 ## Description
 
-This tool allows you to generate xml sitemaps for search engines to better index your Optimizely sites. Although there are several Optimizely sitemap tools available like [SearchEngineSitemaps](https://www.coderesort.com/p/epicode/wiki/SearchEngineSitemaps) and [EPiSiteMap](http://episitemap.codeplex.com/) which have inspired this project this tool gives you some additional specific features.
+This tool allows you to generate xml sitemaps for search engines to better index your Optimizely sites.
 
 ## Features
 
@@ -22,39 +22,46 @@ See the [editor guide](docs/editor-guide.md) for more information.
 
 ## Latest release
 
-The latest version is available on the Optimizely NuGet feed. You can find it by searching the term Geta.SEO.Sitemaps.
+The latest version is available on the Optimizely NuGet feed. You can find it by searching the term Geta.Optimizely.Sitemaps.
 
-## Download
+## Installation
 
-From nuget.episerver.com feed.
-
-## How to get started?
-
-1. Install Sitemap plugin via NuGet in Visual Studio. Ensure that you also install the required dependencies.
+The command below will install Sitemaps into your Optimizely project.
 
 ```
-  Install-Package Geta.SEO.Sitemaps
-  Install-Package Geta.SEO.Sitemaps.Commerce
+  Install-Package Geta.Optimizely.Sitemaps
 ```
 
-2. Rebuild your solution.
-3. Configure sitemap settings and schedule the sitemap generation process. Configuration available at CMS -> Admin Mode -> Search engine sitemap settings. See the [editor guide](docs/editor-guide.md)
+The command below will install Sitemaps Commerce support into your Optimizely Commerce project.
 
-#### Enabling multi language support
-
-Add this to your web.config file:
-
-```xml
-<configuration>
-<configSections>
-<section name="Geta.SEO.Sitemaps" type="Geta.SEO.Sitemaps.Configuration.SitemapConfigurationSection, Geta.SEO.Sitemaps"/>
-</configSections>
-
-  <Geta.SEO.Sitemaps>
-    <settings enableLanguageDropDownInAdmin="true" />
-  </Geta.SEO.Sitemaps>
-</configuration>
 ```
+Install-Package Geta.Optimizely.Sitemaps.Commerce
+```
+
+## Configuration
+
+For the Sitemaps to work, you have to call AddSitemaps extension method in Startup.ConfigureServices method. This method provides a configuration of default values. Below is a code with all possible configuration options:
+
+```csharp
+services.AddSitemaps(x =>
+{
+  x.EnableLanguageDropDownInAdmin = false;
+  x.EnableRealtimeCaching = true;
+  x.EnableRealtimeSitemap = false;
+});
+```
+
+It is also possible to configure the application in `appsettings.json` file. A configuration from the `appsettings.json` will override configuration configured in Startup. Below is an `appsettings.json` configuration example.
+
+```json
+"Geta": {
+    "Sitemaps": {
+        "EnableLanguageDropDownInAdmin":  true
+    }
+}
+```
+
+## Usage
 
 ### Dynamic property for specific pages
 
@@ -99,7 +106,7 @@ public class OrderConfirmationPage : PageData, IExcludeFromSitemap
 
 ### Exclude content
 
-If you need more control to exclude content from the sitemap you can make your own implementation of IContentFilter. Make sure to inherit from ContentFilter and call the `ShouldExcludeContent` method of the base class. 
+If you need more control to exclude content from the sitemap you can make your own implementation of IContentFilter. Make sure to inherit from ContentFilter and call the `ShouldExcludeContent` method of the base class.
 
 ```
 public class SiteContentFilter : ContentFilter
@@ -120,7 +127,9 @@ public class SiteContentFilter : ContentFilter
 
 Register in your DI container.
 
-```services.AddTransient<IContentFilter, SiteContentFilter>();```
+```csharp
+services.AddTransient<IContentFilter, SiteContentFilter>();
+```
 
 ## Limitations
 

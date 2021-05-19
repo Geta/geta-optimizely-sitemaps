@@ -14,8 +14,6 @@ using EPiServer.PlugIn;
 
 namespace Geta.Optimizely.Sitemaps.SpecializedProperties
 {
-    // TODO: Check how these properties work
-
     [PropertyDefinitionTypePlugIn(DisplayName = "SEOSitemaps")]
     public class PropertySEOSitemaps : PropertyString
     {
