@@ -134,6 +134,7 @@ namespace EPiServer.Reference.Commerce.Site
                 endpoints.MapControllerRoute(name: "Default", pattern: "{controller}/{action}/{id?}");
                 endpoints.MapControllers();
                 endpoints.MapContent();
+                endpoints.MapRazorPages();
             });
         }
     }
