@@ -2,13 +2,14 @@
 using EPiServer.DataAbstraction;
 using EPiServer.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
+using Geta.Optimizely.Sitemaps.SpecializedProperties;
 
 namespace EPiServer.Reference.Commerce.Site.Features.Shared.Pages
 {
     [ContentType(
-        DisplayName = "Standard page", 
+        DisplayName = "Standard page",
         GUID = "934E7266-FB8C-4DEA-B033-3B4E6AE6CBCF",
-        Description = "The standard page.", 
+        Description = "The standard page.",
         AvailableInEditMode = true)]
     [ImageUrl("~/styles/images/page_type.png")]
     public class StandardPage : PageData
@@ -27,6 +28,10 @@ namespace EPiServer.Reference.Commerce.Site.Features.Shared.Pages
                Description = "Main body",
                GroupName = SystemTabNames.Content,
                Order = 2)]
-        public virtual XhtmlString MainBody { get; set; } 
+        public virtual XhtmlString MainBody { get; set; }
+
+        [UIHint("SeoSitemap")]
+        [BackingType(typeof(PropertySEOSitemaps))]
+        public virtual string SEOSitemaps { get; set; }
     }
 }

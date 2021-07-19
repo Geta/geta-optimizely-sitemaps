@@ -7,7 +7,6 @@ using System.Xml.Linq;
 using EPiServer;
 using EPiServer.DataAbstraction;
 using EPiServer.Framework.Cache;
-using EPiServer.ServiceLocation;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Repositories;
@@ -23,7 +22,6 @@ namespace Geta.Optimizely.Sitemaps.Commerce
     /// Known bug: You need to add * (wildcard) url in sitedefinitions in admin mode for this job to run.
     /// See: http://world.episerver.com/forum/developer-forum/EPiServer-Commerce/Thread-Container/2013/12/Null-exception-in-GetUrl-in-search-provider-indexer/
     /// </summary>
-    [ServiceConfiguration(typeof(ICommerceAndStandardSitemapXmlGenerator))] // TODO: Move to extension
     public class CommerceAndStandardSitemapXmlGenerator
         : CommerceSitemapXmlGenerator, ICommerceAndStandardSitemapXmlGenerator
     {

@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
 using EPiServer.DataAnnotations;
+using EPiServer.Reference.Commerce.Site.Infrastructure;
+using Geta.Optimizely.Sitemaps.SpecializedProperties;
 
 namespace EPiServer.Reference.Commerce.Site.Features.Campaign.Pages
 {
@@ -10,8 +12,8 @@ namespace EPiServer.Reference.Commerce.Site.Features.Campaign.Pages
     [ImageUrl("~/styles/images/page_type.png")]
     public class CampaignPage : PageData
     {
-        [Display(Name = "Page Title", 
-            GroupName = SystemTabNames.Content, 
+        [Display(Name = "Page Title",
+            GroupName = SystemTabNames.Content,
             Order = 10)]
         [CultureSpecific]
         public virtual String PageTitle { get; set; }
@@ -21,5 +23,24 @@ namespace EPiServer.Reference.Commerce.Site.Features.Campaign.Pages
           GroupName = SystemTabNames.Content,
           Order = 20)]
         public virtual ContentArea MainContentArea { get; set; }
+
+        [Display(
+            Name = "Seo sitemap settings",
+            Description = "",
+            Order = 100)]
+        [UIHint("SeoSitemap")]
+        [BackingType(typeof(PropertySEOSitemaps))]
+        public virtual string SEOSitemaps { get; set; }
+
+        public override void SetDefaultValues(ContentType contentType)
+        {
+            base.SetDefaultValues(contentType);
+            var sitemap = new PropertySEOSitemaps
+            {
+                Enabled = false
+            };
+            sitemap.Serialize();
+            SEOSitemaps = sitemap.ToString();
+        }
     }
 }
