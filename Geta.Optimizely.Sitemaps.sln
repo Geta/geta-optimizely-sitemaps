@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlloyMvcTemplates", "sandbo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geta.Optimizely.Sitemaps.Commerce", "src\Geta.Optimizely.Sitemaps.Commerce\Geta.Optimizely.Sitemaps.Commerce.csproj", "{39B5430D-35AF-4413-980B-1CE51B367DC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPiServer.Reference.Commerce.Site", "sandbox\Optimizely\Quicksilver\EPiServer.Reference.Commerce.Site\EPiServer.Reference.Commerce.Site.csproj", "{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,12 +31,17 @@ Global
 		{39B5430D-35AF-4413-980B-1CE51B367DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B5430D-35AF-4413-980B-1CE51B367DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39B5430D-35AF-4413-980B-1CE51B367DC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{89A866FB-4C82-4CF1-BCD4-C20C197CA534} = {9003527C-5B4F-48DB-8946-E6E6773B2EDF}
+		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F} = {9003527C-5B4F-48DB-8946-E6E6773B2EDF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7726B88-56CE-4817-8E7C-0EC0B74F1431}
