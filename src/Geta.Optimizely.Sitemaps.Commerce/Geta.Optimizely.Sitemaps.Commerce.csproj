@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Geta.Optimizely.Sitemaps\Geta.Optimizely.Sitemaps.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="EPiServer.CMS.AspNetCore" Version="12.0.0" />
+        <PackageReference Include="EPiServer.CMS.AspNetCore.Mvc" Version="12.0.0" />
+        <PackageReference Include="EPiServer.CMS.UI.Core" Version="12.0.0-pre-021814" />
+        <PackageReference Include="EPiServer.Commerce.Core" Version="14.0.0-pre-021056" />
+        <PackageReference Include="EPiServer.Framework" Version="12.0.0" />
+    </ItemGroup>
+    
+</Project>

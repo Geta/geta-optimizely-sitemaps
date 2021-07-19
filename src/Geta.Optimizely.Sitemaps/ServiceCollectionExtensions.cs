@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using EPiServer.DependencyInjection;
+using EPiServer.Cms.Shell;
 using EPiServer.Shell.Modules;
 using Geta.Mapping;
 using Geta.Optimizely.Sitemaps.Configuration;
@@ -18,7 +18,7 @@ namespace Geta.Optimizely.Sitemaps
     {
         public static IServiceCollection AddSitemaps(this IServiceCollection services)
         {
-            return AddSitemaps(services, o => { });
+            return AddSitemaps(services, _ => { });
         }
 
         public static IServiceCollection AddSitemaps(

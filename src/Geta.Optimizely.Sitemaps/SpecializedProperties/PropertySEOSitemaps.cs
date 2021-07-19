@@ -74,11 +74,6 @@ namespace Geta.Optimizely.Sitemaps.SpecializedProperties
             reader.Close();
         }
 
-        public override PropertyData ParseToObject(string str)
-        {
-            return Parse(str);
-        }
-
         public void Serialize()
         {
             var s = new StringWriter();
