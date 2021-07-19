@@ -29,7 +29,7 @@ The latest version is available on the Optimizely NuGet feed. You can find it by
 The command below will install Sitemaps into your Optimizely project.
 
 ```
-  Install-Package Geta.Optimizely.Sitemaps
+Install-Package Geta.Optimizely.Sitemaps
 ```
 
 The command below will install Sitemaps Commerce support into your Optimizely Commerce project.
