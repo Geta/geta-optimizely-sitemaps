@@ -16,7 +16,7 @@
         <Description>Search Engine Sitemap generator for Optimizely</Description>
         <PackageReleaseNotes>https://github.com/Geta/geta-optimizely-sitemaps/blob/master/CHANGELOG.md</PackageReleaseNotes>
         <PackageTags>Sitemap SEO Optimizely OptimizelyModulePackage ThirdPartyAddOn</PackageTags>
-        <RepositoryUrl>https://github.com/Geta/geta-optimizely-googleproductfeed.git</RepositoryUrl>
+        <RepositoryUrl>https://github.com/Geta/geta-optimizely-sitemaps.git</RepositoryUrl>
     </PropertyGroup>
 
     <ItemGroup>
@@ -38,5 +38,5 @@
         <Link>icon.png</Link>
       </None>
     </ItemGroup>
-    
+
 </Project>
