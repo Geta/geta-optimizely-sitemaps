@@ -13,7 +13,7 @@
       <Using Namespace="System.IO" />
       <Using Namespace="System.IO.Compression" />
       <Code Type="Fragment" Language="cs">
-        <![CDATA[        
+        <![CDATA[
           if(this.OverwriteExistingFile) {
             File.Delete(this.OutputFileName);
           }
@@ -24,7 +24,7 @@
   </UsingTask>
 
   <PropertyGroup>
-    <SolutionDir Condition="$(SolutionDir) == ''">$(MSBuildProjectDirectory)\..\</SolutionDir>
+    <SolutionDir Condition="$(SolutionDir) == ''">$(MSBuildProjectDirectory)\..\..\</SolutionDir>
     <TmpOutDir>$(SolutionDir)\tmp</TmpOutDir>
   </PropertyGroup>
 

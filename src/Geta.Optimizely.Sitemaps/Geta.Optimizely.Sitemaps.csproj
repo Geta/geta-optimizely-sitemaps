@@ -50,6 +50,6 @@
     </None>
   </ItemGroup>
 
-  <Import Project="$(SolutionDir)\src\Geta.Optimizely.Sitemaps\msbuild\Main.proj" Condition="Exists('$(SolutionDir)\src\Geta.Optimizely.Sitemaps\msbuild\Main.proj')" />
+  <Import Project="msbuild\Main.proj" />
 
 </Project>
