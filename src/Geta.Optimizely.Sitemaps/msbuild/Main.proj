@@ -58,7 +58,7 @@
   <ItemGroup>
     <Content Include="$(OutDir)\Geta.Optimizely.Sitemaps.zip" >
       <Pack>true</Pack>
-      <PackagePath>content\modules\_protected\Geta.Optimizely.Sitemaps\;contentFiles\any\any\modules\_protected\Geta.Optimizely.Sitemaps\</PackagePath>
+      <PackagePath>contentFiles\any\any\modules\_protected\Geta.Optimizely.Sitemaps</PackagePath>
     </Content>
   </ItemGroup>
 </Project>
