@@ -21,4 +21,8 @@
 	<ItemGroup>
 	  <Content Remove="wwwroot\js\js\adyen.js" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\src\Geta.Optimizely.Sitemaps.Commerce\Geta.Optimizely.Sitemaps.Commerce.csproj" />
+	  <ProjectReference Include="..\..\..\src\Geta.Optimizely.Sitemaps\Geta.Optimizely.Sitemaps.csproj" />
+	</ItemGroup>
 </Project>

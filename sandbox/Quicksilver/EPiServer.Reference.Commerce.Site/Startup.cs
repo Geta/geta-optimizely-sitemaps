@@ -26,6 +26,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using Geta.Optimizely.Sitemaps;
 
 namespace EPiServer.Reference.Commerce.Site
 {
@@ -67,16 +68,23 @@ namespace EPiServer.Reference.Commerce.Site
             //UI
             if (_webHostingEnvironment.IsDevelopment())
             {
-                
+
                 services.Configure<ClientResourceOptions>(uiOptions =>
                 {
                     uiOptions.Debug = true;
                 });
             }
-            
+
             services.Configure<JsonOptions>(o =>
             {
                 o.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+
+            services.AddSitemaps(x =>
+            {
+                x.EnableLanguageDropDownInAdmin = false;
+                x.EnableRealtimeCaching = true;
+                x.EnableRealtimeSitemap = false;
             });
 
             //Commerce
@@ -129,6 +137,7 @@ namespace EPiServer.Reference.Commerce.Site
                 endpoints.MapControllerRoute(name: "Default", pattern: "{controller}/{action}/{id?}");
                 endpoints.MapControllers();
                 endpoints.MapContent();
+                endpoints.MapRazorPages();
             });
         }
     }
