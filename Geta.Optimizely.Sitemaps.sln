@@ -7,11 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sandbox", "Sandbox", "{9003
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geta.Optimizely.Sitemaps", "src\Geta.Optimizely.Sitemaps\Geta.Optimizely.Sitemaps.csproj", "{A56D25DD-73FB-4754-B054-C5CD9B52804F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlloyMvcTemplates", "sandbox\Optimizely\Alloy\AlloyMvcTemplates.csproj", "{89A866FB-4C82-4CF1-BCD4-C20C197CA534}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Geta.Optimizely.Sitemaps.Commerce", "src\Geta.Optimizely.Sitemaps.Commerce\Geta.Optimizely.Sitemaps.Commerce.csproj", "{39B5430D-35AF-4413-980B-1CE51B367DC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPiServer.Reference.Commerce.Site", "sandbox\Optimizely\Quicksilver\EPiServer.Reference.Commerce.Site\EPiServer.Reference.Commerce.Site.csproj", "{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlloyMvcTemplates", "sandbox\Alloy\AlloyMvcTemplates.csproj", "{25488A3D-08B1-4071-8D27-EC4DC8E93FB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,25 +21,20 @@ Global
 		{A56D25DD-73FB-4754-B054-C5CD9B52804F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A56D25DD-73FB-4754-B054-C5CD9B52804F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A56D25DD-73FB-4754-B054-C5CD9B52804F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{89A866FB-4C82-4CF1-BCD4-C20C197CA534}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89A866FB-4C82-4CF1-BCD4-C20C197CA534}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{89A866FB-4C82-4CF1-BCD4-C20C197CA534}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89A866FB-4C82-4CF1-BCD4-C20C197CA534}.Release|Any CPU.Build.0 = Release|Any CPU
 		{39B5430D-35AF-4413-980B-1CE51B367DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39B5430D-35AF-4413-980B-1CE51B367DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39B5430D-35AF-4413-980B-1CE51B367DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{39B5430D-35AF-4413-980B-1CE51B367DC7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25488A3D-08B1-4071-8D27-EC4DC8E93FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25488A3D-08B1-4071-8D27-EC4DC8E93FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25488A3D-08B1-4071-8D27-EC4DC8E93FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25488A3D-08B1-4071-8D27-EC4DC8E93FB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{89A866FB-4C82-4CF1-BCD4-C20C197CA534} = {9003527C-5B4F-48DB-8946-E6E6773B2EDF}
-		{84A7FDD9-0A69-4A12-9021-6C0EDFA5E68F} = {9003527C-5B4F-48DB-8946-E6E6773B2EDF}
+		{25488A3D-08B1-4071-8D27-EC4DC8E93FB7} = {9003527C-5B4F-48DB-8946-E6E6773B2EDF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7726B88-56CE-4817-8E7C-0EC0B74F1431}
