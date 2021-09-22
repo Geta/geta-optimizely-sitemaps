@@ -34,10 +34,10 @@
 
     <!-- Copy -->
     <ItemGroup>
-      <ClientResources Include="$(SolutionDir)\src\Geta.Optimizely.Sitemaps\module\ClientResources\**\*" />
+      <ClientResources Include="$(SolutionDir)\src\$(MSBuildProjectName)\module\ClientResources\**\*" />
     </ItemGroup>
 
-    <Copy SourceFiles="$(SolutionDir)\src\Geta.Optimizely.Sitemaps\module\module.config"
+    <Copy SourceFiles="$(SolutionDir)\src\$(MSBuildProjectName)\module\module.config"
           DestinationFolder="$(TmpOutDir)\content" />
     <Copy SourceFiles="@(ClientResources)"
           DestinationFiles="@(ClientResources -> '$(TmpOutDir)\content\$(Version)\ClientResources\%(RecursiveDir)%(Filename)%(Extension)')" />
@@ -48,7 +48,7 @@
 
     <ZipDirectory
       InputPath="$(TmpOutDir)\content"
-      OutputFileName="$(OutDir)\Geta.Optimizely.Sitemaps.zip"
+      OutputFileName="$(OutDir)\$(MSBuildProjectName).zip"
       OverwriteExistingFile="true" />
 
     <!-- Cleanup -->
@@ -56,10 +56,11 @@
   </Target>
 
   <ItemGroup>
-    <Content Include="$(OutDir)\Geta.Optimizely.Sitemaps.zip" >
+    <Content Include="$(OutDir)\$(MSBuildProjectName).zip" >
       <Pack>true</Pack>
-      <PackagePath>contentFiles\any\any\modules\_protected\Geta.Optimizely.Sitemaps</PackagePath>
-      <PackageFlatten>true</PackageFlatten>
+      <PackagePath>contentFiles\any\any\modules\_protected\$(MSBuildProjectName)</PackagePath>
+      <BuildAction>None</BuildAction>
+      <PackageCopyToOutput>true</PackageCopyToOutput>
     </Content>
   </ItemGroup>
 </Project>
