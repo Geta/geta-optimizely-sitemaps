@@ -4,7 +4,7 @@
     <CmsUIVersion>12.0.2</CmsUIVersion>
     <TelemetryVersion>2.0.0</TelemetryVersion>
     <CommerceCoreVersion>14.0.2</CommerceCoreVersion>
-    <CommerceTrackingeVersion>4.0.2-pre-021483</CommerceTrackingeVersion>
+    <CommerceTrackingeVersion>4.0.2</CommerceTrackingeVersion>
     <SerilogVersion>2.10.0</SerilogVersion>
     <SerilogAspNetCoreVersion>3.4.0</SerilogAspNetCoreVersion>
     <SerilogSinkFileVersion>4.1.0</SerilogSinkFileVersion>
