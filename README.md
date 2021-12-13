@@ -51,6 +51,11 @@ services.AddSitemaps(x =>
 });
 ```
 
+And for the Commerce support add a call to:
+```csharp
+services.AddSitemapsCommerce();
+```
+
 It is also possible to configure the application in `appsettings.json` file. A configuration from the `appsettings.json` will override configuration configured in Startup. Below is an `appsettings.json` configuration example.
 
 ```json
@@ -59,6 +64,15 @@ It is also possible to configure the application in `appsettings.json` file. A c
         "EnableLanguageDropDownInAdmin":  true
     }
 }
+```
+
+Also, you have to add Razor pages routing support.
+
+```
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRazorPages();
+});
 ```
 
 ## Usage
