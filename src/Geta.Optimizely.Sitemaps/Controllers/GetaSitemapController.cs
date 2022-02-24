@@ -17,7 +17,10 @@ using Microsoft.Extensions.Options;
 
 namespace Geta.Optimizely.Sitemaps.Controllers
 {
-    [Route("sitemap.xml")]
+    [Route("sitemap.xml", Name = "Sitemap without path and/or language.")]
+    [Route("{path}sitemap.xml", Name = "Sitemap with path")]
+    [Route("{language}/sitemap.xml", Name = "Sitemap with language")]
+    [Route("{language}/{path}sitemap.xml", Name = "Sitemap with language and path")]
     public class GetaSitemapController : Controller
     {
         private readonly ISitemapRepository _sitemapRepository;
@@ -40,10 +43,6 @@ namespace Geta.Optimizely.Sitemaps.Controllers
             _configuration = options.Value;
         }
 
-        [Route("", Name = "Sitemap without path")]
-        [Route("{path}sitemap.xml", Name = "Sitemap with path")]
-        [Route("{language}/sitemap.xml", Name = "Sitemap with language")]
-        [Route("{language}/{path}sitemap.xml", Name = "Sitemap with language and path")]
         public ActionResult Index()
         {
             var sitemapData = _sitemapRepository.GetSitemapData(Request.GetDisplayUrl());
