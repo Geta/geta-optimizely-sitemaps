@@ -35,14 +35,14 @@
                     {
                         <tr>
                             <td class="sitemap-name">
-                                @if (Model.ShowHostsLabel)
-                                {
-                                    <label>@Model.HostLabel</label>
-                                    <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
-                                }
                                 @if (Model.ShowHostsDropDown)
                                 {
                                     <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
+                                }
+                                else
+                                {
+                                    <label>@Model.HostLabel</label>
+                                    <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                                 }
                                 <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePathEditPart"/>Sitemap.xml
                                 <br/><br/>
@@ -137,14 +137,14 @@
                 <form method="post">
                     <tr class="insert">
                         <td class="sitemap-name">
-                            @if (Model.ShowHostsLabel)
-                            {
-                                <label asp-for="SitemapViewModel.RelativePath"></label>
-                                <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
-                            }
                             @if (Model.ShowHostsDropDown)
                             {
                                 <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
+                            }
+                            else
+                            {
+                                <label asp-for="SitemapViewModel.RelativePath"></label>
+                                <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                             }
 
                             <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePath" />Sitemap.xml
