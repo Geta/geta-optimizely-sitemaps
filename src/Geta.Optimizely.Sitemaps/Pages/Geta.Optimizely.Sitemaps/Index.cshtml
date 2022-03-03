@@ -38,6 +38,7 @@
                                 @if (Model.ShowHostsLabel)
                                 {
                                     <label>@Model.HostLabel</label>
+                                    <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                                 }
                                 @if (Model.ShowHostsDropDown)
                                 {
@@ -139,6 +140,7 @@
                             @if (Model.ShowHostsLabel)
                             {
                                 <label asp-for="SitemapViewModel.RelativePath"></label>
+                                <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                             }
                             @if (Model.ShowHostsDropDown)
                             {
