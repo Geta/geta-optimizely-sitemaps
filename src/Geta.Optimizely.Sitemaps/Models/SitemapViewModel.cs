@@ -10,7 +10,7 @@ namespace Geta.Optimizely.Sitemaps.Models
 {
     public class SitemapViewModel
     {
-        protected const string SitemapHostPostfix = "Sitemap.xml";
+        protected const string SitemapHostPostfix = "sitemap.xml";
 
         public string Id { get; set; }
         public string SiteUrl { get; set; }
@@ -83,7 +83,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                     return string.Empty;
                 }
 
-                return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCulture));
+                return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCultureIgnoreCase));
             }
         }
 
