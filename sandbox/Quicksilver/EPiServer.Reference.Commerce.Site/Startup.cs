@@ -27,6 +27,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using Geta.Optimizely.Sitemaps;
+using Geta.Optimizely.Sitemaps.Commerce;
 
 namespace EPiServer.Reference.Commerce.Site
 {
@@ -80,12 +81,14 @@ namespace EPiServer.Reference.Commerce.Site
                 o.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
 
-            services.AddSitemaps(x =>
-            {
-                x.EnableLanguageDropDownInAdmin = false;
-                x.EnableRealtimeCaching = true;
-                x.EnableRealtimeSitemap = false;
-            });
+            services
+                .AddSitemaps(x =>
+                {
+                    x.EnableLanguageDropDownInAdmin = false;
+                    x.EnableRealtimeCaching = true;
+                    x.EnableRealtimeSitemap = false;
+                })
+                .AddSitemapsCommerce();
 
             //Commerce
             services.AddCommerce();
