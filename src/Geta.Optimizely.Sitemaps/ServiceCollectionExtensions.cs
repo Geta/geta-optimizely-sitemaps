@@ -64,7 +64,6 @@ namespace Geta.Optimizely.Sitemaps
 
         private static void AddModule(IServiceCollection services)
         {
-            services.AddCmsUI();
             services.Configure<ProtectedModuleOptions>(
                 pm =>
                 {
