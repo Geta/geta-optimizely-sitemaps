@@ -51,6 +51,17 @@ services.AddSitemaps(x =>
 });
 ```
 
+You can configure access to the sitemaps configuration tab by adding a custom policy (the default is WebAdmins):
+
+```csharp
+services.AddSitemaps(x =>
+{
+  x.EnableLanguageDropDownInAdmin = false;
+  x.EnableRealtimeCaching = true;
+  x.EnableRealtimeSitemap = false;
+}, p => p.RequireRole(Roles.Administrators));
+```
+
 And for the Commerce support add a call to:
 ```csharp
 services.AddSitemapsCommerce();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using EPiServer.Authorization;
 using EPiServer.Cms.Shell;
 using EPiServer.Shell.Modules;
 using Geta.Mapping;
@@ -9,6 +10,7 @@ using Geta.Optimizely.Sitemaps.Models;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Utils;
 using Geta.Optimizely.Sitemaps.XML;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,14 +18,24 @@ namespace Geta.Optimizely.Sitemaps
 {
     public static class ServiceCollectionExtensions
     {
+        private static readonly Action<AuthorizationPolicyBuilder> DefaultPolicy = p => p.RequireRole(Roles.WebAdmins);
+
         public static IServiceCollection AddSitemaps(this IServiceCollection services)
         {
-            return AddSitemaps(services, _ => { });
+            return AddSitemaps(services, _ => { }, DefaultPolicy);
         }
 
         public static IServiceCollection AddSitemaps(
             this IServiceCollection services,
             Action<SitemapOptions> setupAction)
+        {
+            return AddSitemaps(services, setupAction, DefaultPolicy);
+        }
+
+        public static IServiceCollection AddSitemaps(
+            this IServiceCollection services,
+            Action<SitemapOptions> setupAction,
+            Action<AuthorizationPolicyBuilder> configurePolicy)
         {
             AddModule(services);
 
@@ -40,6 +52,11 @@ namespace Geta.Optimizely.Sitemaps
             {
                 setupAction(options);
                 configuration.GetSection("Geta:Sitemaps").Bind(options);
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Constants.PolicyName, configurePolicy);
             });
 
             return services;
