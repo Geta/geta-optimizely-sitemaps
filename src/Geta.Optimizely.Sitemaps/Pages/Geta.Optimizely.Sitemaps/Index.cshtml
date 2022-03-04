@@ -42,7 +42,7 @@
                                 else
                                 {
                                     <label>@Model.HostLabel</label>
-                                    <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
+                                    <input type="hidden" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                                 }
                                 <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePathEditPart"/>sitemap.xml
                                 <br/><br/>
@@ -144,7 +144,7 @@
                             else
                             {
                                 <label asp-for="SitemapViewModel.RelativePath"></label>
-                                <input type="hidden" class="form-control align-middle" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
+                                <input type="hidden" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                             }
 
                             <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePath" />sitemap.xml
