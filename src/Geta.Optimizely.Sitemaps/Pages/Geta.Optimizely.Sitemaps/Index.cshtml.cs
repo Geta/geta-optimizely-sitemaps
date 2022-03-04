@@ -41,7 +41,6 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
         [BindProperty] public IList<SelectListItem> SiteHosts { get; set; }
         public bool ShowHostsDropDown { get; set; }
         public string HostLabel { get; set; }
-        public bool ShowHostsLabel { get; set; }
         [BindProperty] public IList<SelectListItem> LanguageBranches { get; set; }
         protected int EditIndex { get; set; }
         protected InsertItemPosition InsertItemPosition { get; set; }
@@ -198,7 +197,6 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
             else
             {
                 HostLabel = SiteHosts.ElementAt(0).Value;
-                ShowHostsLabel = true;
             }
         }
 

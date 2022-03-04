@@ -35,13 +35,14 @@
                     {
                         <tr>
                             <td class="sitemap-name">
-                                @if (Model.ShowHostsLabel)
-                                {
-                                    <label>@Model.HostLabel</label>
-                                }
                                 @if (Model.ShowHostsDropDown)
                                 {
                                     <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
+                                }
+                                else
+                                {
+                                    <label>@Model.HostLabel</label>
+                                    <input type="hidden" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                                 }
                                 <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePathEditPart"/>sitemap.xml
                                 <br/><br/>
@@ -136,13 +137,14 @@
                 <form method="post">
                     <tr class="insert">
                         <td class="sitemap-name">
-                            @if (Model.ShowHostsLabel)
-                            {
-                                <label asp-for="SitemapViewModel.RelativePath"></label>
-                            }
                             @if (Model.ShowHostsDropDown)
                             {
                                 <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts"></select>
+                            }
+                            else
+                            {
+                                <label asp-for="SitemapViewModel.RelativePath"></label>
+                                <input type="hidden" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
                             }
 
                             <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePath" />sitemap.xml
