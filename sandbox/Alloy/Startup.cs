@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using Geta.Optimizely.Sitemaps;
+using EPiServer.Authorization;
 
 namespace EPiServer.Templates.Alloy.Mvc
 {
@@ -51,7 +52,7 @@ namespace EPiServer.Templates.Alloy.Mvc
                 x.EnableLanguageDropDownInAdmin = false;
                 x.EnableRealtimeCaching = true;
                 x.EnableRealtimeSitemap = false;
-            });
+            }, p => p.RequireRole(Roles.Administrators));
 
             services.AddCmsAspNetIdentity<ApplicationUser>();
             services.AddMvc();

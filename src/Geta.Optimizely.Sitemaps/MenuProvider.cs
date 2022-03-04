@@ -16,7 +16,8 @@ namespace Geta.Optimizely.Sitemaps
                 MenuPaths.Global + "/cms/seositemaps",
                 url)
             {
-                SortIndex = 100
+                SortIndex = 100,
+                AuthorizationPolicy = Constants.PolicyName
             };
 
             return new List<MenuItem>
