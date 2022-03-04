@@ -49,6 +49,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                 to.IncludeDebugInfo = from.IncludeDebugInfo;
                 to.RootPageId = from.RootPageId.ToString();
                 to.SitemapFormat = from.SitemapFormat.ToString();
+                to.LanguageBranch = from.Language;
             }
 
             private string GetLanguage(string language)
