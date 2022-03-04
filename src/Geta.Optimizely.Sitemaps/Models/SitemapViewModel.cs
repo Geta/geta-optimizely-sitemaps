@@ -10,7 +10,7 @@ namespace Geta.Optimizely.Sitemaps.Models
 {
     public class SitemapViewModel
     {
-        protected const string SitemapHostPostfix = "Sitemap.xml";
+        protected const string SitemapHostPostfix = "sitemap.xml";
 
         public string Id { get; set; }
         public string SiteUrl { get; set; }
@@ -23,7 +23,7 @@ namespace Geta.Optimizely.Sitemaps.Models
         public string PathsToAvoid { get; set; }
         public string PathsToInclude { get; set; }
         public bool IncludeDebugInfo { get; set; }
-        public string RootPageId { get; set; }
+        public string RootPageId { get; set; } = Constants.DefaultRootPageId.ToString();
         public string SitemapFormat { get; set; }
 
         public class MapperFromEntity : Mapper<SitemapData, SitemapViewModel>
@@ -49,6 +49,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                 to.IncludeDebugInfo = from.IncludeDebugInfo;
                 to.RootPageId = from.RootPageId.ToString();
                 to.SitemapFormat = from.SitemapFormat.ToString();
+                to.LanguageBranch = from.Language;
             }
 
             private string GetLanguage(string language)
@@ -83,7 +84,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                     return string.Empty;
                 }
 
-                return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCulture));
+                return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCultureIgnoreCase));
             }
         }
 
@@ -119,8 +120,11 @@ namespace Geta.Optimizely.Sitemaps.Models
 
             private int TryParse(string id)
             {
-                int.TryParse(id, out var rootId);
-                return rootId;
+                if (int.TryParse(id, out var rootId))
+                {
+                    return rootId;
+                };
+                return Constants.DefaultRootPageId;
             }
 
             private SitemapFormat GetSitemapFormat(string format)

@@ -3,5 +3,6 @@
     public static class Constants
     {
         public const string ModuleName = "Geta.Optimizely.Sitemaps";
+        public const int DefaultRootPageId = -1;
     }
 }
