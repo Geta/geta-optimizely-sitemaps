@@ -23,7 +23,7 @@ namespace Geta.Optimizely.Sitemaps.Models
         public string PathsToAvoid { get; set; }
         public string PathsToInclude { get; set; }
         public bool IncludeDebugInfo { get; set; }
-        public string RootPageId { get; set; }
+        public string RootPageId { get; set; } = Constants.DefaultRootPageId.ToString();
         public string SitemapFormat { get; set; }
 
         public class MapperFromEntity : Mapper<SitemapData, SitemapViewModel>
@@ -119,8 +119,11 @@ namespace Geta.Optimizely.Sitemaps.Models
 
             private int TryParse(string id)
             {
-                int.TryParse(id, out var rootId);
-                return rootId;
+                if (int.TryParse(id, out var rootId))
+                {
+                    return rootId;
+                };
+                return Constants.DefaultRootPageId;
             }
 
             private SitemapFormat GetSitemapFormat(string format)

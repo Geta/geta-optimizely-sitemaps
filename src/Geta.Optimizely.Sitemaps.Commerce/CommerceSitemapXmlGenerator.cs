@@ -57,7 +57,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
         {
             var rootContentReference = _referenceConverter.GetRootLink();
 
-            if (SitemapData.RootPageId != -1)
+            if (SitemapData.RootPageId != Constants.DefaultRootPageId)
             {
                 rootContentReference = new ContentReference(SitemapData.RootPageId)
                 {
