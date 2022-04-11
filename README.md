@@ -30,13 +30,13 @@ The latest version is available on the Optimizely NuGet feed. You can find it by
 The command below will install Sitemaps into your Optimizely project.
 
 ```
-Install-Package Geta.Optimizely.Sitemaps
+dotnet add package Geta.Optimizely.Sitemaps
 ```
 
 The command below will install Sitemaps Commerce support into your Optimizely Commerce project.
 
 ```
-Install-Package Geta.Optimizely.Sitemaps.Commerce
+dotnet add package Geta.Optimizely.Sitemaps.Commerce
 ```
 
 ## Configuration
