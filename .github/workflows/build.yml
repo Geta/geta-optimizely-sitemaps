@@ -41,8 +41,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
-        run: | # Replace {package-name} with your package name
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Geta_geta-optimizely-sitemaps" /o:"geta" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=**/**/coverage.opencover.xml
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"Geta_${{ github.event.repository.name }}" /o:"geta" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=**/**/coverage.opencover.xml
           dotnet build
           dotnet test --filter Category!=Integration /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=coverage 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
