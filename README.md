@@ -182,7 +182,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## Package maintainer
 
-https://github.com/frederikvig
+https://github.com/marisks
 
 ## Changelog
 
