@@ -27,8 +27,8 @@ jobs:
       - name: Pack
         run: dotnet pack --configuration Release /p:Version=${{env.VERSION}} --no-build --output .
       - name: Push
-        run: | # Replace {package-X-name} with your package names, add more lines if needed or remove the second one if you have only one package.
-          dotnet nuget push {package-1-name}.${{env.VERSION}}.nupkg --source https://nuget.pkg.github.com/Geta/index.json --api-key ${{env.GITHUB_TOKEN}}
-          dotnet nuget push {package-2-name}.${{env.VERSION}}.nupkg --source https://nuget.pkg.github.com/Geta/index.json --api-key ${{env.GITHUB_TOKEN}}
+        run: |
+          dotnet nuget push Geta.Optimizely.Sitemaps.${{env.VERSION}}.nupkg --source https://nuget.pkg.github.com/Geta/index.json --api-key ${{env.GITHUB_TOKEN}}
+          dotnet nuget push Geta.Optimizely.Sitemaps.Commerce.${{env.VERSION}}.nupkg --source https://nuget.pkg.github.com/Geta/index.json --api-key ${{env.GITHUB_TOKEN}}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
