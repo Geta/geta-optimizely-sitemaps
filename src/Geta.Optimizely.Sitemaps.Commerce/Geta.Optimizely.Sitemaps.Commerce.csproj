@@ -2,10 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
-        <Version>1.0.0</Version>
         <PackageId>Geta.Optimizely.Sitemaps.Commerce</PackageId>
         <Title>Search Engine Sitemap generator for Optimizely Commerce</Title>
-        <PackageVersion>1.0.0</PackageVersion>
         <Authors>Geta Digital</Authors>
         <Company>Geta Digital</Company>
         <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
