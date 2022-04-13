@@ -50,8 +50,8 @@ namespace Geta.Optimizely.Sitemaps.XML
         protected IEnumerable<LanguageBranch> EnabledLanguages { get; set; }
         protected IEnumerable<CurrentLanguageContent> HrefLanguageContents { get; set; }
 
-        protected XNamespace SitemapXmlNamespace => @"http://www.sitemaps.org/schemas/sitemap/0.9";
-        protected XNamespace SitemapXhtmlNamespace => @"http://www.w3.org/1999/xhtml";
+        protected static XNamespace SitemapXmlNamespace => @"http://www.sitemaps.org/schemas/sitemap/0.9";
+        protected static XNamespace SitemapXhtmlNamespace => @"http://www.w3.org/1999/xhtml";
 
         public bool IsDebugMode { get; set; }
 

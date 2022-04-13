@@ -77,7 +77,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                 return $"{site}{language}{sitemapData.Host}";
             }
 
-            private string GetRelativePathEditPart(string hostName)
+            private static string GetRelativePathEditPart(string hostName)
             {
                 return hostName == null
                     ? string.Empty
