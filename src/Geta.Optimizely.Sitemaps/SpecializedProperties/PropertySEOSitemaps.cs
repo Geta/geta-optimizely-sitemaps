@@ -17,34 +17,10 @@ namespace Geta.Optimizely.Sitemaps.SpecializedProperties
     [PropertyDefinitionTypePlugIn(DisplayName = "SEOSitemaps")]
     public class PropertySEOSitemaps : PropertyString
     {
-        public static string PropertyName = "SEOSitemaps";
-
-        protected string changeFrequency = "weekly";
-
-        protected bool enabled = true;
-
-        protected string priority = "0.5";
-
-        public string ChangeFreq
-        {
-            get => changeFrequency;
-
-            set => changeFrequency = value;
-        }
-
-        public bool Enabled
-        {
-            get => enabled;
-
-            set => enabled = value;
-        }
-
-        public string Priority
-        {
-            get => priority;
-
-            set => priority = value;
-        }
+        public const string PropertyName = "SEOSitemaps";
+        public string ChangeFreq { get; set; } = "weekly";
+        public bool Enabled { get; set; } = true;
+        public string Priority { get; set; } = "0.5";
 
         [XmlIgnore]
         protected override string String
@@ -65,9 +41,9 @@ namespace Geta.Optimizely.Sitemaps.SpecializedProperties
 
             reader.ReadStartElement(PropertyName);
 
-            enabled = bool.Parse(reader.ReadElementString("enabled"));
-            changeFrequency = reader.ReadElementString("changefreq");
-            priority = reader.ReadElementString("priority");
+            Enabled = bool.Parse(reader.ReadElementString("enabled"));
+            ChangeFreq = reader.ReadElementString("changefreq");
+            Priority = reader.ReadElementString("priority");
 
             reader.ReadEndElement();
 
@@ -81,9 +57,9 @@ namespace Geta.Optimizely.Sitemaps.SpecializedProperties
 
             writer.WriteStartElement(PropertyName);
 
-            writer.WriteElementString("enabled", enabled.ToString());
-            writer.WriteElementString("changefreq", changeFrequency);
-            writer.WriteElementString("priority", priority);
+            writer.WriteElementString("enabled", Enabled.ToString());
+            writer.WriteElementString("changefreq", ChangeFreq);
+            writer.WriteElementString("priority", Priority);
 
             writer.WriteEndElement();
 
