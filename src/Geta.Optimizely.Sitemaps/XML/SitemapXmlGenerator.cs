@@ -192,19 +192,15 @@ namespace Geta.Optimizely.Sitemaps.XML
                     continue;
                 }
 
-                var contentLanguages = GetLanguageBranches(contentReference);
+                var contentLanguages = GetLanguageBranches(contentReference)
+                    .Where(x => x.Content is not ILocale localeContent
+                                || !ExcludeContentLanguageFromSitemap(localeContent.Language));
 
                 foreach (var contentLanguageInfo in contentLanguages)
                 {
                     if (StopGeneration)
                     {
                         return Enumerable.Empty<XElement>();
-                    }
-
-                    if (contentLanguageInfo.Content is ILocale localeContent
-                        && ExcludeContentLanguageFromSitemap(localeContent.Language))
-                    {
-                        continue;
                     }
 
                     if (UrlSet.Count >= MaxSitemapEntryCount)
