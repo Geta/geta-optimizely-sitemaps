@@ -11,19 +11,14 @@ namespace Geta.Optimizely.Sitemaps.Utils
     /// Administrators are able to specify specific paths to exclude (blacklist) or include (whitelist) in sitemaps.
     /// This class is used to check this.
     /// </summary>
-    public class UrlFilter
+    public static class UrlFilter
     {
         public static bool IsUrlFiltered(string url, SitemapData sitemapConfig)
         {
-            IList<string> whiteList = sitemapConfig.PathsToInclude;
-            IList<string> blackList = sitemapConfig.PathsToAvoid;
+            var whiteList = sitemapConfig.PathsToInclude;
+            var blackList = sitemapConfig.PathsToAvoid;
 
-            if (IsNotInWhiteList(url, whiteList) || IsInBlackList(url, blackList))
-            {
-                return true;
-            }
-
-            return false;
+            return IsNotInWhiteList(url, whiteList) || IsInBlackList(url, blackList);
         }
 
         private static bool IsNotInWhiteList(string url, IList<string> paths)
@@ -36,23 +31,20 @@ namespace Geta.Optimizely.Sitemaps.Utils
             return IsPathInUrl(url, paths, false);
         }
 
-        private static bool IsPathInUrl(string url, IList<string> paths, bool mustContainPath)
+        private static bool IsPathInUrl(string url, ICollection<string> paths, bool mustContainPath)
         {
-            if (paths != null && paths.Count > 0)
+            if (paths == null || paths.Count <= 0)
             {
-                var anyPathIsInUrl = paths.Any(x =>
-                {
-                    var dir = AddStartSlash(AddTailingSlash(x.ToLower().Trim()));
-                    return url.ToLower().StartsWith(dir);
-                });
-
-                if (anyPathIsInUrl != mustContainPath)
-                {
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            var anyPathIsInUrl = paths.Any(x =>
+            {
+                var dir = AddStartSlash(AddTailingSlash(x.ToLower().Trim()));
+                return url.ToLower().StartsWith(dir);
+            });
+
+            return anyPathIsInUrl != mustContainPath;
         }
 
         private static string AddTailingSlash(string url)
