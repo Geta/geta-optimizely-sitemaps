@@ -26,7 +26,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             IContentFilter contentFilter,
             ISynchronizedObjectInstanceCache objectCache,
             IMemoryCache cache,
-            ILogger<SitemapXmlGenerator> logger)
+            ILogger<MobileSitemapXmlGenerator> logger)
             : base(
                 sitemapRepository,
                 contentRepository,
@@ -40,7 +40,7 @@ namespace Geta.Optimizely.Sitemaps.XML
         {
         }
 
-        protected XNamespace MobileNamespace => @"http://www.google.com/schemas/sitemap-mobile/1.0";
+        private static readonly XNamespace MobileNamespace = @"http://www.google.com/schemas/sitemap-mobile/1.0";
 
         protected override XElement GenerateSiteElement(IContent contentData, string url)
         {
