@@ -189,9 +189,8 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
 
         private void EmptyDto()
         {
-            SitemapViewModel = new SitemapViewModel();
+            SitemapViewModel = new();
         }
-
 
         public bool IsEditing(string id)
         {
