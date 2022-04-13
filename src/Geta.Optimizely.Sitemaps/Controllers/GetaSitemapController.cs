@@ -49,61 +49,93 @@ namespace Geta.Optimizely.Sitemaps.Controllers
 
             if (sitemapData == null)
             {
-                _logger.LogError("Xml sitemap data not found!");
-                return new NotFoundResult();
+                return SitemapDataNotFound();
             }
-
-            if (sitemapData.Data == null || (_configuration.EnableRealtimeSitemap))
-            {
-                if (!GetSitemapData(sitemapData))
-                {
-                    _logger.LogError("Xml sitemap data not found!");
-                    return new NotFoundResult();
-                }
-            }
-
-            return new FileContentResult(sitemapData.Data, "text/xml; charset=utf-8");
-        }
-
-        private bool GetSitemapData(SitemapData sitemapData)
-        {
-            var userAgent = Request.HttpContext.GetServerVariable("USER_AGENT");
-
-            var isGoogleBot = userAgent != null &&
-                              userAgent.IndexOf("Googlebot", StringComparison.InvariantCultureIgnoreCase) > -1;
-
-            var googleBotCacheKey = isGoogleBot ? "Google-" : string.Empty;
 
             if (_configuration.EnableRealtimeSitemap)
             {
-                var cacheKey = googleBotCacheKey + _sitemapRepository.GetSitemapUrl(sitemapData);
-
-                var sitemapDataData = CacheManager.Get(cacheKey) as byte[];
-
-                if (sitemapDataData != null)
-                {
-                    sitemapData.Data = sitemapDataData;
-                    return true;
-                }
-
-                if (_sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, false, out _))
-                {
-                    if (_configuration.EnableRealtimeCaching)
-                    {
-                        var cachePolicy = isGoogleBot
-                            ? new CacheEvictionPolicy(TimeSpan.Zero, CacheTimeoutType.Sliding, new[] { _contentCacheKeyCreator.VersionKey })
-                            : null;
-
-                        CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
-                    }
-
-                    return true;
-                }
-
-                return false;
+                return RealtimeSitemapData(sitemapData);
             }
 
-            return _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData).Generate(sitemapData, !_configuration.EnableRealtimeSitemap, out _);
+            return SitemapData(sitemapData);
+        }
+
+        private ActionResult RealtimeSitemapData(SitemapData sitemapData)
+        {
+            var isGoogleBot = IsGoogleBot();
+            var cacheKey = GetCacheKey(sitemapData, isGoogleBot);
+            var cachedData = GetCachedSitemapData(cacheKey);
+
+            if (cachedData != null)
+            {
+                sitemapData.Data = cachedData;
+                return FileContentResult(sitemapData);
+            }
+
+            var sitemapGenerator = _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData);
+            var hasGenerated = sitemapGenerator.Generate(sitemapData, false, out _);
+
+            if (hasGenerated)
+            {
+                if (_configuration.EnableRealtimeCaching)
+                {
+                    CacheSitemapData(sitemapData, isGoogleBot, cacheKey);
+                }
+
+                return FileContentResult(sitemapData);
+            }
+
+            return SitemapDataNotFound();
+        }
+
+        private ActionResult SitemapData(SitemapData sitemapData)
+        {
+            var sitemapGenerator = _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapData);
+            var hasGenerated = sitemapGenerator.Generate(sitemapData, true, out _);
+
+            return hasGenerated
+                ? FileContentResult(sitemapData)
+                : SitemapDataNotFound();
+        }
+
+        private ActionResult SitemapDataNotFound()
+        {
+            _logger.LogError("Xml sitemap data not found!");
+            return new NotFoundResult();
+        }
+
+        private void CacheSitemapData(SitemapData sitemapData, bool isGoogleBot, string cacheKey)
+        {
+            var cachePolicy = isGoogleBot
+                ? new CacheEvictionPolicy(TimeSpan.Zero,
+                                          CacheTimeoutType.Sliding,
+                                          new[] { _contentCacheKeyCreator.VersionKey })
+                : null;
+
+            CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
+        }
+
+        private static byte[] GetCachedSitemapData(string cacheKey)
+        {
+            return CacheManager.Get(cacheKey) as byte[];
+        }
+
+        private string GetCacheKey(SitemapData sitemapData, bool isGoogleBot)
+        {
+            var cacheKeyPrefix = isGoogleBot ? "Google-" : string.Empty;
+            return cacheKeyPrefix + _sitemapRepository.GetSitemapUrl(sitemapData);
+        }
+
+        private static FileContentResult FileContentResult(SitemapData sitemapData)
+        {
+            return new(sitemapData.Data, "text/xml; charset=utf-8");
+        }
+
+        private bool IsGoogleBot()
+        {
+            var userAgent = Request.HttpContext.GetServerVariable("USER_AGENT");
+            return userAgent != null
+                   && userAgent.IndexOf("Googlebot", StringComparison.InvariantCultureIgnoreCase) > -1;
         }
     }
 }
