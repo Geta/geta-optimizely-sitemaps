@@ -159,24 +159,17 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
 
             foreach (var siteInformation in hosts)
             {
-                siteUrls.Add(new SelectListItem
+                siteUrls.Add(new()
                 {
                     Text = siteInformation.SiteUrl.ToString(),
                     Value = siteInformation.SiteUrl.ToString()
                 });
 
-                foreach (var host in siteInformation.Hosts)
-                {
-                    if (ShouldAddToSiteHosts(host, siteInformation))
-                    {
-                        var hostUri = host.GetUri();
-                        siteUrls.Add(new SelectListItem
-                        {
-                            Text = hostUri.ToString(),
-                            Value = hostUri.ToString()
-                        });
-                    }
-                }
+                var hostUrls = siteInformation.Hosts
+                    .Where(host => ShouldAddToSiteHosts(host, siteInformation))
+                    .Select(host => host.GetUri())
+                    .Select(hostUri => new SelectListItem { Text = hostUri.ToString(), Value = hostUri.ToString() });
+                siteUrls.AddRange(hostUrls);
             }
 
             SiteHosts = siteUrls;
