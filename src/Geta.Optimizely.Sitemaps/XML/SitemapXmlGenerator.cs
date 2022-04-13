@@ -299,7 +299,7 @@ namespace Geta.Optimizely.Sitemaps.XML
         {
             var languageData = EnabledLanguages
                 .Select(x => (languageBranch: x, languageContent: GetLanguageContent(contentLink, x)))
-                .Where(x => x.languageContent == null || ContentFilter.ShouldExcludeContent(x.languageContent));
+                .Where(x => x.languageContent != null && !ContentFilter.ShouldExcludeContent(x.languageContent));
 
             foreach (var (languageBranch, languageContent) in languageData)
             {
