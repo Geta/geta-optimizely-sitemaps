@@ -30,8 +30,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Market.Services
 
         public virtual CultureInfo GetCurrentLanguage()
         {
-            CultureInfo cultureInfo;
-            return TryGetLanguage(_cookieService.Get(LanguageCookie), out cultureInfo)
+            return TryGetLanguage(_cookieService.Get(LanguageCookie), out var cultureInfo)
                 ? cultureInfo
                 : CurrentMarket.DefaultLanguage;
         }
@@ -93,7 +92,7 @@ namespace EPiServer.Reference.Commerce.Site.Features.Market.Services
             }
         }
 
-        
+
 
         private IMarket CurrentMarket => _currentMarket.GetCurrentMarket();
     }

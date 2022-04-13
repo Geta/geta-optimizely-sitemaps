@@ -484,7 +484,9 @@ namespace Geta.Optimizely.Sitemaps.XML
             return Math.Max(1.0 - (depth / 10.0), 0.5).ToString(CultureInfo.InvariantCulture);
         }
 
+#pragma warning disable CA1822
         protected CultureInfo GetCurrentLanguage(IContent content)
+#pragma warning restore CA1822
         {
             if (content is ILocalizable localizableContent)
             {
@@ -494,7 +496,9 @@ namespace Geta.Optimizely.Sitemaps.XML
             return CultureInfo.InvariantCulture;
         }
 
+#pragma warning disable CA1822
         protected CultureInfo GetMasterLanguage(IContent content)
+#pragma warning restore CA1822
         {
             if (content is ILocalizable localizableContent)
             {
@@ -564,7 +568,9 @@ namespace Geta.Optimizely.Sitemaps.XML
                                        : url);
         }
 
+#pragma warning disable CA1822
         protected bool IsAbsoluteUrl(string url, out Uri absoluteUri)
+#pragma warning restore CA1822
         {
             return Uri.TryCreate(url, UriKind.Absolute, out absoluteUri);
         }
