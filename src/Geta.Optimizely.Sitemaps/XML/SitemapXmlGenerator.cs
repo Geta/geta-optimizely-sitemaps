@@ -411,7 +411,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             }
 
             var hrefLangDatas = GetHrefLangDataFromCache(content.ContentLink).ToList();
-            var count = hrefLangDatas.Count();
+            var count = hrefLangDatas.Count;
 
             if (count < 2)
             {
@@ -439,47 +439,12 @@ namespace Geta.Optimizely.Sitemaps.XML
             }
 
             var content = languageContentInfo.Content;
-            string url = null;
 
-            if (SitemapData.EnableSimpleAddressSupport
-                && content is PageData pageData
-                && !string.IsNullOrWhiteSpace(pageData.ExternalURL))
-            {
-                url = pageData.ExternalURL;
-            }
+            var url = GetContentUrl(languageContentInfo, content);
 
             if (string.IsNullOrWhiteSpace(url))
             {
-                if (content is ILocalizable localizableContent)
-                {
-                    var language = string.IsNullOrWhiteSpace(SitemapData.Language)
-                        ? languageContentInfo.CurrentLanguage.Name
-                        : SitemapData.Language;
-
-                    url = UrlResolver.GetUrl(content.ContentLink, language);
-
-                    if (string.IsNullOrWhiteSpace(url))
-                    {
-                        return;
-                    }
-
-                    // Make 100% sure we remove the language part in the URL if the sitemap host is mapped to the page's LanguageBranch.
-                    if (HostLanguageBranch != null
-                        && localizableContent.Language.Name.Equals(HostLanguageBranch,
-                                                                   StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        url = url.Replace($"/{HostLanguageBranch}/", "/");
-                    }
-                }
-                else
-                {
-                    url = UrlResolver.GetUrl(content.ContentLink);
-
-                    if (string.IsNullOrWhiteSpace(url))
-                    {
-                        return;
-                    }
-                }
+                return;
             }
 
             url = GetAbsoluteUrl(url);
@@ -643,6 +608,52 @@ namespace Geta.Optimizely.Sitemaps.XML
             }
 
             return false;
+        }
+
+        private string GetContentUrl(CurrentLanguageContent languageContentInfo, IContent content)
+        {
+            string url = null;
+
+            if (SitemapData.EnableSimpleAddressSupport
+                && content is PageData pageData
+                && !string.IsNullOrWhiteSpace(pageData.ExternalURL))
+            {
+                url = pageData.ExternalURL;
+            }
+
+            if (!string.IsNullOrWhiteSpace(url))
+            {
+                return url;
+            }
+
+            if (content is not ILocalizable localizableContent)
+            {
+                return UrlResolver.GetUrl(content.ContentLink);
+            }
+
+            var language = string.IsNullOrWhiteSpace(SitemapData.Language)
+                ? languageContentInfo.CurrentLanguage.Name
+                : SitemapData.Language;
+
+            url = UrlResolver.GetUrl(content.ContentLink, language);
+            url = EnsureCorrectUrlHostLanguage(localizableContent, url);
+
+            return url;
+        }
+
+        private string EnsureCorrectUrlHostLanguage(ILocalizable localizableContent, string url)
+        {
+            if (string.IsNullOrEmpty(url)) return url;
+
+            // Make 100% sure we remove the language part in the URL if the sitemap host is mapped to the page's LanguageBranch.
+            if (HostLanguageBranch != null
+                && localizableContent.Language.Name.Equals(HostLanguageBranch,
+                                                           StringComparison.InvariantCultureIgnoreCase))
+            {
+                url = url.Replace($"/{HostLanguageBranch}/", "/");
+            }
+
+            return url;
         }
     }
 }
