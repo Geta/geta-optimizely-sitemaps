@@ -24,22 +24,22 @@ namespace Geta.Optimizely.Sitemaps.Utils
             switch (sitemapData.SitemapFormat)
             {
                 case SitemapFormat.Mobile:
-                    xmlGenerator = _serviceProvider.GetService<IMobileSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetRequiredService<IMobileSitemapXmlGenerator>();
                     break;
                 case SitemapFormat.Commerce:
-                    xmlGenerator = _serviceProvider.GetService<ICommerceSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetRequiredService<ICommerceSitemapXmlGenerator>();
                     break;
                 case SitemapFormat.StandardAndCommerce:
-                    xmlGenerator = _serviceProvider.GetService<ICommerceAndStandardSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetRequiredService<ICommerceAndStandardSitemapXmlGenerator>();
                     break;
                 default:
-                    xmlGenerator = _serviceProvider.GetService<IStandardSitemapXmlGenerator>();
+                    xmlGenerator = _serviceProvider.GetRequiredService<IStandardSitemapXmlGenerator>();
                     break;
             }
 
             xmlGenerator.IsDebugMode = sitemapData.IncludeDebugInfo;
 
             return xmlGenerator;
-        } 
+        }
     }
 }

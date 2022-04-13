@@ -24,14 +24,14 @@ namespace Geta.Optimizely.Sitemaps.XML
             IContentFilter contentFilter,
             ISynchronizedObjectInstanceCache objectCache,
             IMemoryCache cache,
-            ILogger<SitemapXmlGenerator> logger)
+            ILogger<StandardSitemapXmlGenerator> logger)
             : base(
                 sitemapRepository,
-                contentRepository, 
-                urlResolver, 
-                siteDefinitionRepository, 
-                languageBranchRepository, 
-                contentFilter, 
+                contentRepository,
+                urlResolver,
+                siteDefinitionRepository,
+                languageBranchRepository,
+                contentFilter,
                 objectCache,
                 cache,
                 logger)

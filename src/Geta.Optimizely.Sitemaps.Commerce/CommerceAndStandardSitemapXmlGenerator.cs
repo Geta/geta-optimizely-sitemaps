@@ -35,7 +35,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
             IContentFilter contentFilter,
             ISynchronizedObjectInstanceCache objectCache,
             IMemoryCache memoryCache,
-            ILogger<SitemapXmlGenerator> logger)
+            ILogger<CommerceAndStandardSitemapXmlGenerator> logger)
             : base(
                 sitemapRepository,
                 contentRepository,
