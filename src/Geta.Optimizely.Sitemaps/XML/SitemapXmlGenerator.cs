@@ -297,16 +297,12 @@ namespace Geta.Optimizely.Sitemaps.XML
 
         protected virtual IEnumerable<HrefLangData> GetHrefLangData(ContentReference contentLink)
         {
-            foreach (var languageBranch in EnabledLanguages)
+            var languageData = EnabledLanguages
+                .Select(x => (languageBranch: x, languageContent: GetLanguageContent(contentLink, x)))
+                .Where(x => x.languageContent == null || ContentFilter.ShouldExcludeContent(x.languageContent));
+
+            foreach (var (languageBranch, languageContent) in languageData)
             {
-                var languageContent =
-                    ContentRepository.Get<IContent>(contentLink, LanguageSelector.Fallback(languageBranch.Culture.Name, false));
-
-                if (languageContent == null || ContentFilter.ShouldExcludeContent(languageContent))
-                {
-                    continue;
-                }
-
                 var hrefLangData =
                     CreateHrefLangData(languageContent, languageBranch.Culture, GetMasterLanguage(languageContent));
                 yield return hrefLangData;
@@ -316,6 +312,11 @@ namespace Geta.Optimizely.Sitemaps.XML
                     yield return new() { HrefLang = languageBranch.Culture.Name.ToLowerInvariant(), Href = hrefLangData.Href };
                 }
             }
+        }
+
+        private IContent GetLanguageContent(ContentReference contentLink, LanguageBranch languageBranch)
+        {
+            return ContentRepository.Get<IContent>(contentLink, LanguageSelector.Fallback(languageBranch.Culture.Name, false));
         }
 
         protected virtual HrefLangData CreateHrefLangData(IContent content, CultureInfo language, CultureInfo masterLanguage)
