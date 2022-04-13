@@ -15,7 +15,7 @@ namespace Geta.Optimizely.Sitemaps.Controllers
     {
         private readonly ISitemapRepository _sitemapRepository;
 
-        protected XNamespace SitemapXmlNamespace
+        private static XNamespace SitemapXmlNamespace
         {
             get { return @"http://www.sitemaps.org/schemas/sitemap/0.9"; }
         }

@@ -10,7 +10,7 @@ namespace Geta.Optimizely.Sitemaps.Models
 {
     public class SitemapViewModel
     {
-        protected const string SitemapHostPostfix = "sitemap.xml";
+        private const string SitemapHostPostfix = "sitemap.xml";
 
         public string Id { get; set; }
         public string SiteUrl { get; set; }
@@ -79,12 +79,9 @@ namespace Geta.Optimizely.Sitemaps.Models
 
             private string GetRelativePathEditPart(string hostName)
             {
-                if (hostName == null)
-                {
-                    return string.Empty;
-                }
-
-                return hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCultureIgnoreCase));
+                return hostName == null
+                    ? string.Empty
+                    : hostName.Substring(0, hostName.IndexOf(SitemapHostPostfix, StringComparison.InvariantCultureIgnoreCase));
             }
         }
 
@@ -92,9 +89,9 @@ namespace Geta.Optimizely.Sitemaps.Models
         {
             public override void Map(SitemapViewModel @from, SitemapData to)
             {
-                var relativePart = !from.RelativePath.IsNullOrEmpty()
-                    ? from.RelativePath + SitemapHostPostfix
-                    : from.RelativePathEditPart + SitemapHostPostfix;
+                var relativePart = @from.RelativePath.IsNullOrEmpty()
+                    ? @from.RelativePathEditPart + SitemapHostPostfix
+                    : @from.RelativePath + SitemapHostPostfix;
 
                 to.SiteUrl = from.SiteUrl;
                 to.Host = relativePart;
@@ -109,25 +106,23 @@ namespace Geta.Optimizely.Sitemaps.Models
                 to.SitemapFormat = GetSitemapFormat(from.SitemapFormat);
             }
 
-            private IList<string> GetList(string input)
+            private static IList<string> GetList(string input)
             {
                 var value = input?.Trim();
 
                 return string.IsNullOrEmpty(value)
                     ? new List<string>()
-                    : new List<string>(value.Split(';'));
+                    : new(value.Split(';'));
             }
 
-            private int TryParse(string id)
+            private static int TryParse(string id)
             {
-                if (int.TryParse(id, out var rootId))
-                {
-                    return rootId;
-                };
-                return Constants.DefaultRootPageId;
+                return int.TryParse(id, out var rootId)
+                    ? rootId
+                    : Constants.DefaultRootPageId;
             }
 
-            private SitemapFormat GetSitemapFormat(string format)
+            private static SitemapFormat GetSitemapFormat(string format)
             {
                 return Enum.TryParse<SitemapFormat>(format, out var sitemapFormat)
                     ? sitemapFormat
