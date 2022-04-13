@@ -37,13 +37,11 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
         }
 
         public bool CreateMenuIsVisible { get; set; }
-        public string EditItemId { get; set; }
+        private string EditItemId { get; set; }
         [BindProperty] public IList<SelectListItem> SiteHosts { get; set; }
         public bool ShowHostsDropDown { get; set; }
         public string HostLabel { get; set; }
         [BindProperty] public IList<SelectListItem> LanguageBranches { get; set; }
-        protected int EditIndex { get; set; }
-        protected InsertItemPosition InsertItemPosition { get; set; }
         [BindProperty] public SitemapViewModel SitemapViewModel { get; set; }
         [BindProperty] public IList<SitemapViewModel> SitemapViewModels { get; set; }
 
@@ -57,8 +55,6 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
             LoadSiteHosts();
 
             CreateMenuIsVisible = true;
-            EditIndex = -1;
-            InsertItemPosition = InsertItemPosition.LastItem;
 
             LoadLanguageBranches();
             BindSitemapDataList();
@@ -73,7 +69,6 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
             _modelToEntityMapper.Map(SitemapViewModel, sitemap);
             _sitemapRepository.Save(sitemap);
 
-            CloseInsert();
             BindSitemapDataList();
             EmptyDto();
 
@@ -110,7 +105,6 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
             _modelToEntityMapper.Map(SitemapViewModel, sitemap);
             _sitemapRepository.Save(sitemap);
 
-            EditIndex = -1;
             BindSitemapDataList();
             EmptyDto();
             return RedirectToPage();
@@ -191,11 +185,6 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
             {
                 HostLabel = SiteHosts.ElementAt(0).Value;
             }
-        }
-
-        private void CloseInsert()
-        {
-            InsertItemPosition = InsertItemPosition.None;
         }
 
         private void EmptyDto()
