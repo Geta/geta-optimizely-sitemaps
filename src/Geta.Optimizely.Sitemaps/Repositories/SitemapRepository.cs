@@ -1,4 +1,4 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System;
@@ -41,12 +41,18 @@ namespace Geta.Optimizely.Sitemaps.Repositories
 
         public SitemapData GetSitemapData(string requestUrl)
         {
-            var url = new Url(requestUrl); 
-            
+            var url = new Url(requestUrl);
+
             // contains the sitemap URL, for example en/sitemap.xml
             var host = url.Path.TrimStart('/').ToLowerInvariant();
 
+            //Get the site based on just the host
             var siteDefinition = _siteDefinitionResolver.GetByHostname(url.Host, true, out _);
+            if (siteDefinition == null)
+            {
+                //If that didn't work, also include the port
+                siteDefinition = _siteDefinitionResolver.GetByHostname($"{url.Host}:{url.Port}", true, out _);
+            }
             if (siteDefinition == null)
             {
                 return null;
