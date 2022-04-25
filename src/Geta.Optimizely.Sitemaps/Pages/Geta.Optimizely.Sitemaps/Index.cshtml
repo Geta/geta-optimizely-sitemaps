@@ -119,10 +119,10 @@
                                         asp-page-handler="delete" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="trash-2"></span> Delete
                                 </button>
-                                <button type="submit" class="btn btn-light"
-                                        asp-page-handler="view">
+                                <a class="btn btn-light" target="_blank"
+                                        asp-page-handler="view" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="eye"></span> View
-                                </button>
+                                </a>
                             </td>
                         </tr>
                     }

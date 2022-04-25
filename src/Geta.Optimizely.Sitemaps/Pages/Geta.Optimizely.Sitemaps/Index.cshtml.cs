@@ -62,6 +62,18 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
 
             return Page();
         }
+        
+        public IActionResult OnGetView(string id)
+        {
+            var sitemap = _sitemapRepository.GetSitemapData(Identity.Parse(id));
+
+            if (sitemap == null)
+            {
+                return NotFound();
+            }
+            
+            return File(sitemap.Data, "text/xml; charset=utf-8");
+        }
 
         public IActionResult OnPostCreate()
         {
