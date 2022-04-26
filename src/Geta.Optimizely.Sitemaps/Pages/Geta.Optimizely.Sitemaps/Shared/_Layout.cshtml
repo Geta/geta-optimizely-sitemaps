@@ -6,6 +6,7 @@
     <title>@ViewData["Title"]</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="/_content/Geta.Optimizely.Sitemaps/css/dashboard.css" rel="stylesheet">
 </head>
 <body>
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
@@ -17,8 +18,10 @@
 <div class="container-fluid">
     <div class="row">
         <main class="col-md-9 col-lg-10 px-md-4 gy-3">
-            <div class="mb-3">List of sitemap configurations:</div>
-
+            @RenderBody()
+        </main>
+        <aside class="col-md-3 col-lg-2 px-md-4 gy-3">
+            <div class="mb-3 fw-bold">List of sitemap configurations</div>
             <div class="mb-3">
                 <div>
                     <span class="fw-bold">Host:</span>
@@ -29,11 +32,11 @@
                     If your site targets users in many languages and you can provide Google with rel="alternate" hreflang="x". These attributes help Google serve the correct language or regional URL to searchers.
                 </div>
                 <div>
-                    <span class="fw-bold">Path to include:</span>
+                    <span class="fw-bold">Paths to include:</span>
                     Sitemap will contain only pages from this virtual directory url. Separate multiple with ";".
                 </div>
                 <div>
-                    <span class="fw-bold">Path to avoid:</span>
+                    <span class="fw-bold">Paths to avoid:</span>
                     Sitemap will not contain pages from this virtual directory url (works only if "Directory to include" left blank). Separate multiple with ";".
                 </div>
                 <div>
@@ -49,9 +52,10 @@
                     Standard/Mobile/Commerce/Standard and commere
                 </div>
             </div>
-
-            @RenderBody()
-        </main>
+            <div class="mb-3">
+                <span class="fw-bold">NB!</span> To generate the actual sitemaps please run the scheduled task "Generate xml sitemaps".
+            </div>
+        </aside>
     </div>
 </div>
 
