@@ -4,7 +4,7 @@
 
 <div>
     <form method="post">
-        <button type="submit" class="btn btn-secondary"
+        <button type="submit" class="btn btn-primary"
                 asp-page-handler="new">
             <span data-feather="plus"></span> New sitemap
         </button>
@@ -12,8 +12,8 @@
 </div>
 
 <div class="table-responsive mt-3">
-    <table class="table table-hover table-sm" aria-label="Sitemaps">
-        <thead class="table-secondary">
+    <table class="table table-hover" aria-label="Sitemaps">
+        <thead class="table-default">
         <tr>
             <th scope="col">Host</th>
             <th>Path to include</th>
@@ -37,7 +37,7 @@
                             @{ await Html.RenderPartialAsync("_SitemapFormRow", Model); }
                         </td>
                         <td>
-                            <button type="submit" class="btn btn-secondary"
+                            <button type="submit" class="btn btn-primary"
                                     asp-page-handler="update" asp-route-id="@Model.SitemapViewModel.Id">
                                 <span data-feather="edit-2"></span> Update
                             </button>
@@ -67,7 +67,7 @@
                         <td>
                             @if (!Model.IsEditing(sitemapViewModel.Id))
                             {
-                                <button type="submit" class="btn btn-secondary"
+                                <button type="submit" class="btn btn-primary"
                                         asp-page-handler="edit" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="edit"></span> Edit
                                 </button>
@@ -75,7 +75,7 @@
                                         asp-page-handler="delete" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="trash-2"></span> Delete
                                 </button>
-                                <a class="btn btn-light" target="_blank"
+                                <a class="btn btn-secondary" target="_blank"
                                    asp-page-handler="view" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="eye"></span> View
                                 </a>
@@ -96,7 +96,7 @@
                         @{ await Html.RenderPartialAsync("_SitemapFormRow", Model); }
                     </td>
                     <td>
-                        <button type="submit" class="btn btn-secondary"
+                        <button type="submit" class="btn btn-primary"
                                 asp-page-handler="create">
                             <span data-feather="edit-2"></span> Save
                         </button>
