@@ -65,7 +65,7 @@
                         <td>@sitemapViewModel.SitemapFormat</td>
 
                         <td>
-                            @if (!Model.IsEditing(sitemapViewModel.Id))
+                            @if (!Model.IsEditing())
                             {
                                 <button type="submit" class="btn btn-primary"
                                         asp-page-handler="edit" asp-route-id="@sitemapViewModel.Id">
