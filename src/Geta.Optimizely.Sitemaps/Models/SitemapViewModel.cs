@@ -25,6 +25,7 @@ namespace Geta.Optimizely.Sitemaps.Models
         public bool IncludeDebugInfo { get; set; }
         public string RootPageId { get; set; } = Constants.DefaultRootPageId.ToString();
         public string SitemapFormat { get; set; }
+        public bool CanView { get; set; }
 
         public class MapperFromEntity : Mapper<SitemapData, SitemapViewModel>
         {
@@ -50,6 +51,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                 to.RootPageId = from.RootPageId.ToString();
                 to.SitemapFormat = from.SitemapFormat.ToString();
                 to.LanguageBranch = from.Language;
+                to.CanView = from.Data != null;
             }
 
             private string GetLanguage(string language)
