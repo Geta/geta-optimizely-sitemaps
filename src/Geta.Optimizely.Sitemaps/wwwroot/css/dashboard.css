@@ -5,3 +5,12 @@
 .paths-input {
     width: 50em;
 }
+
+.geta-logo svg {
+    width: 60px;
+}
+
+.geta-logo-prefix {
+    color: white;
+    font-size: 12px;
+}
