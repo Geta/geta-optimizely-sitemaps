@@ -1,0 +1,39 @@
+/*
+ * Icons
+ */
+
+.feather {
+    width: 16px;
+    height: 16px;
+    margin-bottom: 3px;
+}
+
+/*
+ * Form
+ */
+
+.fixed-size-label {
+    width: 9em;
+}
+
+.paths-input {
+    width: 50em;
+}
+
+/*
+ * Navbar
+ */
+
+.geta-logo svg {
+    width: 60px;
+}
+
+.geta-logo-prefix {
+    color: white;
+    font-size: 12px;
+}
+
+.version {
+    color: white;
+    font-size: 0.6em;
+}

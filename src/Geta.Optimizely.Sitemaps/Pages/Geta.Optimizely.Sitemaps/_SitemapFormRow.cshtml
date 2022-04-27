@@ -1,0 +1,91 @@
+﻿@model Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps.IndexModel
+
+<div class="row mb-2 mt-2 align-items-center">
+    <div class="col-auto row align-items-center">
+        <label class="col-auto fixed-size-label">Host:</label>
+        <div class="col-auto">
+            @if (Model.ShowHostsDropDown)
+            {
+                <select asp-for="SitemapViewModel.SiteUrl" asp-items="Model.SiteHosts" class="form-select"></select>
+            }
+            else
+            {
+                @Model.HostLabel
+                <input type="hidden" asp-for="SitemapViewModel.SiteUrl" value="@Model.HostLabel"/>
+            }
+        </div>
+    </div>
+    <div class="col-auto">
+        <input type="text" class="form-control" asp-for="SitemapViewModel.RelativePathEditPart"/>
+    </div>
+    <div class="col-auto">
+        sitemap.xml
+    </div>
+</div>
+<div class="row mb-2 mt-2 align-items-center">
+    <div class="col-auto row align-items-center">
+        <label class="col-auto fixed-size-label">Language:</label>
+        <div class="col-auto">
+            <select asp-for="SitemapViewModel.LanguageBranch" asp-items="Model.LanguageBranches" class="form-select"></select>
+        </div>
+    </div>
+    <div class="col-auto">
+        <label>Language fallback:</label>
+        <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.EnableLanguageFallback">
+    </div>
+    <div class="col-auto">
+        <label>Include alternate language pages:</label>
+        <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.IncludeAlternateLanguagePages">
+    </div>
+    <div class="col-auto">
+        <label>Enable simple address support:</label>
+        <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.EnableSimpleAddressSupport">
+    </div>
+</div>
+<div class="row mb-2 mt-2 align-items-center">
+    <label class="col-auto fixed-size-label">Paths to include:</label>
+    <div class="col-auto">
+        <input type="text" class="form-control paths-input" asp-for="SitemapViewModel.PathsToInclude"/>
+    </div>
+</div>
+<div class="row mb-2 mt-2 align-items-center">
+    <label class="col-auto fixed-size-label">Paths to avoid:</label>
+    <div class="col-auto">
+        <input type="text" class="form-control paths-input" asp-for="SitemapViewModel.PathsToAvoid"/>
+    </div>
+</div>
+<div class="row mb-2 mt-2 align-items-center">
+    <label class="col-auto fixed-size-label">Root page ID:</label>
+    <div class="col-auto">
+        <input type="text" class="form-control" asp-for="SitemapViewModel.RootPageId"/>
+    </div>
+</div>
+<div class="row mb-2 mt-2 align-items-center">
+    <div class="col-auto">
+        <label class="fixed-size-label">Debug info:</label>
+        <input type="checkbox" class="form-check-input" asp-for="SitemapViewModel.IncludeDebugInfo">
+    </div>
+</div>
+<div class="row mb-2 mt-2 align-items-center">
+    <div>
+        <label class="col-sm-2 col-form-label">Format:</label>
+        <div class="form-group">
+            <div class="form-check">
+                <input class="form-check-input" asp-for="SitemapViewModel.SitemapFormat" value="Standard" type="radio"/>
+                <label class="form-check-label">Standard</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" asp-for="SitemapViewModel.SitemapFormat" value="Mobile" type="radio"/>
+                <label class="form-check-label">Mobile</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" asp-for="SitemapViewModel.SitemapFormat" value="Commerce" type="radio"/>
+                <label class="form-check-label">Commerce</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" asp-for="SitemapViewModel.SitemapFormat" value="StandardAndCommerce" type="radio"/>
+                <label class="form-check-label">Standard and commerce</label>
+            </div>
+        </div>
+    </div>
+</div>

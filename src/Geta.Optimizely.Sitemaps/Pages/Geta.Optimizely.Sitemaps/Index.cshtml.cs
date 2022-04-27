@@ -208,5 +208,10 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps
         {
             return id == EditItemId;
         }
+
+        public bool IsEditing()
+        {
+            return !string.IsNullOrEmpty(EditItemId);
+        }
     }
 }

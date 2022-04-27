@@ -12,7 +12,7 @@ namespace Geta.Optimizely.Sitemaps
             var url = Paths.ToResource(GetType(), "container");
 
             var link = new UrlMenuItem(
-                "Seo sitemaps",
+                "SEO Sitemaps",
                 MenuPaths.Global + "/cms/seositemaps",
                 url)
             {
