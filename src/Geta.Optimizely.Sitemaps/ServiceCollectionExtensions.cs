@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using EPiServer.Authorization;
-using EPiServer.Cms.Shell;
 using EPiServer.Shell.Modules;
 using Geta.Mapping;
 using Geta.Optimizely.Sitemaps.Configuration;
