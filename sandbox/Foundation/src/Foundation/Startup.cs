@@ -20,6 +20,8 @@ using Foundation.Infrastructure.Display;
 using Geta.NotFoundHandler.Infrastructure.Configuration;
 using Geta.NotFoundHandler.Infrastructure.Initialization;
 using Geta.NotFoundHandler.Optimizely;
+using Geta.Optimizely.Sitemaps;
+using Geta.Optimizely.Sitemaps.Commerce;
 using Jhoose.Security.DependencyInjection;
 using Mediachase.Commerce.Anonymous;
 using Mediachase.Commerce.Orders;
@@ -88,6 +90,9 @@ namespace Foundation
             services.TryAddEnumerable(Microsoft.Extensions.DependencyInjection.ServiceDescriptor.Singleton(typeof(IFirstRequestInitializer), typeof(ContentInstaller)));
             services.AddDetection();
             services.AddTinyMceConfiguration();
+
+            services.AddSitemaps();
+            services.AddSitemapsCommerce();
 
             //site specific
             services.AddEmbeddedLocalization<Startup>();

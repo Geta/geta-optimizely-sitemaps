@@ -120,4 +120,7 @@
 		<None Include="Features\Shared\Components\Dropdown\Default.cshtml" />
 		<None Include="Features\Shared\Components\Money\Default.cshtml" />
 	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\..\..\src\Geta.Optimizely.Sitemaps.Commerce\Geta.Optimizely.Sitemaps.Commerce.csproj" />
+	</ItemGroup>
 </Project>
