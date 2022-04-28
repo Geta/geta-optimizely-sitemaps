@@ -89,14 +89,6 @@ app.UseEndpoints(endpoints =>
 
 ## Usage
 
-### Dynamic property for specific pages
-
-You can specify page specific sitemap properties (like change frequency, priority or include/disinclude the specific page in any sitemap) for each Optimizely page by defining a dynamic property with type SEOSitemaps (and the same name):
-![Create dynamic property](docs/images/SitemapDynamicPropertyDefine.png?raw=true)
-
-and specify values for the dynamic property:
-![Set value for the dynamic property](docs/images/SitemapDynamicPropertyOnPage.PNG?raw=true)
-
 ### Adding Sitemap Properties to all content pages
 
 Credits to [jarihaa](https://github.com/jarihaa) for [contributing](https://github.com/Geta/SEO.Sitemaps/pull/87) this.
