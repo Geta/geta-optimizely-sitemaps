@@ -13,10 +13,12 @@ Add a new sitemap definition and fill values for sitemap host and other fields:
 
 ![Add a sitemap](images/SitemapAdd.png?raw=true)
 
-In case of multiple sites you choose for which site to host this sitemap:  
+In case of multiple sites you choose for which site to host this sitemap:
+
 ![Add a sitemap multiple site](images/SitemapAddMultiSite.png?raw=true)
 
 Each sitemap configuration must have a unique host name:
+
 ![Configure sitemaps](images/SitemapConfigure.png?raw=true)
 
 ## Scheduled job
