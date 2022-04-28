@@ -7,6 +7,7 @@ All notable changes to this project will be documented in this file.
 - Cleanup
 - GitHub Workflow for build
 - Sonarcloud for code quality checks
+- UI improvements
 
 ## [1.0.1]
 
