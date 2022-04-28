@@ -9,6 +9,7 @@ using EPiServer.Web;
 using Foundation.Features.Blocks.ButtonBlock;
 using Foundation.Features.Shared.SelectionFactories;
 using Foundation.Infrastructure;
+using Geta.Optimizely.Sitemaps.SpecializedProperties;
 //using Geta.EpiCategories;
 //using Geta.EpiCategories.DataAnnotations;
 using System.ComponentModel.DataAnnotations;
@@ -251,7 +252,11 @@ namespace Foundation.Features.Shared
         public virtual string Css { get; set; }
 
         #endregion
-
+        
+        [UIHint("SeoSitemap")]
+        [BackingType(typeof(PropertySEOSitemaps))]
+        public virtual string SEOSitemaps { get; set; }
+        
         //public virtual void SetItem(ItemModel itemModel)
         //{
         //    itemModel.Description = PageDescription;
@@ -269,6 +274,13 @@ namespace Foundation.Features.Shared
             Padding = "p-1";
             Margin = "m-1";
             base.SetDefaultValues(contentType);
+            
+            var sitemap = new PropertySEOSitemaps
+            {
+                Enabled = false
+            };
+            sitemap.Serialize();
+            this.SEOSitemaps = sitemap.ToString();
         }
     }
 }
