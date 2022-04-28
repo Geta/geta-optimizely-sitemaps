@@ -1,2 +1,0 @@
-Expand-Archive -Force .\Alloy\App_Data\setup.zip -DestinationPath .\Alloy\App_Data\
-Expand-Archive -Force .\Quicksilver\EPiServer.Reference.Commerce.Site\app_data\setup.zip -DestinationPath .\Quicksilver\EPiServer.Reference.Commerce.Site\app_data\
