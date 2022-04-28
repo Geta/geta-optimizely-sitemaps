@@ -87,5 +87,11 @@ src/Foundation/modules/
 /src/Foundation/wwwroot/js/main.min.js.map
 /src/Foundation/wwwroot/scss/main.min.css
 /src/Foundation/wwwroot/scss/main.min.css.map
+/src/Foundation/wwwroot/js/*.png
+/src/Foundation/wwwroot/js/*.woff
+/src/Foundation/wwwroot/js/*.woff2
+/src/Foundation/wwwroot/js/*.ttf
+/src/Foundation/wwwroot/js/*.eot
+/src/Foundation/wwwroot/js/*.svg
 /log.txt
 appsettings.Development.json
