@@ -21,10 +21,6 @@ This tool allows you to generate xml sitemaps for search engines to better index
 
 See the [editor guide](docs/editor-guide.md) for more information.
 
-## Latest release
-
-The latest version is available on the Optimizely NuGet feed. You can find it by searching the term Geta.Optimizely.Sitemaps.
-
 ## Installation
 
 The command below will install Sitemaps into your Optimizely project.
@@ -152,21 +148,6 @@ services.AddTransient<IContentFilter, SiteContentFilter>();
 ## Limitations
 
 - Each sitemap will contain max 50k entries (according to [sitemaps.org protocol](http://www.sitemaps.org/protocol.html#index)) so if the site in which you are using this plugin contains more active pages then you should split them over multiple sitemaps (by specifying a different root page or include/avoid paths for each).
-
-## Local development setup
-
-See description in [shared repository](https://github.com/Geta/package-shared/blob/master/README.md#local-development-set-up) regarding how to setup local development environment.
-
-### Docker hostnames
-
-Instead of using the static IP addresses the following hostnames can be used out-of-the-box.
-
-- http://sitemaps.getalocaltest.me
-- http://manager-sitemaps.getalocaltest.me
-
-### QuickSilver login
-
-Use the default admin@example.com user for QuickSilver, see [Installation](https://github.com/episerver/Quicksilver).
 
 ## Contributing
 
