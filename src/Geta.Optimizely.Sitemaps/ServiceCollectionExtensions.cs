@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using EPiServer.Authorization;
 using EPiServer.Shell.Modules;
@@ -7,6 +7,7 @@ using Geta.Optimizely.Sitemaps.Configuration;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Models;
 using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Services;
 using Geta.Optimizely.Sitemaps.Utils;
 using Geta.Optimizely.Sitemaps.XML;
 using Microsoft.AspNetCore.Authorization;
@@ -42,6 +43,7 @@ namespace Geta.Optimizely.Sitemaps
             services.AddSingleton<ISitemapLoader, SitemapLoader>();
             services.AddSingleton<ISitemapRepository, SitemapRepository>();
             services.AddSingleton<IContentFilter, ContentFilter>();
+            services.AddSingleton<IUriAugmenterService, NullUriAugmenterService>();
             services.AddTransient<IMobileSitemapXmlGenerator, MobileSitemapXmlGenerator>();
             services.AddTransient<IStandardSitemapXmlGenerator, StandardSitemapXmlGenerator>();
             services.AddTransient(typeof(IMapper<SitemapViewModel, SitemapData>), typeof(SitemapViewModel.MapperToEntity));
