@@ -11,16 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geta.Optimizely.Sitemaps.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foundation", "sandbox\Foundation\src\Foundation\Foundation.csproj", "{82A14BA5-4A85-4DC3-833E-37EBC47BB891}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A71AFC18-7B1C-422E-B556-A1F124C79E34}"
-	ProjectSection(SolutionItems) = preProject
-		.gitignore = .gitignore
-		CHANGELOG.md = CHANGELOG.md
-		CONTRIBUTING.md = CONTRIBUTING.md
-		LICENSE.md = LICENSE.md
-		NuGet.config = NuGet.config
-		README.md = README.md
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FEDCD604-4393-4662-BD63-0469772CF527}"
 	ProjectSection(SolutionItems) = preProject
 		docs\editor-guide.md = docs\editor-guide.md

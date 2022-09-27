@@ -18,7 +18,7 @@ This tool allows you to generate xml sitemaps for search engines to better index
 - ability to include pages that are in a different branch than the one of the start page
 - ability to generate sitemaps for mobile pages
 - it also supports multi-site and multi-language environments
-- ability to augment url generation for parameterized pages using QueryStrings.
+- ability to augment URL generation for parameterized pages using QueryStrings
 
 See the [editor guide](docs/editor-guide.md) for more information.
 
@@ -60,11 +60,13 @@ services.AddSitemaps(x =>
 }, p => p.RequireRole(Roles.Administrators));
 ```
 
-In order to augment Urls you must remove the default IUriAugmenterService and implement your own:
+In order to augment Urls for the PersonListPage with the corresponding querystring parameters for said page, please review the (SitemapUriParameterAugmenterService class)[Sandbox/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs] within the Foundation project:
+
 ```csharp
-// Swap out the NullUriAugmenterService so we can augment Urls within the Sitemap.
-services.RemoveAll<IUriAugmenterService>();
-services.AddSingleton<IUriAugmenterService, SitemapUriParameterAugmenterService>();
+services.AddSitemaps(options =>
+{
+    options.UriAugmenterServiceImplementationFactory = sp => sp.GetInstance<SitemapUriParameterAugmenterService>();
+});
 ```
 
 And for the Commerce support add a call to:

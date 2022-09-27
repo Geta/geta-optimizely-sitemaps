@@ -454,7 +454,7 @@ namespace Geta.Optimizely.Sitemaps.XML
 
             var contentUrl = new Uri(url);
 
-            foreach (var fullContentUrl in _uriAugmenterService.AugmentUri(content, languageContentInfo, contentUrl))
+            foreach (var fullContentUrl in _uriAugmenterService.GetAugmentUri(content, languageContentInfo, contentUrl))
             {
                 var fullUrl = fullContentUrl.ToString();
 

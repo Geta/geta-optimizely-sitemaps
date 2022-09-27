@@ -1,9 +1,12 @@
-﻿using EPiServer.Authorization;
+﻿using EPiServer;
+using EPiServer.Authorization;
 using EPiServer.ContentApi.Cms;
 using EPiServer.ContentApi.Cms.Internal;
 using EPiServer.ContentDefinitionsApi;
 using EPiServer.ContentManagementApi;
+using EPiServer.Core;
 using EPiServer.Data;
+using EPiServer.DataAbstraction;
 using EPiServer.Framework.Web.Resources;
 using EPiServer.Labs.ContentManager;
 using EPiServer.OpenIDConnect;
@@ -15,6 +18,7 @@ using Foundation.Features.Checkout.Payments;
 using Foundation.Infrastructure;
 using Foundation.Infrastructure.Cms.Extensions;
 using Foundation.Infrastructure.Cms.ModelBinders;
+using Foundation.Infrastructure.Cms.Services;
 using Foundation.Infrastructure.Cms.Users;
 using Foundation.Infrastructure.Display;
 using Geta.NotFoundHandler.Infrastructure.Configuration;
@@ -22,6 +26,7 @@ using Geta.NotFoundHandler.Infrastructure.Initialization;
 using Geta.NotFoundHandler.Optimizely;
 using Geta.Optimizely.Sitemaps;
 using Geta.Optimizely.Sitemaps.Commerce;
+using Geta.Optimizely.Sitemaps.Services;
 using Jhoose.Security.DependencyInjection;
 using Mediachase.Commerce.Anonymous;
 using Mediachase.Commerce.Orders;
@@ -91,7 +96,12 @@ namespace Foundation
             services.AddDetection();
             services.AddTinyMceConfiguration();
 
-            services.AddSitemaps();
+            services.AddSingleton<SitemapUriParameterAugmenterService>();
+            services.AddSitemaps(options =>
+            {
+                // Implement the UriAugmenterServiceImplementationFactory in order to enumerate the PersonalListPage querystring parameters.
+                options.UriAugmenterServiceImplementationFactory = sp => sp.GetInstance<SitemapUriParameterAugmenterService>();
+            });
             services.AddSitemapsCommerce();
 
             //site specific

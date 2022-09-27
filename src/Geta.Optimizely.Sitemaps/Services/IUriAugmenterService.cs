@@ -9,10 +9,10 @@ namespace Geta.Optimizely.Sitemaps.Services
         /// <summary>
         /// Allows sitemap implementer an easy facility to take a simple url and expand it in a number of ways, includig parameterizing it with QueryStrings.
         /// </summary>
-        /// <param name="content">Original content of page url being created.</param>
-        /// <param name="languageContentInfo">Language for Uri</param>
-        /// <param name="originUri">Origin uri to be included in sitemap.</param>
-        /// <returns>Must include origin to be included in sitemap.</returns>
-        IEnumerable<Uri> AugmentUri(IContent content, CurrentLanguageContent languageContentInfo, Uri originUri);
+        /// <param name="content">Original content of page URL being created.</param>
+        /// <param name="languageContentInfo">Language for URI</param>
+        /// <param name="originUri">Origin URI to be included in sitemap</param>
+        /// <returns>Must include origin to be included in sitemap</returns>
+        IEnumerable<Uri> GetAugmentUri(IContent content, CurrentLanguageContent languageContentInfo, Uri originUri);
     }
 }
