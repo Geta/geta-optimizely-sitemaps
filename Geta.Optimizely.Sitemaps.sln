@@ -11,22 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Geta.Optimizely.Sitemaps.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Foundation", "sandbox\Foundation\src\Foundation\Foundation.csproj", "{82A14BA5-4A85-4DC3-833E-37EBC47BB891}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{FEDCD604-4393-4662-BD63-0469772CF527}"
-	ProjectSection(SolutionItems) = preProject
-		docs\editor-guide.md = docs\editor-guide.md
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{FE02F591-778A-4883-BA52-DA2B6B93D483}"
-	ProjectSection(SolutionItems) = preProject
-		docs\images\docker-debugging-output.PNG = docs\images\docker-debugging-output.PNG
-		docs\images\docker-output.PNG = docs\images\docker-output.PNG
-		docs\images\sitemap-property.PNG = docs\images\sitemap-property.PNG
-		docs\images\sitemap-scheduled-job.PNG = docs\images\sitemap-scheduled-job.PNG
-		docs\images\SitemapAdd.png = docs\images\SitemapAdd.png
-		docs\images\SitemapAddMultiSite.png = docs\images\SitemapAddMultiSite.png
-		docs\images\SitemapConfigure.png = docs\images\SitemapConfigure.png
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,7 +35,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{82A14BA5-4A85-4DC3-833E-37EBC47BB891} = {9003527C-5B4F-48DB-8946-E6E6773B2EDF}
-		{FE02F591-778A-4883-BA52-DA2B6B93D483} = {FEDCD604-4393-4662-BD63-0469772CF527}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7726B88-56CE-4817-8E7C-0EC0B74F1431}
