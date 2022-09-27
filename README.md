@@ -60,7 +60,7 @@ services.AddSitemaps(x =>
 }, p => p.RequireRole(Roles.Administrators));
 ```
 
-In order to augment Urls for the PersonListPage with the corresponding querystring parameters for said page, please review the (SitemapUriParameterAugmenterService class)[Sandbox/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs] within the Foundation project:
+In order to augment Urls for the PersonListPage with the corresponding querystring parameters for said page, please review the [SitemapUriParameterAugmenterService class](Sandbox/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs) within the Foundation project:
 
 ```csharp
 services.AddSitemaps(options =>
