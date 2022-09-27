@@ -26,7 +26,7 @@ namespace Foundation.Infrastructure.Cms.Services
 
         public IEnumerable<Uri> GetAugmentUri(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri)
         {
-            if (((PageData)content).PageTypeName == "PersonListPage")
+            if (((PageData)content).PageTypeName == nameof(Features.People.PersonListPage))
             {
                 var fullUriString = fullUri.ToString();
 
