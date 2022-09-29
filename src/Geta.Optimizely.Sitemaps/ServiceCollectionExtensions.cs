@@ -20,22 +20,25 @@ namespace Geta.Optimizely.Sitemaps
     {
         private static readonly Action<AuthorizationPolicyBuilder> DefaultPolicy = p => p.RequireRole(Roles.WebAdmins);
 
-        public static IServiceCollection AddSitemaps(this IServiceCollection services)
+        public static IServiceCollection AddSitemaps(this IServiceCollection services,
+            Func<IServiceProvider, IUriAugmenterService> uriAugmenterService = null)
         {
-            return AddSitemaps(services, _ => { }, DefaultPolicy);
-        }
-
-        public static IServiceCollection AddSitemaps(
-            this IServiceCollection services,
-            Action<SitemapOptions> setupAction)
-        {
-            return AddSitemaps(services, setupAction, DefaultPolicy);
+            return AddSitemaps(services, _ => { }, DefaultPolicy, uriAugmenterService);
         }
 
         public static IServiceCollection AddSitemaps(
             this IServiceCollection services,
             Action<SitemapOptions> setupAction,
-            Action<AuthorizationPolicyBuilder> configurePolicy)
+            Func<IServiceProvider, IUriAugmenterService> uriAugmenterService = null)
+        {
+            return AddSitemaps(services, setupAction, DefaultPolicy, uriAugmenterService);
+        }
+
+        public static IServiceCollection AddSitemaps(
+            this IServiceCollection services,
+            Action<SitemapOptions> setupAction,
+            Action<AuthorizationPolicyBuilder> configurePolicy,
+            Func<IServiceProvider, IUriAugmenterService> uriAugmenterService = null)
         {
             AddModule(services);
 
@@ -52,15 +55,16 @@ namespace Geta.Optimizely.Sitemaps
             {
                 setupAction(options);
                 configuration.GetSection("Geta:Sitemaps").Bind(options);
-                
-                if (options.UriAugmenterServiceImplementationFactory != null)
-                {
-                    services.AddSingleton(typeof(IUriAugmenterService), options.UriAugmenterServiceImplementationFactory);
-                } else
-                {
-                    services.AddSingleton<IUriAugmenterService, DefaultUriAugmenterService>();
-                }
             });
+            
+            if (uriAugmenterService != null)
+            {
+                services.AddSingleton(typeof(IUriAugmenterService), uriAugmenterService);
+            }
+            else
+            {
+                services.AddSingleton<IUriAugmenterService, DefaultUriAugmenterService>();
+            }
 
             services.AddAuthorization(options =>
             {

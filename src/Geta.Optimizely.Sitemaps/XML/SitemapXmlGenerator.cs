@@ -182,18 +182,25 @@ namespace Geta.Optimizely.Sitemaps.XML
             return GenerateXmlElements(descendants);
         }
 
-        protected virtual IEnumerable<XElement> GenerateXmlElements(IEnumerable<ContentReference> pages)
+        protected virtual IEnumerable<XElement> GenerateXmlElements(List<ContentReference> pages)
         {
             var sitemapXmlElements = new List<XElement>();
 
-            foreach (var contentReference in pages)
+            for (var p = 0; p < pages.Count; p++)
             {
+                var contentReference = pages[p];
+
                 if (StopGeneration)
                 {
                     return Enumerable.Empty<XElement>();
                 }
 
                 if (TryGet<IExcludeFromSitemap>(contentReference, out _))
+                {
+                    continue;
+                }
+
+                if (ContentReference.IsNullOrEmpty(contentReference))
                 {
                     continue;
                 }

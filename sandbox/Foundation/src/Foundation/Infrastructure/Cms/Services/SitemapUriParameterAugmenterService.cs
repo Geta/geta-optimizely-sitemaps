@@ -26,25 +26,28 @@ namespace Foundation.Infrastructure.Cms.Services
 
         public IEnumerable<Uri> GetAugmentUri(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri)
         {
-            if (((PageData)content).PageTypeName == nameof(Features.People.PersonListPage))
+            if (content is PageData pageContent)
             {
-                var fullUriString = fullUri.ToString();
-
-                var personPageType = _contentTypeRepository.Load<PersonPage>();
-                var usages = _contentModelUsage.ListContentOfContentType(personPageType).Select(c => _contentRepository.Get<PersonPage>(c.ContentLink));
-                // Group all of the results by the querystring parameters that drive the page.
-                var nameSectorLocations = usages.GroupBy(k => new { k.Name, k.Sector, k.Location });
-
-                // Enumerate the total set of expected name/sectors/locations in ordr for them to be indexed.
-                foreach (var nameSectorLocation in nameSectorLocations)
+                if (pageContent.PageTypeName == nameof(Features.People.PersonListPage))
                 {
-                    var augmentedUri = new Uri($"{fullUriString}?name={nameSectorLocation.Key.Name}&sector={nameSectorLocation.Key.Sector}&location={nameSectorLocation.Key.Location}");
-                    yield return augmentedUri;
+                    var fullUriString = fullUri.ToString();
+
+                    var personPageType = _contentTypeRepository.Load<PersonPage>();
+                    var usages = _contentModelUsage.ListContentOfContentType(personPageType).Select(c => _contentRepository.Get<PersonPage>(c.ContentLink));
+                    // Group all of the results by the querystring parameters that drive the page.
+                    var nameSectorLocations = usages.GroupBy(k => new { k.Name, k.Sector, k.Location });
+
+                    // Enumerate the total set of expected name/sectors/locations in ordr for them to be indexed.
+                    foreach (var nameSectorLocation in nameSectorLocations)
+                    {
+                        var augmentedUri = new Uri($"{fullUriString}?name={nameSectorLocation.Key.Name}&sector={nameSectorLocation.Key.Sector}&location={nameSectorLocation.Key.Location}");
+                        yield return augmentedUri;
+                    }
                 }
-            }
-            else
-            {
-                yield return fullUri;
+                else
+                {
+                    yield return fullUri;
+                }
             }
         }
     }
