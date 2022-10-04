@@ -63,17 +63,10 @@ services.AddSitemaps(x =>
 In order to augment Urls for the PersonListPage with the corresponding querystring parameters for said page, please review the [SitemapUriParameterAugmenterService class](sandbox/Foundation/src/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs) within the Foundation project:
 
 ```csharp
-services.AddSitemaps(uriAugmenterService: sp => sp.GetInstance<SitemapUriParameterAugmenterService>());
-```
-
-Or, alternatively:
-```csharp
-services.AddSitemaps(x =>
+services.AddSitemaps(options =>
 {
-  x.EnableLanguageDropDownInAdmin = false;
-  x.EnableRealtimeCaching = true;
-  x.EnableRealtimeSitemap = false;
-}, sp => sp.GetInstance<SitemapUriParameterAugmenterService>());
+    options.SetAugmenterService<SitemapUriParameterAugmenterService>();
+});
 ```
 
 
