@@ -9,7 +9,7 @@ namespace Geta.Optimizely.Sitemaps.Services
     {
         public IEnumerable<Uri> GetAugmentUri(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri)
         {
-            return new Uri[] { fullUri };
+            yield return fullUri;
         }
     }
 }

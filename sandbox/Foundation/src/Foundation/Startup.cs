@@ -99,7 +99,7 @@ namespace Foundation
             // Implement the UriAugmenterServiceImplementationFactory in order to enumerate the PersonalListPage querystring parameters.
             services.AddSitemaps(options =>
             {
-                options.SetAugmenterService<SitemapUriParameterAugmenterService>(services);
+                options.SetAugmenterService<SitemapUriParameterAugmenterService>();
             });
             services.AddSitemapsCommerce();
 

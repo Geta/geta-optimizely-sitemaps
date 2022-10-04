@@ -43,7 +43,6 @@ namespace Geta.Optimizely.Sitemaps
             services.AddSingleton<ISitemapLoader, SitemapLoader>();
             services.AddSingleton<ISitemapRepository, SitemapRepository>();
             services.AddSingleton<IContentFilter, ContentFilter>();
-            services.AddSingleton<IUriAugmenterService, DefaultUriAugmenterService>();
             services.AddTransient<IMobileSitemapXmlGenerator, MobileSitemapXmlGenerator>();
             services.AddTransient<IStandardSitemapXmlGenerator, StandardSitemapXmlGenerator>();
             services.AddTransient(typeof(IMapper<SitemapViewModel, SitemapData>), typeof(SitemapViewModel.MapperToEntity));
@@ -54,6 +53,17 @@ namespace Geta.Optimizely.Sitemaps
                 setupAction(options);
                 configuration.GetSection("Geta:Sitemaps").Bind(options);
             });
+
+            // Emulated - https://github.com/Geta/geta-optimizely-productfeed/blob/master/src/Geta.Optimizely.ProductFeed/ServiceCollectionExtensions.cs
+            var options = new SitemapOptions();
+            setupAction(options);
+            if (options.UriAugmenterService != null)
+            {
+                services.AddSingleton(typeof(IUriAugmenterService), options.UriAugmenterService);
+            } else
+            {
+                services.AddSingleton<IUriAugmenterService, DefaultUriAugmenterService>();
+            }
 
             services.AddAuthorization(options =>
             {
