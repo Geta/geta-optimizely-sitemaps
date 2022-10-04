@@ -1,7 +1,5 @@
 using System;
-using System.Linq;
 using Geta.Optimizely.Sitemaps.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Geta.Optimizely.Sitemaps.Configuration
 {
@@ -11,7 +9,7 @@ namespace Geta.Optimizely.Sitemaps.Configuration
         public bool EnableRealtimeCaching { get; set; } = true;
         public bool EnableLanguageDropDownInAdmin { get; set; } = false;
 
-        public Type UriAugmenterService { get; set; }
+        public Type UriAugmenterService { get; set; } = typeof(DefaultUriAugmenterService);
 
         public void SetAugmenterService<T>() where T : class, IUriAugmenterService
         {

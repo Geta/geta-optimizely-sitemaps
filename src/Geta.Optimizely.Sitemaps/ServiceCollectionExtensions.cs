@@ -57,13 +57,7 @@ namespace Geta.Optimizely.Sitemaps
             // Emulated - https://github.com/Geta/geta-optimizely-productfeed/blob/master/src/Geta.Optimizely.ProductFeed/ServiceCollectionExtensions.cs
             var options = new SitemapOptions();
             setupAction(options);
-            if (options.UriAugmenterService != null)
-            {
-                services.AddSingleton(typeof(IUriAugmenterService), options.UriAugmenterService);
-            } else
-            {
-                services.AddSingleton<IUriAugmenterService, DefaultUriAugmenterService>();
-            }
+            services.AddSingleton(typeof(IUriAugmenterService), options.UriAugmenterService);
 
             services.AddAuthorization(options =>
             {
