@@ -20,25 +20,22 @@ namespace Geta.Optimizely.Sitemaps
     {
         private static readonly Action<AuthorizationPolicyBuilder> DefaultPolicy = p => p.RequireRole(Roles.WebAdmins);
 
-        public static IServiceCollection AddSitemaps(this IServiceCollection services,
-            Func<IServiceProvider, IUriAugmenterService> uriAugmenterService = null)
+        public static IServiceCollection AddSitemaps(this IServiceCollection services)
         {
-            return AddSitemaps(services, _ => { }, DefaultPolicy, uriAugmenterService);
+            return AddSitemaps(services, _ => { }, DefaultPolicy);
+        }
+        
+        public static IServiceCollection AddSitemaps(
+            this IServiceCollection services,
+            Action<SitemapOptions> setupAction)
+        {
+            return AddSitemaps(services, setupAction, DefaultPolicy);
         }
 
         public static IServiceCollection AddSitemaps(
             this IServiceCollection services,
             Action<SitemapOptions> setupAction,
-            Func<IServiceProvider, IUriAugmenterService> uriAugmenterService = null)
-        {
-            return AddSitemaps(services, setupAction, DefaultPolicy, uriAugmenterService);
-        }
-
-        public static IServiceCollection AddSitemaps(
-            this IServiceCollection services,
-            Action<SitemapOptions> setupAction,
-            Action<AuthorizationPolicyBuilder> configurePolicy,
-            Func<IServiceProvider, IUriAugmenterService> uriAugmenterService = null)
+            Action<AuthorizationPolicyBuilder> configurePolicy)
         {
             AddModule(services);
 
@@ -46,6 +43,7 @@ namespace Geta.Optimizely.Sitemaps
             services.AddSingleton<ISitemapLoader, SitemapLoader>();
             services.AddSingleton<ISitemapRepository, SitemapRepository>();
             services.AddSingleton<IContentFilter, ContentFilter>();
+            services.AddSingleton<IUriAugmenterService, DefaultUriAugmenterService>();
             services.AddTransient<IMobileSitemapXmlGenerator, MobileSitemapXmlGenerator>();
             services.AddTransient<IStandardSitemapXmlGenerator, StandardSitemapXmlGenerator>();
             services.AddTransient(typeof(IMapper<SitemapViewModel, SitemapData>), typeof(SitemapViewModel.MapperToEntity));
@@ -56,15 +54,6 @@ namespace Geta.Optimizely.Sitemaps
                 setupAction(options);
                 configuration.GetSection("Geta:Sitemaps").Bind(options);
             });
-            
-            if (uriAugmenterService != null)
-            {
-                services.AddSingleton(typeof(IUriAugmenterService), uriAugmenterService);
-            }
-            else
-            {
-                services.AddSingleton<IUriAugmenterService, DefaultUriAugmenterService>();
-            }
 
             services.AddAuthorization(options =>
             {

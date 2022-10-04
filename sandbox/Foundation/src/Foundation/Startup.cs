@@ -96,9 +96,11 @@ namespace Foundation
             services.AddDetection();
             services.AddTinyMceConfiguration();
 
-            services.AddSingleton<SitemapUriParameterAugmenterService>();
             // Implement the UriAugmenterServiceImplementationFactory in order to enumerate the PersonalListPage querystring parameters.
-            services.AddSitemaps(uriAugmenterService: sp => sp.GetInstance<SitemapUriParameterAugmenterService>());
+            services.AddSitemaps(options =>
+            {
+                options.SetAugmenterService<SitemapUriParameterAugmenterService>(services);
+            });
             services.AddSitemapsCommerce();
 
             //site specific
