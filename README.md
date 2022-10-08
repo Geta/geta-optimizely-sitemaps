@@ -18,7 +18,7 @@ This tool allows you to generate xml sitemaps for search engines to better index
 - ability to include pages that are in a different branch than the one of the start page
 - ability to generate sitemaps for mobile pages
 - it also supports multi-site and multi-language environments
-- ability to augment URL generation for parameterized pages using QueryStrings
+- ability to augment URL generation
 
 See the [editor guide](docs/editor-guide.md) for more information.
 
@@ -60,19 +60,22 @@ services.AddSitemaps(x =>
 }, p => p.RequireRole(Roles.Administrators));
 ```
 
-In order to augment Urls for the PersonListPage with the corresponding querystring parameters for said page, please review the [SitemapUriParameterAugmenterService class](sandbox/Foundation/src/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs) within the Foundation project:
+And for the Commerce support add a call to:
+```csharp
+services.AddSitemapsCommerce();
+```
+
+In order to augment Urls for a given set of content one must prepare to build a service that identifies content to be augmented
+and yields augmented Uris from IUriAugmenterService.GetAugmentUris(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri) method.
+
+1. [Create a service that implements IUriAugmenterService yielding multiple Uris per single input content/language/Uri.](sandbox/Foundation/src/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs).
+2. Ensure the services is set, overring the default service, within the optionsAction of AddSitemaps. For example:
 
 ```csharp
 services.AddSitemaps(options =>
 {
     options.SetAugmenterService<SitemapUriParameterAugmenterService>();
 });
-```
-
-
-And for the Commerce support add a call to:
-```csharp
-services.AddSitemapsCommerce();
 ```
 
 It is also possible to configure the application in `appsettings.json` file. A configuration from the `appsettings.json` will override configuration configured in Startup. Below is an `appsettings.json` configuration example.

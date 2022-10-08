@@ -182,14 +182,12 @@ namespace Geta.Optimizely.Sitemaps.XML
             return GenerateXmlElements(descendants);
         }
 
-        protected virtual IEnumerable<XElement> GenerateXmlElements(List<ContentReference> pages)
+        protected virtual IEnumerable<XElement> GenerateXmlElements(IEnumerable<ContentReference> pages)
         {
             var sitemapXmlElements = new List<XElement>();
 
-            for (var p = 0; p < pages.Count; p++)
+            foreach (var contentReference in pages)
             {
-                var contentReference = pages[p];
-
                 if (StopGeneration)
                 {
                     return Enumerable.Empty<XElement>();
@@ -461,7 +459,7 @@ namespace Geta.Optimizely.Sitemaps.XML
 
             var contentUrl = new Uri(url);
 
-            foreach (var fullContentUrl in _uriAugmenterService.GetAugmentUri(content, languageContentInfo, contentUrl))
+            foreach (var fullContentUrl in _uriAugmenterService.GetAugmentUris(content, languageContentInfo, contentUrl))
             {
                 var fullUrl = fullContentUrl.ToString();
 

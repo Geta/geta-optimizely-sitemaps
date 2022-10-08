@@ -24,7 +24,7 @@ namespace Foundation.Infrastructure.Cms.Services
             _contentRepository = contentRepository;
         }
 
-        public IEnumerable<Uri> GetAugmentUri(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri)
+        public IEnumerable<Uri> GetAugmentUris(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri)
         {
             if (content is PageData pageContent)
             {

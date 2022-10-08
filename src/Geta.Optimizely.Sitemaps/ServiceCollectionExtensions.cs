@@ -54,7 +54,6 @@ namespace Geta.Optimizely.Sitemaps
                 configuration.GetSection("Geta:Sitemaps").Bind(options);
             });
 
-            // Emulated - https://github.com/Geta/geta-optimizely-productfeed/blob/master/src/Geta.Optimizely.ProductFeed/ServiceCollectionExtensions.cs
             var options = new SitemapOptions();
             setupAction(options);
             services.AddSingleton(typeof(IUriAugmenterService), options.UriAugmenterService);

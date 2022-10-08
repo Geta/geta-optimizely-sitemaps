@@ -68,7 +68,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
                 };
             }
 
-            var descendants = ContentRepository.GetDescendents(rootContentReference).ToList();
+            var descendants = ContentRepository.GetDescendents(rootContentReference);
 
             return GenerateXmlElements(descendants);
         }
