@@ -18,7 +18,8 @@ This tool allows you to generate xml sitemaps for search engines to better index
 - ability to include pages that are in a different branch than the one of the start page
 - ability to generate sitemaps for mobile pages
 - it also supports multi-site and multi-language environments
-- ability to augment URL generation for parameterized pages using QueryStrings
+- ability to augment URL generation
+
 
 See the [editor guide](docs/editor-guide.md) for more information.
 
