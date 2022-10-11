@@ -1,4 +1,4 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System;
@@ -19,6 +19,7 @@ using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Models;
 using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Services;
 using Geta.Optimizely.Sitemaps.SpecializedProperties;
 using Geta.Optimizely.Sitemaps.Utils;
 using Microsoft.Extensions.Caching.Memory;
@@ -41,6 +42,7 @@ namespace Geta.Optimizely.Sitemaps.XML
         protected readonly ISiteDefinitionRepository SiteDefinitionRepository;
         protected readonly ILanguageBranchRepository LanguageBranchRepository;
         protected readonly IContentFilter ContentFilter;
+        private readonly IUriAugmenterService _uriAugmenterService;
         private readonly ISynchronizedObjectInstanceCache _objectCache;
         private readonly IMemoryCache _memoryCache;
         private readonly ILogger<SitemapXmlGenerator> _logger;
@@ -55,6 +57,8 @@ namespace Geta.Optimizely.Sitemaps.XML
 
         public bool IsDebugMode { get; set; }
 
+        private readonly Regex _dashRegex = new Regex("[-]+", RegexOptions.Compiled);
+
         protected SitemapXmlGenerator(
             ISitemapRepository sitemapRepository,
             IContentRepository contentRepository,
@@ -62,6 +66,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             ISiteDefinitionRepository siteDefinitionRepository,
             ILanguageBranchRepository languageBranchRepository,
             IContentFilter contentFilter,
+            IUriAugmenterService uriAugmenterService,
             ISynchronizedObjectInstanceCache objectCache,
             IMemoryCache memoryCache,
             ILogger<SitemapXmlGenerator> logger)
@@ -74,6 +79,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             EnabledLanguages = LanguageBranchRepository.ListEnabled();
             UrlSet = new HashSet<string>();
             ContentFilter = contentFilter;
+            _uriAugmenterService = uriAugmenterService;
             _objectCache = objectCache;
             _memoryCache = memoryCache;
             _logger = logger;
@@ -188,6 +194,11 @@ namespace Geta.Optimizely.Sitemaps.XML
                 }
 
                 if (TryGet<IExcludeFromSitemap>(contentReference, out _))
+                {
+                    continue;
+                }
+
+                if (ContentReference.IsNullOrEmpty(contentReference))
                 {
                     continue;
                 }
@@ -389,7 +400,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             if (IsDebugMode)
             {
                 var language = contentData is ILocale localeContent ? localeContent.Language : CultureInfo.InvariantCulture;
-                var contentName = Regex.Replace(contentData.Name, "[-]+", "", RegexOptions.None);
+                var contentName = _dashRegex.Replace(contentData.Name, string.Empty);
 
                 element.AddFirst(
                     new XComment($"page ID: '{contentData.ContentLink.ID}', name: '{contentName}', language: '{language.Name}'"));
@@ -446,22 +457,27 @@ namespace Geta.Optimizely.Sitemaps.XML
 
             url = GetAbsoluteUrl(url);
 
-            var fullContentUrl = new Uri(url);
+            var contentUrl = new Uri(url);
 
-            if (UrlSet.Contains(fullContentUrl.ToString()) || UrlFilter.IsUrlFiltered(fullContentUrl.AbsolutePath, SitemapData))
+            foreach (var fullContentUrl in _uriAugmenterService.GetAugmentUris(content, languageContentInfo, contentUrl))
             {
-                return;
+                var fullUrl = fullContentUrl.ToString();
+
+                if (UrlSet.Contains(fullUrl) || UrlFilter.IsUrlFiltered(fullContentUrl.AbsolutePath, SitemapData))
+                {
+                    continue;
+                }
+
+                var contentElement = GenerateSiteElement(content, fullUrl);
+
+                if (contentElement == null)
+                {
+                    continue;
+                }
+
+                xmlElements.Add(contentElement);
+                UrlSet.Add(fullUrl);
             }
-
-            var contentElement = GenerateSiteElement(content, fullContentUrl.ToString());
-
-            if (contentElement == null)
-            {
-                return;
-            }
-
-            xmlElements.Add(contentElement);
-            UrlSet.Add(fullContentUrl.ToString());
         }
 
         protected virtual XElement CreateHrefLangElement(HrefLangData data)

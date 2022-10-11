@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using EPiServer.Authorization;
 using EPiServer.Shell.Modules;
@@ -7,6 +7,7 @@ using Geta.Optimizely.Sitemaps.Configuration;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Models;
 using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Services;
 using Geta.Optimizely.Sitemaps.Utils;
 using Geta.Optimizely.Sitemaps.XML;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,7 @@ namespace Geta.Optimizely.Sitemaps
         {
             return AddSitemaps(services, _ => { }, DefaultPolicy);
         }
-
+        
         public static IServiceCollection AddSitemaps(
             this IServiceCollection services,
             Action<SitemapOptions> setupAction)
@@ -52,6 +53,10 @@ namespace Geta.Optimizely.Sitemaps
                 setupAction(options);
                 configuration.GetSection("Geta:Sitemaps").Bind(options);
             });
+
+            var options = new SitemapOptions();
+            setupAction(options);
+            services.AddSingleton(typeof(IUriAugmenterService), options.UriAugmenterService);
 
             services.AddAuthorization(options =>
             {
