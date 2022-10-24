@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <PackageId>Geta.Optimizely.Sitemaps.Commerce</PackageId>
         <Title>Search Engine Sitemap generator for Optimizely Commerce</Title>
         <Authors>Geta Digital</Authors>

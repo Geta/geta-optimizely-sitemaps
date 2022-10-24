@@ -8,7 +8,6 @@ using EPiServer.Find.Cms;
 using EPiServer.Find.Commerce;
 using EPiServer.Find.Framework.BestBets;
 using EPiServer.Find.Framework.Statistics;
-using EPiServer.Find.Helpers;
 using EPiServer.Find.Statistics;
 using EPiServer.Find.UnifiedSearch;
 using EPiServer.Globalization;
@@ -260,7 +259,7 @@ namespace Foundation.Features.Search
                 query = query.Filter(x => !(x as FoundationPageData).ExcludeFromSearch.Exists() | (x as FoundationPageData).ExcludeFromSearch.Match(false));
 
                 // obey DNT
-                var doNotTrackHeader = HttpContextHelper.Current.HttpContext.Request.Headers["DNT"].ToString();
+                var doNotTrackHeader = EPiServer.Find.Helpers.HttpContextHelper.Current.HttpContext.Request.Headers["DNT"].ToString();
                 if ((doNotTrackHeader == null || doNotTrackHeader.Equals("0")) && filterOptions.TrackData)
                 {
                     query = query.Track();
