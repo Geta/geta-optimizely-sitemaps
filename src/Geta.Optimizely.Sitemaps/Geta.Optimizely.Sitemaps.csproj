@@ -16,6 +16,7 @@
     <PackageReleaseNotes>https://github.com/Geta/geta-optimizely-sitemaps/blob/master/CHANGELOG.md</PackageReleaseNotes>
     <PackageTags>Sitemap SEO Optimizely OptimizelyModulePackage ThirdPartyAddOn</PackageTags>
     <RepositoryUrl>https://github.com/Geta/geta-optimizely-sitemaps.git</RepositoryUrl>
+    <StaticWebAssetBasePath>/_content/</StaticWebAssetBasePath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,6 +47,10 @@
       <PackagePath>\</PackagePath>
       <Link>icon.png</Link>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\GetaOptimizelySitemaps" />
   </ItemGroup>
 
   <Import Project="msbuild\Main.proj" />
