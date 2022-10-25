@@ -64,7 +64,7 @@
     </Content>
     <Content Include="$(SolutionDir)\src\$(MSBuildProjectName)\msbuild\CopyZipFiles.targets" >
       <Pack>true</Pack>
-      <PackagePath>build\net5.0\$(MSBuildProjectName).targets</PackagePath>
+      <PackagePath>build\net6.0\$(MSBuildProjectName).targets</PackagePath>
     </Content>
   </ItemGroup>
 </Project>
