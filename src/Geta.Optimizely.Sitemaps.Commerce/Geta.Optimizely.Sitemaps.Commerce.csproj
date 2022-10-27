@@ -15,6 +15,7 @@
         <PackageReleaseNotes>https://github.com/Geta/geta-optimizely-sitemaps/blob/master/CHANGELOG.md</PackageReleaseNotes>
         <PackageTags>Sitemap SEO Optimizely OptimizelyModulePackage ThirdPartyAddOn</PackageTags>
         <RepositoryUrl>https://github.com/Geta/geta-optimizely-sitemaps.git</RepositoryUrl>
+        <LangVersion>latest</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
