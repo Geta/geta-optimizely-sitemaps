@@ -49,10 +49,6 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\GetaOptimizelySitemaps" />
-  </ItemGroup>
-
   <Import Project="msbuild\Main.proj" />
 
 </Project>
