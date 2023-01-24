@@ -106,8 +106,8 @@ public class IndexModel : PageModel
     {
         LoadSiteHosts();
         var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
-        EditItemId = id;
         SitemapViewModel = _entityToModelCreator.Create(sitemapData);
+        EditItemId = id;
         LoadLanguageBranches();
         BindSitemapDataList();
         PopulateHostListControl(sitemapData.SiteUrl);
@@ -205,7 +205,7 @@ public class IndexModel : PageModel
         }
         else
         {
-            HostLabel = selected ?? SiteHosts.FirstOrDefault().Value;
+            HostLabel = selected ?? SiteHosts.FirstOrDefault()?.Value;
         }
     }
 
