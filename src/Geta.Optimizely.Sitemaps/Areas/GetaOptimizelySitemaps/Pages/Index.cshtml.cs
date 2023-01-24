@@ -39,19 +39,12 @@ public class IndexModel : PageModel
     }
 
     public bool CreateMenuIsVisible { get; set; }
-
     private string EditItemId { get; set; }
-
     [BindProperty] public IList<SelectListItem> SiteHosts { get; set; }
-
     public bool ShowHostsDropDown { get; set; }
-
     public string HostLabel { get; set; }
-
     [BindProperty] public IList<SelectListItem> LanguageBranches { get; set; }
-
     [BindProperty] public SitemapViewModel SitemapViewModel { get; set; }
-
     [BindProperty] public IList<SitemapViewModel> SitemapViewModels { get; set; }
 
     public void OnGet()
