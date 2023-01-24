@@ -39,12 +39,19 @@ public class IndexModel : PageModel
     }
 
     public bool CreateMenuIsVisible { get; set; }
+
     private string EditItemId { get; set; }
+
     [BindProperty] public IList<SelectListItem> SiteHosts { get; set; }
+
     public bool ShowHostsDropDown { get; set; }
+
     public string HostLabel { get; set; }
+
     [BindProperty] public IList<SelectListItem> LanguageBranches { get; set; }
+
     [BindProperty] public SitemapViewModel SitemapViewModel { get; set; }
+
     [BindProperty] public IList<SitemapViewModel> SitemapViewModels { get; set; }
 
     public void OnGet()
@@ -97,13 +104,13 @@ public class IndexModel : PageModel
 
     public IActionResult OnPostEdit(string id)
     {
+        LoadSiteHosts();
         var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
         EditItemId = id;
         SitemapViewModel = _entityToModelCreator.Create(sitemapData);
-        LoadSiteHosts(sitemapData.SiteUrl);
-        LoadLanguageBranches(sitemapData.Language);
+        LoadLanguageBranches();
         BindSitemapDataList();
-        PopulateHostListControl();
+        PopulateHostListControl(sitemapData.SiteUrl);
         return Page();
     }
 
@@ -138,20 +145,18 @@ public class IndexModel : PageModel
         return RedirectToPage();
     }
 
-    private void LoadLanguageBranches(string selected = null)
+    private void LoadLanguageBranches()
     {
         LanguageBranches = _languageBranchRepository.ListEnabled().Select(x => new SelectListItem
         {
             Text = x.Name,
-            Value = x.Culture.Name,
-            Selected = x.Culture.Name == selected
+            Value = x.Culture.Name
         }).ToList();
 
         LanguageBranches.Insert(0, new SelectListItem
         {
             Text = "*",
-            Value = "",
-            Selected = string.IsNullOrEmpty(selected)
+            Value = ""
         });
     }
 
@@ -161,7 +166,7 @@ public class IndexModel : PageModel
         SitemapViewModels = sitemapsData.Select(entity => _entityToModelCreator.Create(entity)).ToList();
     }
 
-    private void LoadSiteHosts(string selected = null)
+    private void LoadSiteHosts()
     {
         var hosts = _siteDefinitionRepository.List().ToList();
 
@@ -173,8 +178,7 @@ public class IndexModel : PageModel
             siteUrls.Add(new()
             {
                 Text = siteUrl,
-                Value = siteUrl,
-                Selected = siteUrl == selected
+                Value = siteUrl
             });
 
             var hostUrls = siteInformation.Hosts
@@ -193,7 +197,7 @@ public class IndexModel : PageModel
         return !UriComparer.SchemeAndServerEquals(host.GetUri(), siteInformation.SiteUrl);
     }
 
-    private void PopulateHostListControl()
+    private void PopulateHostListControl(string selected = null)
     {
         if (SiteHosts.Count > 1)
         {
@@ -201,7 +205,7 @@ public class IndexModel : PageModel
         }
         else
         {
-            HostLabel = (SiteHosts.FirstOrDefault(x => x.Selected) ?? SiteHosts.FirstOrDefault()).Value;
+            HostLabel = selected ?? SiteHosts.FirstOrDefault().Value;
         }
     }
 
