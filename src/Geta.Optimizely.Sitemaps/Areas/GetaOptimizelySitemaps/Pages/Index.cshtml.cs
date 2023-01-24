@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
 using EPiServer.Web;
@@ -6,12 +8,10 @@ using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Models;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps;
 
@@ -97,11 +97,11 @@ public class IndexModel : PageModel
 
     public IActionResult OnPostEdit(string id)
     {
-        LoadSiteHosts();
-        EditItemId = id;
         var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
+        EditItemId = id;
         SitemapViewModel = _entityToModelCreator.Create(sitemapData);
-        LoadLanguageBranches();
+        LoadSiteHosts(sitemapData.SiteUrl);
+        LoadLanguageBranches(sitemapData.Language);
         BindSitemapDataList();
         PopulateHostListControl();
         return Page();
@@ -138,18 +138,20 @@ public class IndexModel : PageModel
         return RedirectToPage();
     }
 
-    private void LoadLanguageBranches()
+    private void LoadLanguageBranches(string selected = null)
     {
         LanguageBranches = _languageBranchRepository.ListEnabled().Select(x => new SelectListItem
         {
             Text = x.Name,
-            Value = x.Culture.Name
+            Value = x.Culture.Name,
+            Selected = x.Culture.Name == selected
         }).ToList();
 
         LanguageBranches.Insert(0, new SelectListItem
         {
             Text = "*",
-            Value = ""
+            Value = "",
+            Selected = string.IsNullOrEmpty(selected)
         });
     }
 
@@ -159,7 +161,7 @@ public class IndexModel : PageModel
         SitemapViewModels = sitemapsData.Select(entity => _entityToModelCreator.Create(entity)).ToList();
     }
 
-    private void LoadSiteHosts()
+    private void LoadSiteHosts(string selected = null)
     {
         var hosts = _siteDefinitionRepository.List().ToList();
 
@@ -167,10 +169,12 @@ public class IndexModel : PageModel
 
         foreach (var siteInformation in hosts)
         {
+            var siteUrl = siteInformation.SiteUrl.ToString();
             siteUrls.Add(new()
             {
-                Text = siteInformation.SiteUrl.ToString(),
-                Value = siteInformation.SiteUrl.ToString()
+                Text = siteUrl,
+                Value = siteUrl,
+                Selected = siteUrl == selected
             });
 
             var hostUrls = siteInformation.Hosts
@@ -197,7 +201,7 @@ public class IndexModel : PageModel
         }
         else
         {
-            HostLabel = SiteHosts.ElementAt(0).Value;
+            HostLabel = (SiteHosts.FirstOrDefault(x => x.Selected) ?? SiteHosts.FirstOrDefault()).Value;
         }
     }
 
