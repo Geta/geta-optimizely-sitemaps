@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
 using EPiServer.Web;
@@ -6,12 +8,10 @@ using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Models;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps;
 
@@ -98,12 +98,12 @@ public class IndexModel : PageModel
     public IActionResult OnPostEdit(string id)
     {
         LoadSiteHosts();
-        EditItemId = id;
         var sitemapData = _sitemapRepository.GetSitemapData(Identity.Parse(id));
         SitemapViewModel = _entityToModelCreator.Create(sitemapData);
+        EditItemId = id;
         LoadLanguageBranches();
         BindSitemapDataList();
-        PopulateHostListControl();
+        PopulateHostListControl(sitemapData.SiteUrl);
         return Page();
     }
 
@@ -167,10 +167,11 @@ public class IndexModel : PageModel
 
         foreach (var siteInformation in hosts)
         {
+            var siteUrl = siteInformation.SiteUrl.ToString();
             siteUrls.Add(new()
             {
-                Text = siteInformation.SiteUrl.ToString(),
-                Value = siteInformation.SiteUrl.ToString()
+                Text = siteUrl,
+                Value = siteUrl
             });
 
             var hostUrls = siteInformation.Hosts
@@ -189,7 +190,7 @@ public class IndexModel : PageModel
         return !UriComparer.SchemeAndServerEquals(host.GetUri(), siteInformation.SiteUrl);
     }
 
-    private void PopulateHostListControl()
+    private void PopulateHostListControl(string selected = null)
     {
         if (SiteHosts.Count > 1)
         {
@@ -197,7 +198,7 @@ public class IndexModel : PageModel
         }
         else
         {
-            HostLabel = SiteHosts.ElementAt(0).Value;
+            HostLabel = selected ?? SiteHosts.FirstOrDefault()?.Value;
         }
     }
 
