@@ -25,7 +25,7 @@ jobs:
       - name: Test
         run: dotnet test --configuration Release /p:Version=${{env.VERSION}} --no-build
       - name: Pack
-        run: dotnet pack --configuration Release /p:Version=${{env.VERSION}} --no-build --output .
+        run: dotnet pack --configuration Release /p:Version=${{env.VERSION}} --output .
       - name: Push
         run: |
           dotnet nuget push Geta.Optimizely.Sitemaps.${{env.VERSION}}.nupkg --source https://nuget.pkg.github.com/Geta/index.json --api-key ${{env.GITHUB_TOKEN}}

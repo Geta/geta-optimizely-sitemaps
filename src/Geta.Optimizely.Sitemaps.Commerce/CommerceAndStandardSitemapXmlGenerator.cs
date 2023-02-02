@@ -1,4 +1,4 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using EPiServer.Framework.Cache;
 using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Repositories;
+using Geta.Optimizely.Sitemaps.Services;
 using Geta.Optimizely.Sitemaps.Utils;
 using Geta.Optimizely.Sitemaps.XML;
 using Mediachase.Commerce.Catalog;
@@ -33,6 +34,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
             ILanguageBranchRepository languageBranchRepository,
             ReferenceConverter referenceConverter,
             IContentFilter contentFilter,
+            IUriAugmenterService uriAugmenterService,
             ISynchronizedObjectInstanceCache objectCache,
             IMemoryCache memoryCache,
             ILogger<CommerceAndStandardSitemapXmlGenerator> logger)
@@ -44,6 +46,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
                 languageBranchRepository,
                 referenceConverter,
                 contentFilter,
+                uriAugmenterService,
                 objectCache,
                 memoryCache,
                 logger)

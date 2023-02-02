@@ -1,10 +1,10 @@
-﻿using Castle.Core.Internal;
+using System;
+using System.Collections.Generic;
+using Castle.Core.Internal;
+using EPiServer.DataAbstraction;
 using EPiServer.Web;
 using Geta.Mapping;
 using Geta.Optimizely.Sitemaps.Entities;
-using System;
-using System.Collections.Generic;
-using EPiServer.DataAbstraction;
 
 namespace Geta.Optimizely.Sitemaps.Models
 {
@@ -14,6 +14,7 @@ namespace Geta.Optimizely.Sitemaps.Models
 
         public string Id { get; set; }
         public string SiteUrl { get; set; }
+        public string SitemapUrl { get; set; }
         public string LanguageBranch { get; set; }
         public string RelativePath { get; set; }
         public string RelativePathEditPart { get; set; }
@@ -39,7 +40,8 @@ namespace Geta.Optimizely.Sitemaps.Models
             public override void Map(SitemapData @from, SitemapViewModel to)
             {
                 to.Id = from.Id.ToString();
-                to.SiteUrl = GetSiteUrl(from);
+                to.SiteUrl = from.SiteUrl;
+                to.SitemapUrl = GetSitemapUrl(from);
                 to.RelativePath = from.Host;
                 to.RelativePathEditPart = GetRelativePathEditPart(from.Host);
                 to.EnableLanguageFallback = from.EnableLanguageFallback;
@@ -65,7 +67,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                 return $"{languageBranch.URLSegment}/";
             }
 
-            private string GetSiteUrl(SitemapData sitemapData)
+            private string GetSitemapUrl(SitemapData sitemapData)
             {
                 var language = GetLanguage(sitemapData.Language);
 
