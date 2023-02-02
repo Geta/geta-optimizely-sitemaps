@@ -57,7 +57,8 @@ public class GetaSitemapController : Controller
             return RealtimeSitemapData(sitemapData);
         }
 
-        return SitemapData(sitemapData);
+        // returned cached version from schedule job instead of running through generator.
+        return FileContentResult(sitemapData);
     }
 
     private ActionResult RealtimeSitemapData(SitemapData sitemapData)
