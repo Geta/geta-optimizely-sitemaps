@@ -57,7 +57,9 @@ public class GetaSitemapController : Controller
             return RealtimeSitemapData(sitemapData);
         }
 
-        return SitemapData(sitemapData);
+        return sitemapData.Data != null
+            ? FileContentResult(sitemapData)
+            : SitemapData(sitemapData);
     }
 
     private ActionResult RealtimeSitemapData(SitemapData sitemapData)
