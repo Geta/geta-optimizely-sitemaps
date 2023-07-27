@@ -57,7 +57,7 @@ namespace Geta.Optimizely.Sitemaps.XML
 
         public bool IsDebugMode { get; set; }
 
-        private readonly Regex _dashRegex = new Regex("[-]+", RegexOptions.Compiled);
+        private readonly Regex _dashRegex = new("[-]+", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
 
         protected SitemapXmlGenerator(
             ISitemapRepository sitemapRepository,
@@ -193,12 +193,7 @@ namespace Geta.Optimizely.Sitemaps.XML
                     return Enumerable.Empty<XElement>();
                 }
 
-                if (TryGet<IExcludeFromSitemap>(contentReference, out _))
-                {
-                    continue;
-                }
-
-                if (ContentReference.IsNullOrEmpty(contentReference))
+                if (ContentReference.IsNullOrEmpty(contentReference) || TryGet<IExcludeFromSitemap>(contentReference, out _))
                 {
                     continue;
                 }

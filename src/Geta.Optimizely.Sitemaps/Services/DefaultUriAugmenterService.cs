@@ -7,9 +7,9 @@ namespace Geta.Optimizely.Sitemaps.Services
 {
     public class DefaultUriAugmenterService : IUriAugmenterService
     {
-        public IEnumerable<Uri> GetAugmentUris(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri)
+        public IEnumerable<Uri> GetAugmentUris(IContent content, CurrentLanguageContent languageContentInfo, Uri originUri)
         {
-            yield return fullUri;
+            yield return originUri;
         }
     }
 }
