@@ -46,7 +46,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
             }
 
 
-            if (!IsPublished(content, _sitemapOptions.IsStrictPublishCheckingEnabled))
+            if (!IsPublished(content))
             {
                 return true;
             }
@@ -148,7 +148,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
             return false;
         }
 
-        private static bool IsPublished(IContent content, bool isStrictPublishCheckingEnabled)
+        private bool IsPublished(IContent content)
         {
             if (content is IVersionable versionableContent)
             {
@@ -171,7 +171,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
                 return true;
             }
 
-            return !isStrictPublishCheckingEnabled;
+            return !_sitemapOptions.IsStrictPublishCheckingEnabled;
         }
     }
 }
