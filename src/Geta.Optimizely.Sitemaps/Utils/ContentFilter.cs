@@ -1,14 +1,17 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System;
+using AspNetCore;
 using EPiServer.Core;
 using EPiServer.Framework.Web;
 using EPiServer.Security;
 using EPiServer.Web;
+using Geta.Optimizely.Sitemaps.Configuration;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.SpecializedProperties;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Geta.Optimizely.Sitemaps.Utils
 {
@@ -16,11 +19,13 @@ namespace Geta.Optimizely.Sitemaps.Utils
     {
         private readonly TemplateResolver _templateResolver;
         private readonly ILogger<ContentFilter> _logger;
+        private readonly SitemapOptions _sitemapOptions;
 
-        public ContentFilter(TemplateResolver templateResolver, ILogger<ContentFilter> logger)
+        public ContentFilter(TemplateResolver templateResolver, ILogger<ContentFilter> logger, IOptions<SitemapOptions> sitemapOptions)
         {
             _templateResolver = templateResolver;
             _logger = logger;
+            _sitemapOptions = sitemapOptions.Value;
         }
 
         public virtual bool ShouldExcludeContent(IContent content)
@@ -51,9 +56,12 @@ namespace Geta.Optimizely.Sitemaps.Utils
                 return true;
             }
 
-            if (!IsVisibleOnSite(content))
+            if (_sitemapOptions.SiteArchitecture == SiteArchitecture.Mvc)
             {
-                return true;
+                if (!IsVisibleOnSite(content))
+                {
+                    return true;
+                }
             }
 
             if (content.ContentLink.CompareToIgnoreWorkID(ContentReference.WasteBasket))
@@ -76,8 +84,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
             return false;
         }
 
-        public virtual bool ShouldExcludeContent(
-            CurrentLanguageContent languageContentInfo, SiteDefinition siteSettings, SitemapData sitemapData)
+        public virtual bool ShouldExcludeContent(CurrentLanguageContent languageContentInfo, SiteDefinition siteSettings, SitemapData sitemapData)
         {
             return ShouldExcludeContent(languageContentInfo.Content);
         }
@@ -141,7 +148,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
             return false;
         }
 
-        private static bool IsPublished(IContent content)
+        private bool IsPublished(IContent content)
         {
             if (content is IVersionable versionableContent)
             {
@@ -164,7 +171,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
                 return true;
             }
 
-            return false;
+            return !_sitemapOptions.IsStrictPublishCheckingEnabled;
         }
     }
 }
