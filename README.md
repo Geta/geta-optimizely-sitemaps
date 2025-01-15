@@ -153,7 +153,7 @@ public class SiteContentFilter : ContentFilter
     }
 ```
 
-Register in your DI container.
+Register in your DI container. Be sure to register you custom ContentFilter _after_ calling ```services.AddSitemaps()```, otherwise the default ContentFilter will be used.
 
 ```csharp
 services.AddTransient<IContentFilter, SiteContentFilter>();
