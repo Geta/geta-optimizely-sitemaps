@@ -1,4 +1,4 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using EPiServer;
@@ -112,7 +112,8 @@ public class GetaSitemapController : Controller
             ? new CacheEvictionPolicy(TimeSpan.Zero,
                                       CacheTimeoutType.Sliding,
                                       new[] { _contentCacheKeyCreator.VersionKey })
-            : null;
+            : new CacheEvictionPolicy(TimeSpan.FromMinutes(_configuration.SitemapDataCacheExpirationInMinutes),
+                                      CacheTimeoutType.Absolute);
 
         CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
     }
