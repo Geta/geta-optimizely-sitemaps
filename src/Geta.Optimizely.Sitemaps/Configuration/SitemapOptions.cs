@@ -23,6 +23,8 @@ namespace Geta.Optimizely.Sitemaps.Configuration
 
         public Type UriAugmenterService { get; set; } = typeof(DefaultUriAugmenterService);
 
+        public int SitemapDataCacheExpirationInMinutes { get; set; } = 60;
+
         public void SetAugmenterService<T>() where T : class, IUriAugmenterService
         {
             UriAugmenterService = typeof(T);
