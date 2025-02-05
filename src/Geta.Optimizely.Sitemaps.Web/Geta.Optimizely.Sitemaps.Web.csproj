@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\sandbox\geta-packages-foundation-sandbox\src\Foundation\Foundation.csproj" />
+      <ProjectReference Include="..\Geta.Optimizely.Sitemaps.Commerce\Geta.Optimizely.Sitemaps.Commerce.csproj" />
+      <ProjectReference Include="..\Geta.Optimizely.Sitemaps\Geta.Optimizely.Sitemaps.csproj" />
+    </ItemGroup>
+
+  <Import Project="..\..\sandbox\geta-packages-foundation-sandbox\src\Foundation\modules\ModulesInclude.proj"/>
+
+  <ItemGroup>
+    <Content Include="wwwroot\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>
