@@ -163,6 +163,14 @@ services.AddTransient<IContentFilter, SiteContentFilter>();
 
 - Each sitemap will contain max 50k entries (according to [sitemaps.org protocol](http://www.sitemaps.org/protocol.html#index)) so if the site in which you are using this plugin contains more active pages then you should split them over multiple sitemaps (by specifying a different root page or include/avoid paths for each).
 
+
+## How to run locally
+[Follow the instructions](https://github.com/Geta/geta-packages-foundation-sandbox#how-to-run-locally)
+
+
+**_NOTE:_** If used regular installation, please run Geta.Optimizely.Sitemaps.Web instead of Foundation as it consists specific configurations/setup for package.
+
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
