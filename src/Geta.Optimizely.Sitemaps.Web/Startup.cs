@@ -1,9 +1,7 @@
+using EPiServer.Framework.Hosting;
+using EPiServer.Web.Hosting;
 using Geta.Optimizely.Sitemaps.Commerce;
 using Geta.Optimizely.Sitemaps.Web.Services;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Geta.Optimizely.Sitemaps.Web;
 
@@ -25,6 +23,17 @@ public class Startup
             options.SetAugmenterService<SitemapUriParameterAugmenterService>();
         });
         services.AddSitemapsCommerce();
+        
+        var moduleName = typeof(ContainerController).Assembly.GetName().Name;
+        var fullPath = Path.GetFullPath($"..\\{moduleName}\\module");
+
+        services.Configure<CompositeFileProviderOptions>(options =>
+        {
+            options.BasePathFileProviders.Add(new MappingPhysicalFileProvider(
+                                                  $"/EPiServer/{moduleName}",
+                                                  string.Empty,
+                                                  fullPath));
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

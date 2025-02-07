@@ -165,11 +165,36 @@ services.AddTransient<IContentFilter, SiteContentFilter>();
 
 
 ## How to run locally
-[Follow the instructions](https://github.com/Geta/geta-packages-foundation-sandbox#how-to-run-locally)
+Install required dependencies [click](https://github.com/Geta/geta-packages-foundation-sandbox#prerequisites)
+
+### Option 1: Aspire Project (Recommended)
+1. **Run application**
+   ```bash
+   cd sandbox/geta-packages-foundation-sandbox/src/Foundation.AppHost
+   dotnet run --project Foundation.AppHost
+2. **Access Dashboard**
+   ```
+   Open the Aspire dashboard and navigate from the dashboard to https://localhost:5001/
+
+### Option 2: Regular project
+1. **Setup Environment**
+   ```bash
+    cd sandbox/geta-packages-foundation-sandbox
+    # Windows
+    setup.cmd
+    
+    # macOS/Linux
+    chmod +x setup.sh
+    ./setup.sh
+2. **Run application**
+   ```bash
+   dotnet run --project ./src/Geta.Optimizely.Sitemaps.Web/Geta.Optimizely.Sitemaps.Web.csproj
+---
 
 
-**_NOTE:_** If used regular installation, please run Geta.Optimizely.Sitemaps.Web instead of Foundation as it consists specific configurations/setup for package.
+CMS username: admin@example.com
 
+Password: Episerver123!
 
 ## Contributing
 
