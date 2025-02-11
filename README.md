@@ -165,19 +165,32 @@ services.AddTransient<IContentFilter, SiteContentFilter>();
 
 
 ## How to run locally
+
 Install required dependencies [click](https://github.com/Geta/geta-packages-foundation-sandbox#prerequisites)
 
 ### Option 1: Aspire Project (Recommended)
-1. **Run application**
+1. **Checkout repository with submodule**
    ```bash
+   git clone https://github.com/Geta/geta-optimizely-sitemaps
+   cd geta-optimizely-sitemaps
+   git submodule update --init
+
+2. **Run application**
+   ```bash
+   Turn on docker
    cd sandbox/geta-packages-foundation-sandbox/src/Foundation.AppHost
    dotnet run --project Foundation.AppHost
-2. **Access Dashboard**
+
+3. **Access Dashboard**
    ```
    Open the Aspire dashboard and navigate from the dashboard to https://localhost:5001/
 
 ### Option 2: Regular project
-1. **Setup Environment**
+1. **Checkout repository**
+   ```bash
+   git clone https://github.com/Geta/geta-optimizely-sitemaps
+   geta-optimizely-sitemaps
+2. **Setup Environment**
    ```bash
     cd sandbox/geta-packages-foundation-sandbox
     # Windows
@@ -186,9 +199,9 @@ Install required dependencies [click](https://github.com/Geta/geta-packages-foun
     # macOS/Linux
     chmod +x setup.sh
     ./setup.sh
-2. **Run application**
+3. **Run application**
    ```bash
-   dotnet run --project ./src/Geta.Optimizely.Sitemaps.Web/Geta.Optimizely.Sitemaps.Web.csproj
+   dotnet run --project ./src/Geta.Optimizely.Sitemaps/Geta.Optimizely.Sitemaps.Web.csproj
 ---
 
 
