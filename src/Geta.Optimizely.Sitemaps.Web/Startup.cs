@@ -25,7 +25,7 @@ public class Startup
         services.AddSitemapsCommerce();
         
         var moduleName = typeof(ContainerController).Assembly.GetName().Name;
-        var fullPath = Path.GetFullPath($"..\\{moduleName}\\module");
+        var fullPath = Path.GetFullPath($"../{moduleName}/module");
 
         services.Configure<CompositeFileProviderOptions>(options =>
         {
