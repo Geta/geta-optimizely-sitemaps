@@ -68,7 +68,7 @@ services.AddSitemapsCommerce();
 In order to augment Urls for a given set of content one must prepare to build a service that identifies content to be augmented
 and yields augmented Uris from IUriAugmenterService.GetAugmentUris(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri) method.
 
-1. [Create a service that implements IUriAugmenterService yielding multiple Uris per single input content/language/Uri.](sandbox/Foundation/src/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs).
+1. [Create a service that implements IUriAugmenterService yielding multiple Uris per single input content/language/Uri.](sub/Foundation/src/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs).
 2. Ensure the services is set, overring the default service, within the optionsAction of AddSitemaps. For example:
 
 ```csharp
@@ -162,6 +162,58 @@ services.AddTransient<IContentFilter, SiteContentFilter>();
 ## Limitations
 
 - Each sitemap will contain max 50k entries (according to [sitemaps.org protocol](http://www.sitemaps.org/protocol.html#index)) so if the site in which you are using this plugin contains more active pages then you should split them over multiple sitemaps (by specifying a different root page or include/avoid paths for each).
+
+## 🏁 Getting Started
+
+### 📦 Prerequisites
+
+Ensure your system is properly configured to meet all prerequisites for Geta Foundation Core listed [here](https://github.com/Geta/geta-foundation-core#%EF%B8%8F-prerequisites)
+
+### 🐑 Cloning the repository
+
+```bash
+    git clone https://github.com/Geta/geta-optimizely-sitemaps.git
+    cd geta-optimizely-sitemaps
+    git submodule update --init
+```
+
+### 🚀 Running with Aspire (Recommended)
+```bash
+    # Windows
+    cd sub/geta-foundation-core/src/Foundation.AppHost
+    dotnet run
+
+    # Linux / MacOS
+    sudo env "PATH=$PATH" bash
+    chmod +x sub/geta-foundation-core/src/Foundation/docker/build-script/*.sh
+    cd sub/geta-foundation-core/src/Foundation.AppHost
+    dotnet run
+```
+
+### 🖥️ Running as Standalone
+```bash
+   # Windows
+   cd sub/geta-foundation-core
+   ./setup.cmd
+   cd ../../src/Geta.Optimizely.Sitemaps.Web
+   dotnet run
+
+   # Linux / MacOS
+   sudo env "PATH=$PATH" bash
+   cd sub/geta-foundation-core
+   chmod +x *.sh
+   ./setup.sh
+   cd ../../src/Geta.Optimizely.Sitemaps.Web
+   dotnet run
+```
+
+If you run into any issues, check the FAQ section [here](https://github.com/Geta/geta-foundation-web?tab=readme-ov-file#faq) 
+
+---
+
+CMS username: admin@example.com
+
+Password: Episerver123!
 
 ## Contributing
 
