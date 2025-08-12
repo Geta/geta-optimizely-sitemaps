@@ -9,14 +9,11 @@
     <title>Sitemaps</title>
 </head>
 <body>
-@Html.CreatePlatformNavigationMenu()
-<div id="root" @Html.ApplyPlatformNavigation()>
-    <div id="container">
-        @RenderBody()
+    @Html.CreatePlatformNavigationMenu()
+    <div id="root" @Html.ApplyPlatformNavigation()>
+        <div id="container">
+            @RenderBody()
+        </div>
     </div>
-</div>
-
-@ClientResources.RenderResources("admin", new[] { ClientResourceType.Script })
-@await RenderSectionAsync("AdditionalScripts", false)
 </body>
 </html>
