@@ -113,7 +113,7 @@ public class GetaSitemapController : Controller
             _configuration.RealtimeCacheExpirationInMinutesGoogleBot;
 
         var cacheExpiration = TimeSpan.FromMinutes(Math.Max(0, cacheExpirationInMinutes));
-        var cachePolicy = new CacheEvictionPolicy(cacheExpiration, CacheTimeoutType.Absolute);
+        var cachePolicy = new CacheEvictionPolicy(cacheExpiration, CacheTimeoutType.Absolute, new[] { _contentCacheKeyCreator.VersionKey });
 
         CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
     }
