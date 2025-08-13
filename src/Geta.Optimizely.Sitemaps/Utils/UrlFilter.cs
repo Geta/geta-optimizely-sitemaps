@@ -1,4 +1,4 @@
-// Copyright (c) Geta Digital. All rights reserved.
+﻿// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System.Collections.Generic;
@@ -49,9 +49,9 @@ namespace Geta.Optimizely.Sitemaps.Utils
 
         private static string AddTailingSlash(string url)
         {
-            if (!string.IsNullOrWhiteSpace(url) && url[url.Length - 1] != '/')
+            if (!url.EndsWith('/'))
             {
-                url = url + "/";
+                url += "/";
             }
 
             return url;
@@ -59,7 +59,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
 
         private static string AddStartSlash(string url)
         {
-            if (!url.StartsWith("/"))
+            if (!url.StartsWith('/'))
             {
                 url = "/" + url;
             }
