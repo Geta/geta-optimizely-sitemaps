@@ -7,7 +7,6 @@ namespace Geta.Optimizely.Sitemaps.Configuration
     {
         public bool EnableRealtimeSitemap { get; set; } = false;
         public bool EnableRealtimeCaching { get; set; } = true;
-        public bool EnableLanguageDropDownInAdmin { get; set; } = false;
 
         public int RealtimeCacheExpirationInMinutes { get; set; } = 60;
         public int RealtimeCacheExpirationInMinutesGoogleBot { get; set; } = 0;
