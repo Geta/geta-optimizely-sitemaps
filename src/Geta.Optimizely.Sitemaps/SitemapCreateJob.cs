@@ -2,8 +2,9 @@
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using EPiServer;
 using EPiServer.PlugIn;
 using EPiServer.Scheduler;
@@ -34,10 +35,11 @@ namespace Geta.Optimizely.Sitemaps
 
         public override string Execute()
         {
+            var results = new List<bool>();
             OnStatusChanged("Starting generation of sitemaps");
             var message = new StringBuilder();
 
-            IList<SitemapData> sitemapConfigs = _sitemapRepository.GetAllSitemapData();
+            var sitemapConfigs = _sitemapRepository.GetAllSitemapData();
 
             // if no configuration present create one with default values
             if (sitemapConfigs.Count == 0)
@@ -56,8 +58,8 @@ namespace Geta.Optimizely.Sitemaps
                     return "Stop of job was called.";
                 }
 
-                OnStatusChanged(string.Format("Generating {0}{1}.", sitemapConfig.SiteUrl, _sitemapRepository.GetHostWithLanguage(sitemapConfig)));
-                this.GenerateSitemaps(sitemapConfig, message);
+                OnStatusChanged($"Generating {sitemapConfig.SiteUrl}{_sitemapRepository.GetHostWithLanguage(sitemapConfig)}.");
+                results.Add(GenerateSitemaps(sitemapConfig, message));
             }
 
             CacheManager.Remove("SitemapGenerationKey");
@@ -67,23 +69,25 @@ namespace Geta.Optimizely.Sitemaps
                 return "Stop of job was called.";
             }
 
-            return string.Format("Job successfully executed.<br/>Generated sitemaps: {0}", message);
+            if (results.Any(x => !x))
+            {
+                throw new Exception($"Job executed with errors.<br/>{message}");
+            }
+
+            return $"Job successfully executed.<br/>{message}";
         }
 
-        private void GenerateSitemaps(SitemapData sitemapConfig, StringBuilder message)
+        private bool GenerateSitemaps(SitemapData sitemapConfig, StringBuilder message)
         {
-            int entryCount;
             _currentGenerator = _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapConfig);
-            bool success = _currentGenerator.Generate(sitemapConfig, true, out entryCount);
+            var success = _currentGenerator.Generate(sitemapConfig, true, out var entryCount);
 
-            if (success)
-            {
-                message.Append(string.Format("<br/>\"{0}{1}\": {2} entries", sitemapConfig.SiteUrl, _sitemapRepository.GetHostWithLanguage(sitemapConfig), entryCount));
-            }
-            else
-            {
-                message.Append("<br/>Error creating sitemap for \"" + _sitemapRepository.GetHostWithLanguage(sitemapConfig) + "\"");
-            }
+            var sitemapDisplayName = $"{sitemapConfig.SiteUrl}{_sitemapRepository.GetHostWithLanguage(sitemapConfig)}";
+            var resultText = success ? $"Success - {entryCount} entries included" : "An error occured while generating sitemap";
+
+            message.Append($"<br/>{sitemapDisplayName}: {resultText}");
+
+            return success;
         }
 
         private static SitemapData CreateDefaultConfig()
