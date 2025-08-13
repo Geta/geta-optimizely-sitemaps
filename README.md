@@ -83,7 +83,8 @@ It is also possible to configure the application in `appsettings.json` file. A c
 ```json
 "Geta": {
     "Sitemaps": {
-        "EnableRealtimeSitemap":  true
+        "EnableRealtimeSitemap":  true,
+        "RealtimeCacheExpirationInMinutes": 30
     }
 }
 ```
