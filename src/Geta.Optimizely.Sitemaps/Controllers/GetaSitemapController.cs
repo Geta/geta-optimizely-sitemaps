@@ -1,6 +1,7 @@
 // Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
+using System;
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.Framework.Cache;
@@ -11,7 +12,6 @@ using Geta.Optimizely.Sitemaps.Utils;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -108,12 +108,12 @@ public class GetaSitemapController : Controller
 
     private void CacheSitemapData(SitemapData sitemapData, bool isGoogleBot, string cacheKey)
     {
-        var cachePolicy = isGoogleBot
-            ? new CacheEvictionPolicy(TimeSpan.Zero,
-                                      CacheTimeoutType.Sliding,
-                                      new[] { _contentCacheKeyCreator.VersionKey })
-            : new CacheEvictionPolicy(TimeSpan.FromMinutes(Math.Max(0, _configuration.SitemapDataCacheExpirationInMinutes)),
-                                      CacheTimeoutType.Absolute);
+        var cacheExpirationInMinutes = !isGoogleBot ?
+            _configuration.RealtimeCacheExpirationInMinutes :
+            _configuration.RealtimeCacheExpirationInMinutesGoogleBot;
+
+        var cacheExpiration = TimeSpan.FromMinutes(Math.Max(0, cacheExpirationInMinutes));
+        var cachePolicy = new CacheEvictionPolicy(cacheExpiration, CacheTimeoutType.Absolute);
 
         CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
     }

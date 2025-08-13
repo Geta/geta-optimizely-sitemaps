@@ -44,8 +44,10 @@ For the Sitemaps to work, you have to call AddSitemaps extension method in Start
 services.AddSitemaps(x =>
 {
   x.EnableLanguageDropDownInAdmin = false;
-  x.EnableRealtimeCaching = true;
   x.EnableRealtimeSitemap = false;
+  x.EnableRealtimeCaching = true;
+  x.RealtimeCacheExpirationInMinutes = 60;
+  x.RealtimeCacheExpirationInMinutesGoogleBot = 0;
 });
 ```
 
@@ -55,8 +57,10 @@ You can configure access to the sitemaps configuration tab by adding a custom po
 services.AddSitemaps(x =>
 {
   x.EnableLanguageDropDownInAdmin = false;
-  x.EnableRealtimeCaching = true;
   x.EnableRealtimeSitemap = false;
+  x.EnableRealtimeCaching = true;
+  x.RealtimeCacheExpirationInMinutes = 60;
+  x.RealtimeCacheExpirationInMinutesGoogleBot = 0;
 }, p => p.RequireRole(Roles.Administrators));
 ```
 

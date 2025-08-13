@@ -9,6 +9,9 @@ namespace Geta.Optimizely.Sitemaps.Configuration
         public bool EnableRealtimeCaching { get; set; } = true;
         public bool EnableLanguageDropDownInAdmin { get; set; } = false;
 
+        public int RealtimeCacheExpirationInMinutes { get; set; } = 60;
+        public int RealtimeCacheExpirationInMinutesGoogleBot { get; set; } = 0;
+        
         /// <summary>
         /// The default is Mvc, this runs a check in the default content filter to ensure there's a page for every piece of content
         /// Set this to headless if you are running a headless site to skip the check that ensures the content has an accompanying view
@@ -22,8 +25,6 @@ namespace Geta.Optimizely.Sitemaps.Configuration
         public bool IsStrictPublishCheckingEnabled { get; set; } = true;
 
         public Type UriAugmenterService { get; set; } = typeof(DefaultUriAugmenterService);
-
-        public int SitemapDataCacheExpirationInMinutes { get; set; } = 60;
 
         public void SetAugmenterService<T>() where T : class, IUriAugmenterService
         {
