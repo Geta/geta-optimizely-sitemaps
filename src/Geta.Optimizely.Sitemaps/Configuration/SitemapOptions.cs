@@ -9,8 +9,7 @@ namespace Geta.Optimizely.Sitemaps.Configuration
         public bool EnableRealtimeCaching { get; set; } = true;
 
         public int RealtimeCacheExpirationInMinutes { get; set; } = 60;
-        public int RealtimeCacheExpirationInMinutesGoogleBot { get; set; } = 0;
-        
+
         /// <summary>
         /// The default is Mvc, this runs a check in the default content filter to ensure there's a page for every piece of content
         /// Set this to headless if you are running a headless site to skip the check that ensures the content has an accompanying view

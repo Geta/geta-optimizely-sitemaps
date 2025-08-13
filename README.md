@@ -46,7 +46,6 @@ services.AddSitemaps(x =>
   x.EnableRealtimeSitemap = false;
   x.EnableRealtimeCaching = true;
   x.RealtimeCacheExpirationInMinutes = 60;
-  x.RealtimeCacheExpirationInMinutesGoogleBot = 0;
 });
 ```
 
@@ -58,7 +57,6 @@ services.AddSitemaps(x =>
   x.EnableRealtimeSitemap = false;
   x.EnableRealtimeCaching = true;
   x.RealtimeCacheExpirationInMinutes = 60;
-  x.RealtimeCacheExpirationInMinutesGoogleBot = 0;
 }, p => p.RequireRole(Roles.Administrators));
 ```
 
