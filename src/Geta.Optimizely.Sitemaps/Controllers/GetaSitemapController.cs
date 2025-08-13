@@ -112,7 +112,7 @@ public class GetaSitemapController : Controller
             ? new CacheEvictionPolicy(TimeSpan.Zero,
                                       CacheTimeoutType.Sliding,
                                       new[] { _contentCacheKeyCreator.VersionKey })
-            : new CacheEvictionPolicy(TimeSpan.FromMinutes(_configuration.SitemapDataCacheExpirationInMinutes),
+            : new CacheEvictionPolicy(TimeSpan.FromMinutes(Math.Max(0, _configuration.SitemapDataCacheExpirationInMinutes)),
                                       CacheTimeoutType.Absolute);
 
         CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
