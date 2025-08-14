@@ -46,8 +46,9 @@ namespace Geta.Optimizely.Sitemaps.Utils
 
         private static bool IsMatch(string url, string path)
         {
+            var normalizedUrl = NormalizePath(url);
             var normalizedPath = NormalizePath(path);
-            return url.ToLower().StartsWith(normalizedPath);
+            return normalizedUrl.StartsWith(normalizedPath);
         }
 
         private static string NormalizePath(string path)
