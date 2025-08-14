@@ -557,8 +557,9 @@ namespace Geta.Optimizely.Sitemaps.XML
             var siteUrl = new Uri(SitemapData.SiteUrl);
             var sitemapHost = siteUrl.Authority;
 
-            return SiteSettings?.Hosts?.FirstOrDefault(x => x.Name.Equals(sitemapHost, StringComparison.InvariantCultureIgnoreCase))
-                   ?? SiteSettings?.Hosts?.FirstOrDefault(x => x.Name.Equals(SiteDefinition.WildcardHostName));
+            var hosts = SiteSettings?.Hosts;
+            return hosts?.FirstOrDefault(x => x.Name.Equals(sitemapHost, StringComparison.InvariantCultureIgnoreCase)) ??
+                   hosts?.FirstOrDefault(x => x.Name.Equals(SiteDefinition.WildcardHostName));
         }
 
         protected bool ExcludeContentLanguageFromSitemap(CultureInfo language)
