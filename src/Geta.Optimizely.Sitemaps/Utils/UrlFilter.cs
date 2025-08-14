@@ -8,63 +8,51 @@ using Geta.Optimizely.Sitemaps.Entities;
 namespace Geta.Optimizely.Sitemaps.Utils
 {
     /// <summary>
-    /// Administrators are able to specify specific paths to exclude (blacklist) or include (whitelist) in sitemaps.
+    /// Administrators are able to specify specific paths to include (whitelist) or exclude (blacklist) in sitemaps.
     /// This class is used to check this.
     /// </summary>
     public static class UrlFilter
     {
         public static bool IsUrlFiltered(string url, SitemapData sitemapConfig)
         {
-            var whiteList = sitemapConfig.PathsToInclude;
-            var blackList = sitemapConfig.PathsToAvoid;
-
-            return IsNotInWhiteList(url, whiteList) || IsInBlackList(url, blackList);
+            // URL is removed if it fails whitelist or fails blacklist checks
+            return !IsAllowedByWhitelist(url, sitemapConfig.PathsToInclude) ||
+                   !IsAllowedByBlacklist(url, sitemapConfig.PathsToAvoid);
         }
 
-        private static bool IsNotInWhiteList(string url, IList<string> paths)
+        private static bool IsAllowedByWhitelist(string url, IList<string> whitelist)
         {
-            return IsPathInUrl(url, paths, true);
-        }
-
-        private static bool IsInBlackList(string url, IList<string> paths)
-        {
-            return IsPathInUrl(url, paths, false);
-        }
-
-        private static bool IsPathInUrl(string url, ICollection<string> paths, bool mustContainPath)
-        {
-            if (paths == null || paths.Count <= 0)
+            if (whitelist == null || whitelist.Count == 0)
             {
-                return false;
+                // if whitelist is empty, then everything is allowed
+                return true; 
             }
 
-            var anyPathIsInUrl = paths.Any(x =>
-            {
-                var dir = AddStartSlash(AddTailingSlash(x.ToLower().Trim()));
-                return url.ToLower().StartsWith(dir);
-            });
-
-            return anyPathIsInUrl != mustContainPath;
+            // otherwise - url has to match at least one path
+            return whitelist.Any(path => IsMatch(url, path));
         }
 
-        private static string AddTailingSlash(string url)
+        private static bool IsAllowedByBlacklist(string url, IList<string> blacklist)
         {
-            if (!url.EndsWith('/'))
+            if (blacklist == null || blacklist.Count == 0)
             {
-                url += "/";
+                // if blacklist is empty, then everything is allowed
+                return true; 
             }
 
-            return url;
+            // otherwise - url can not match any of the paths 
+            return blacklist.All(path => !IsMatch(url, path));
         }
 
-        private static string AddStartSlash(string url)
+        private static bool IsMatch(string url, string path)
         {
-            if (!url.StartsWith('/'))
-            {
-                url = "/" + url;
-            }
+            var normalizedPath = NormalizePath(path);
+            return url.ToLower().StartsWith(normalizedPath);
+        }
 
-            return url;
+        private static string NormalizePath(string path)
+        {
+            return "/" + path.ToLower().Trim().TrimStart('/').TrimEnd('/') + "/";
         }
     }
 }
