@@ -40,20 +40,22 @@ namespace Geta.Optimizely.Sitemaps.Utils
                 return true; 
             }
 
-            // otherwise - url can not match any of the paths 
-            return blacklist.All(path => !IsMatch(url, path));
+            // otherwise - url is not allowed if it matches any of the paths 
+            return !blacklist.Any(path => IsMatch(url, path));
         }
 
         private static bool IsMatch(string url, string path)
         {
-            var normalizedUrl = NormalizePath(url);
-            var normalizedPath = NormalizePath(path);
+            var normalizedUrl = Normalize(url);
+            var normalizedPath = Normalize(path);
             return normalizedUrl.StartsWith(normalizedPath);
         }
 
-        private static string NormalizePath(string path)
+        private static string Normalize(string value)
         {
-            return "/" + path.ToLower().Trim().TrimStart('/').TrimEnd('/') + "/";
+            var transformedValue = value.ToLower().Trim().TrimStart('/').TrimEnd('/');
+
+            return $"/{transformedValue}/";
         }
     }
 }
