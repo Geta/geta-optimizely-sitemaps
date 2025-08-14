@@ -1,6 +1,7 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
+using System;
 using EPiServer;
 using EPiServer.Core;
 using EPiServer.Framework.Cache;
@@ -8,10 +9,8 @@ using Geta.Optimizely.Sitemaps.Configuration;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -64,8 +63,7 @@ public class GetaSitemapController : Controller
 
     private ActionResult RealtimeSitemapData(SitemapData sitemapData)
     {
-        var isGoogleBot = IsGoogleBot();
-        var cacheKey = GetCacheKey(sitemapData, isGoogleBot);
+        var cacheKey = GetCacheKey(sitemapData);
         var cachedData = GetCachedSitemapData(cacheKey);
 
         if (cachedData != null)
@@ -81,7 +79,7 @@ public class GetaSitemapController : Controller
         {
             if (_configuration.EnableRealtimeCaching)
             {
-                CacheSitemapData(sitemapData, isGoogleBot, cacheKey);
+                CacheSitemapData(sitemapData, cacheKey);
             }
 
             return FileContentResult(sitemapData);
@@ -106,13 +104,10 @@ public class GetaSitemapController : Controller
         return new NotFoundResult();
     }
 
-    private void CacheSitemapData(SitemapData sitemapData, bool isGoogleBot, string cacheKey)
+    private void CacheSitemapData(SitemapData sitemapData, string cacheKey)
     {
-        var cachePolicy = isGoogleBot
-            ? new CacheEvictionPolicy(TimeSpan.Zero,
-                                      CacheTimeoutType.Sliding,
-                                      new[] { _contentCacheKeyCreator.VersionKey })
-            : null;
+        var cacheExpiration = TimeSpan.FromMinutes(Math.Max(0, _configuration.RealtimeCacheExpirationInMinutes));
+        var cachePolicy = new CacheEvictionPolicy(cacheExpiration, CacheTimeoutType.Absolute, new[] { _contentCacheKeyCreator.VersionKey });
 
         CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
     }
@@ -122,21 +117,13 @@ public class GetaSitemapController : Controller
         return CacheManager.Get(cacheKey) as byte[];
     }
 
-    private string GetCacheKey(SitemapData sitemapData, bool isGoogleBot)
+    private string GetCacheKey(SitemapData sitemapData)
     {
-        var cacheKeyPrefix = isGoogleBot ? "Google-" : string.Empty;
-        return cacheKeyPrefix + _sitemapRepository.GetSitemapUrl(sitemapData);
+        return _sitemapRepository.GetSitemapUrl(sitemapData);
     }
 
     private static FileContentResult FileContentResult(SitemapData sitemapData)
     {
         return new(sitemapData.Data, "text/xml; charset=utf-8");
-    }
-
-    private bool IsGoogleBot()
-    {
-        var userAgent = Request.HttpContext.GetServerVariable("USER_AGENT");
-        return userAgent != null
-               && userAgent.IndexOf("Googlebot", StringComparison.InvariantCultureIgnoreCase) > -1;
     }
 }

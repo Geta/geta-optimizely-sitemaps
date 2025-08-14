@@ -43,9 +43,9 @@ For the Sitemaps to work, you have to call AddSitemaps extension method in Start
 ```csharp
 services.AddSitemaps(x =>
 {
-  x.EnableLanguageDropDownInAdmin = false;
-  x.EnableRealtimeCaching = true;
   x.EnableRealtimeSitemap = false;
+  x.EnableRealtimeCaching = true;
+  x.RealtimeCacheExpirationInMinutes = 60;
 });
 ```
 
@@ -54,9 +54,9 @@ You can configure access to the sitemaps configuration tab by adding a custom po
 ```csharp
 services.AddSitemaps(x =>
 {
-  x.EnableLanguageDropDownInAdmin = false;
-  x.EnableRealtimeCaching = true;
   x.EnableRealtimeSitemap = false;
+  x.EnableRealtimeCaching = true;
+  x.RealtimeCacheExpirationInMinutes = 60;
 }, p => p.RequireRole(Roles.Administrators));
 ```
 
@@ -83,7 +83,8 @@ It is also possible to configure the application in `appsettings.json` file. A c
 ```json
 "Geta": {
     "Sitemaps": {
-        "EnableLanguageDropDownInAdmin":  true
+        "EnableRealtimeSitemap":  true,
+        "RealtimeCacheExpirationInMinutes": 30
     }
 }
 ```

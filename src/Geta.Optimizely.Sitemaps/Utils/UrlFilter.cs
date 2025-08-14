@@ -49,9 +49,9 @@ namespace Geta.Optimizely.Sitemaps.Utils
 
         private static string AddTailingSlash(string url)
         {
-            if (url[url.Length - 1] != '/')
+            if (!url.EndsWith('/'))
             {
-                url = url + "/";
+                url += "/";
             }
 
             return url;
@@ -59,7 +59,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
 
         private static string AddStartSlash(string url)
         {
-            if (!url.StartsWith("/"))
+            if (!url.StartsWith('/'))
             {
                 url = "/" + url;
             }

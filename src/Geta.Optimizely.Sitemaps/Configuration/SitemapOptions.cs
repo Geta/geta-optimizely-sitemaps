@@ -7,7 +7,7 @@ namespace Geta.Optimizely.Sitemaps.Configuration
     {
         public bool EnableRealtimeSitemap { get; set; } = false;
         public bool EnableRealtimeCaching { get; set; } = true;
-        public bool EnableLanguageDropDownInAdmin { get; set; } = false;
+        public int RealtimeCacheExpirationInMinutes { get; set; } = 60;
 
         /// <summary>
         /// The default is Mvc, this runs a check in the default content filter to ensure there's a page for every piece of content
