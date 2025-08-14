@@ -53,9 +53,9 @@ namespace Geta.Optimizely.Sitemaps.Utils
 
         private static string Normalize(string value)
         {
-            var transformedValue = value.ToLower().Trim().TrimStart('/').TrimEnd('/');
+            var transformedValue = value?.ToLower().Trim().TrimStart('/').TrimEnd('/');
 
-            return $"/{transformedValue}/";
+            return string.IsNullOrWhiteSpace(transformedValue) ? "/" : $"/{transformedValue}/";
         }
     }
 }
