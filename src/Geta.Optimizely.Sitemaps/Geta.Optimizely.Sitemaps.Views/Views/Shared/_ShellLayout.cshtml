@@ -1,6 +1,6 @@
 @using EPiServer.Framework.Web.Mvc.Html
 @using EPiServer.Shell.Navigation
-@addTagHelper *, EPiServer.CMS.Shell.UI
+@addTagHelper *, EPiServer.Shell.UI
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +12,7 @@
 <body>
     <platform-navigation />
     <div id="root">
-        <div id="container" style="width: 100vw; height: 100vh;">
+        <div id="container">
             @RenderBody()
         </div>
     </div>
