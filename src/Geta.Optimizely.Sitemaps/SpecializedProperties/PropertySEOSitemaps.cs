@@ -23,7 +23,7 @@ namespace Geta.Optimizely.Sitemaps.SpecializedProperties
         public string Priority { get; set; } = "0.5";
 
         [XmlIgnore]
-        protected override string String
+        public override string String
         {
             get => base.String;
 
