@@ -18,6 +18,8 @@ namespace Geta.Optimizely.Sitemaps
     [ScheduledPlugIn(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
     public class SitemapCreateJob : ScheduledJobBase
     {
+        private const string SitemapGenerationCacheKey = "SitemapGenerationKey";
+
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
         private readonly ISynchronizedObjectInstanceCache _objectCache;
@@ -51,14 +53,14 @@ namespace Geta.Optimizely.Sitemaps
                 _sitemapRepository.Save(CreateDefaultConfig());
             }
 
-            _objectCache.Insert("SitemapGenerationKey", DateTime.Now.Ticks, CacheEvictionPolicy.Empty);
+            _objectCache.Insert(SitemapGenerationCacheKey, DateTime.Now.Ticks, CacheEvictionPolicy.Empty);
 
             // create xml sitemap for each configuration
             foreach (var sitemapConfig in sitemapConfigs)
             {
                 if (_stopSignaled)
                 {
-                    _objectCache.Remove("SitemapGenerationKey");
+                    _objectCache.Remove(SitemapGenerationCacheKey);
                     return "Stop of job was called.";
                 }
 
@@ -66,7 +68,7 @@ namespace Geta.Optimizely.Sitemaps
                 results.Add(GenerateSitemaps(sitemapConfig, message));
             }
 
-            _objectCache.Remove("SitemapGenerationKey");
+            _objectCache.Remove(SitemapGenerationCacheKey);
 
             if (_stopSignaled)
             {
@@ -89,7 +91,7 @@ namespace Geta.Optimizely.Sitemaps
             var sitemapDisplayName = $"{sitemapConfig.SiteUrl}{_sitemapRepository.GetHostWithLanguage(sitemapConfig)}";
             var resultText = success
                 ? $"Success - {entryCount} entries included"
-                : $"An error occured while generating sitemap: {_currentGenerator.LastError}";
+                : $"An error occurred while generating sitemap: {_currentGenerator.LastError}";
 
             message.Append($"<br/>{sitemapDisplayName}: {resultText}");
 
