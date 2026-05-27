@@ -524,8 +524,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             return siteDefinitions
                        .FirstOrDefault(siteDef => siteDef.SiteUrl == sitemapSiteUri || siteDef.Hosts.Any(
                                            hostDef => hostDef.Name.Equals(sitemapSiteUri.Authority,
-                                                                          StringComparison.InvariantCultureIgnoreCase)))
-                   ?? siteDefinitions.FirstOrDefault();
+                                                                          StringComparison.InvariantCultureIgnoreCase)));
         }
 
         protected string GetHostLanguageBranch()
