@@ -1,11 +1,9 @@
 # Geta Optimizely Sitemaps
 
-![](http://tc.geta.no/app/rest/builds/buildType:(id:GetaPackages_OptimizelySitemaps_00ci),branch:master/statusIcon)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Geta_geta-optimizely-sitemaps&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Geta_geta-optimizely-sitemaps)
-[![Platform](https://img.shields.io/badge/Platform-.NET%205-blue.svg?style=flat)](https://docs.microsoft.com/en-us/dotnet/)
-[![Platform](https://img.shields.io/badge/Optimizely-%2012-orange.svg?style=flat)](http://world.episerver.com/cms/)
+[![Platform](https://img.shields.io/badge/Platform-.NET%2010-blue.svg?style=flat)](https://docs.microsoft.com/en-us/dotnet/)
+[![Platform](https://img.shields.io/badge/Optimizely-%2013-orange.svg?style=flat)](http://world.episerver.com/cms/)
 
-Search engine sitemaps.xml for Optimizely CMS 12 and Commerce 14
+Search engine sitemaps.xml for Optimizely CMS 13 and Commerce 15
 
 ## Description
 
@@ -68,7 +66,7 @@ services.AddSitemapsCommerce();
 In order to augment Urls for a given set of content one must prepare to build a service that identifies content to be augmented
 and yields augmented Uris from IUriAugmenterService.GetAugmentUris(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri) method.
 
-1. [Create a service that implements IUriAugmenterService yielding multiple Uris per single input content/language/Uri.](sub/Foundation/src/Foundation/Infrastructure/Cms/Services/SitemapUriParameterAugmenterService.cs).
+1. [Create a service that implements IUriAugmenterService yielding multiple Uris per single input content/language/Uri.](src/Geta.Optimizely.Sitemaps.Web/Services/SitemapUriParameterAugmenterService.cs).
 2. Ensure the services is set, overring the default service, within the optionsAction of AddSitemaps. For example:
 
 ```csharp
@@ -91,11 +89,8 @@ It is also possible to configure the application in `appsettings.json` file. A c
 
 Also, you have to add Razor pages routing support.
 
-```
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapRazorPages();
-});
+```csharp
+app.MapRazorPages();
 ```
 
 ## Usage
@@ -208,7 +203,7 @@ Ensure your system is properly configured to meet all prerequisites for Geta Fou
    dotnet run
 ```
 
-If you run into any issues, check the FAQ section [here](https://github.com/Geta/geta-foundation-web?tab=readme-ov-file#faq) 
+If you run into any issues, check the FAQ section [here](https://github.com/Geta/geta-foundation-core?tab=readme-ov-file#faq) 
 
 ---
 
