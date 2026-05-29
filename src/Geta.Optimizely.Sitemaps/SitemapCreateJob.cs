@@ -1,14 +1,13 @@
-﻿// Copyright (c) Geta Digital. All rights reserved.
+// Copyright (c) Geta Digital. All rights reserved.
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EPiServer;
+using EPiServer.Framework.Cache;
 using EPiServer.PlugIn;
 using EPiServer.Scheduler;
-using EPiServer.ServiceLocation;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Utils;
@@ -19,18 +18,25 @@ namespace Geta.Optimizely.Sitemaps
     [ScheduledPlugIn(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
     public class SitemapCreateJob : ScheduledJobBase
     {
+        private const string SitemapGenerationCacheKey = "SitemapGenerationKey";
+
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
+        private readonly ISynchronizedObjectInstanceCache _objectCache;
         private ISitemapXmlGenerator _currentGenerator;
 
         private bool _stopSignaled;
 
-        public SitemapCreateJob()
+        public SitemapCreateJob(
+            ISitemapRepository sitemapRepository,
+            SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory,
+            ISynchronizedObjectInstanceCache objectCache)
         {
             IsStoppable = true;
 
-            this._sitemapRepository = ServiceLocator.Current.GetInstance<ISitemapRepository>();
-            this._sitemapXmlGeneratorFactory = ServiceLocator.Current.GetInstance<SitemapXmlGeneratorFactory>();
+            _sitemapRepository = sitemapRepository;
+            _sitemapXmlGeneratorFactory = sitemapXmlGeneratorFactory;
+            _objectCache = objectCache;
         }
 
         public override string Execute()
@@ -47,14 +53,14 @@ namespace Geta.Optimizely.Sitemaps
                 _sitemapRepository.Save(CreateDefaultConfig());
             }
 
-            CacheManager.Insert("SitemapGenerationKey", DateTime.Now.Ticks);
+            _objectCache.Insert(SitemapGenerationCacheKey, DateTime.Now.Ticks, CacheEvictionPolicy.Empty);
 
             // create xml sitemap for each configuration
             foreach (var sitemapConfig in sitemapConfigs)
             {
                 if (_stopSignaled)
                 {
-                    CacheManager.Remove("SitemapGenerationKey");
+                    _objectCache.Remove(SitemapGenerationCacheKey);
                     return "Stop of job was called.";
                 }
 
@@ -62,7 +68,7 @@ namespace Geta.Optimizely.Sitemaps
                 results.Add(GenerateSitemaps(sitemapConfig, message));
             }
 
-            CacheManager.Remove("SitemapGenerationKey");
+            _objectCache.Remove(SitemapGenerationCacheKey);
 
             if (_stopSignaled)
             {
@@ -83,7 +89,9 @@ namespace Geta.Optimizely.Sitemaps
             var success = _currentGenerator.Generate(sitemapConfig, true, out var entryCount);
 
             var sitemapDisplayName = $"{sitemapConfig.SiteUrl}{_sitemapRepository.GetHostWithLanguage(sitemapConfig)}";
-            var resultText = success ? $"Success - {entryCount} entries included" : "An error occured while generating sitemap";
+            var resultText = success
+                ? $"Success - {entryCount} entries included"
+                : $"An error occurred while generating sitemap: {_currentGenerator.LastError}";
 
             message.Append($"<br/>{sitemapDisplayName}: {resultText}");
 

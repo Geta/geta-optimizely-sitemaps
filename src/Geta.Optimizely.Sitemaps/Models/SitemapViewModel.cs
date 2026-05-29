@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Castle.Core.Internal;
 using EPiServer.DataAbstraction;
 using EPiServer.Web;
 using Geta.Mapping;
@@ -93,7 +92,7 @@ namespace Geta.Optimizely.Sitemaps.Models
         {
             public override void Map(SitemapViewModel @from, SitemapData to)
             {
-                var relativePart = @from.RelativePath.IsNullOrEmpty()
+                var relativePart = string.IsNullOrEmpty(@from.RelativePath)
                     ? @from.RelativePathEditPart + SitemapHostPostfix
                     : @from.RelativePath + SitemapHostPostfix;
 

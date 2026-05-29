@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.0.0]
+
+- Upgraded to Optimizely CMS 13 (.NET 10)
+- Upgraded to Optimizely Commerce 15
+- Removed SonarCloud from CI pipeline
+- Fixed SitemapXmlGenerator silent fallback when site definition is not found
+- Fixed typo and created const for SitemapGenerationCacheKey
+- Updated Geta.Mapping package version
+
 ## [2.0.0]
 
 - Cleanup

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -13,6 +13,23 @@
     <ProjectReference Include="..\Geta.Optimizely.Sitemaps\Geta.Optimizely.Sitemaps.csproj"/>
   </ItemGroup>
 
-  <Import Project="..\..\sub\geta-foundation-core\src\Foundation\modules\ModulesInclude.proj"/>
+  <!-- Resolve NU1107: Foundation pins EPiServer packages to =13.0.1, Sitemaps uses 13.0.2.
+       All Foundation CMS packages overridden to 13.0.2 so the resolver picks a single version. -->
+  <ItemGroup>
+    <PackageReference Include="EPiServer.CMS" Version="13.0.2" />
+    <PackageReference Include="EPiServer.Cms.UI.AspNetIdentity" Version="13.0.2" />
+    <PackageReference Include="EPiServer.OptimizelyIdentity" Version="13.0.2" />
+    <PackageReference Include="EPiServer.CMS.TinyMce" Version="13.0.2" />
+    <PackageReference Include="EPiServer.Cms.UI.VisitorGroups" Version="13.0.2" />
+    <PackageReference Include="EPiServer.Hosting" Version="13.0.2" />
+    <PackageReference Include="EPiServer.ImageLibrary.ImageSharp" Version="13.0.2" />
+    <PackageReference Include="EPiServer.Cms.UI.ContentManager" Version="13.0.2" />
+    <PackageReference Include="EPiServer.Events.ChangeNotification" Version="13.0.2" />
+    <PackageReference Include="Optimizely.Graph.Cms" Version="13.0.2" />
+    <PackageReference Include="Optimizely.Graph.Cms.Query" Version="13.0.2" />
+  </ItemGroup>
+
+  <!-- ModulesInclude.proj removed: .NET 10 static web assets serves Foundation's wwwroot via project reference automatically.
+       The copy target causes "Conflicting assets" errors with the SDK's asset fingerprinting. -->
 
 </Project>

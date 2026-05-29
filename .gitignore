@@ -266,3 +266,6 @@ __pycache__/
 
 # Cake - Uncomment if you are using it
 # tools/
+
+# Local development secrets
+**/appsettings.Development.json
