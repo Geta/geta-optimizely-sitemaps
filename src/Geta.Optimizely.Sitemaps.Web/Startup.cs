@@ -32,10 +32,7 @@ public class Startup
                 var descriptor = services.FirstOrDefault(d => d.ServiceType == syncClientType);
                 if (descriptor != null) services.Remove(descriptor);
 
-                var createMethod = typeof(DispatchProxy).GetMethods(BindingFlags.Public | BindingFlags.Static)
-                    .First(m => m.Name == nameof(DispatchProxy.Create)
-                                && m.IsGenericMethodDefinition
-                                && m.GetGenericArguments().Length == 2);
+                var createMethod = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create))!;
                 var proxy = createMethod
                     .MakeGenericMethod(syncClientType, typeof(NoOpSyncClientProxy))
                     .Invoke(null, null)!;

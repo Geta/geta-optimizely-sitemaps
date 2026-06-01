@@ -6,7 +6,13 @@ internal class NoOpSyncClientProxy : DispatchProxy
 {
     protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
     {
-        var returnType = targetMethod!.ReturnType;
+        if (targetMethod == null)
+            return null;
+
+        var returnType = targetMethod.ReturnType;
+
+        if (returnType == typeof(void))
+            return null;
 
         if (returnType == typeof(Task))
             return Task.CompletedTask;
@@ -21,6 +27,6 @@ internal class NoOpSyncClientProxy : DispatchProxy
                 .Invoke(null, [defaultValue]);
         }
 
-        return null;
+        return returnType.IsValueType ? Activator.CreateInstance(returnType) : null;
     }
 }

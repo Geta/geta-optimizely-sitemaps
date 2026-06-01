@@ -292,7 +292,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             cachedObject = GetHrefLangData(contentLink);
             var policy = new CacheEvictionPolicy(TimeSpan.FromMinutes(10),
                                                  CacheTimeoutType.Absolute,
-                                                 new[] { "SitemapGenerationKey" });
+                                                 new[] { SitemapCreateJob.SitemapGenerationCacheKey });
             _objectCache.Insert(cacheKey, cachedObject, policy);
 
             return cachedObject;

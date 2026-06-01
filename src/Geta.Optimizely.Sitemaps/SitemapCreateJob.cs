@@ -18,7 +18,7 @@ namespace Geta.Optimizely.Sitemaps
     [ScheduledPlugIn(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
     public class SitemapCreateJob : ScheduledJobBase
     {
-        private const string SitemapGenerationCacheKey = "SitemapGenerationKey";
+        public const string SitemapGenerationCacheKey = "SitemapGenerationKey";
 
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
