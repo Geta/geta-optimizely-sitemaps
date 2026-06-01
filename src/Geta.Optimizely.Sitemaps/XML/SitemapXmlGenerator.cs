@@ -287,7 +287,10 @@ namespace Geta.Optimizely.Sitemaps.XML
         {
             var cacheKey = $"HrefLangData-{contentLink.ToReferenceWithoutVersion()}";
 
-            if (_objectCache.Get(cacheKey) is IEnumerable<HrefLangData> cachedObject) return cachedObject;
+            if (_objectCache.Get(cacheKey) is IEnumerable<HrefLangData> cachedObject)
+            {
+                return cachedObject;
+            }
 
             cachedObject = GetHrefLangData(contentLink);
             var policy = new CacheEvictionPolicy(TimeSpan.FromMinutes(10),
@@ -660,7 +663,10 @@ namespace Geta.Optimizely.Sitemaps.XML
 
         private string EnsureCorrectUrlHostLanguage(ILocalizable localizableContent, string url)
         {
-            if (string.IsNullOrEmpty(url)) return url;
+            if (string.IsNullOrEmpty(url))
+            {
+                return url;
+            }
 
             // Make 100% sure we remove the language part in the URL if the sitemap host is mapped to the page's LanguageBranch.
             if (HostLanguageBranch != null

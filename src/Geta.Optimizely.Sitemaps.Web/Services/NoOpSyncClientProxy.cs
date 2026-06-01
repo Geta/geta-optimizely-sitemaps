@@ -7,15 +7,21 @@ internal class NoOpSyncClientProxy : DispatchProxy
     protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)
     {
         if (targetMethod == null)
+        {
             return null;
+        }
 
         var returnType = targetMethod.ReturnType;
 
         if (returnType == typeof(void))
+        {
             return null;
+        }
 
         if (returnType == typeof(Task))
+        {
             return Task.CompletedTask;
+        }
 
         if (returnType.IsGenericType && returnType.GetGenericTypeDefinition() == typeof(Task<>))
         {

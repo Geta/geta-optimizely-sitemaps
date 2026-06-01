@@ -30,7 +30,10 @@ public class Startup
             if (syncClientType != null)
             {
                 var descriptor = services.FirstOrDefault(d => d.ServiceType == syncClientType);
-                if (descriptor != null) services.Remove(descriptor);
+                if (descriptor != null)
+                {
+                    services.Remove(descriptor);
+                }
 
                 var createMethod = typeof(DispatchProxy).GetMethod(nameof(DispatchProxy.Create))!;
                 var proxy = createMethod

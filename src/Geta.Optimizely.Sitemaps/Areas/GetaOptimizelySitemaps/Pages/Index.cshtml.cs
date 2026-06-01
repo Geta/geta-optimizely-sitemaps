@@ -186,7 +186,10 @@ public class IndexModel : PageModel
 
     private static bool ShouldAddToSiteHosts(HostDefinition host, SiteDefinition siteInformation)
     {
-        if (host.Name == "*") return false;
+        if (host.Name == "*")
+        {
+            return false;
+        }
         return !UriComparer.SchemeAndServerEquals(host.GetUri(), siteInformation.SiteUrl);
     }
 
