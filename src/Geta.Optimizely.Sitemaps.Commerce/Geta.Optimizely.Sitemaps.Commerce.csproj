@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <PackageId>Geta.Optimizely.Sitemaps.Commerce</PackageId>
         <Title>Search Engine Sitemap generator for Optimizely Commerce</Title>
         <Authors>Geta Digital</Authors>
@@ -22,11 +22,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="EPiServer.CMS.AspNetCore" Version="12.0.3" />
-        <PackageReference Include="EPiServer.CMS.AspNetCore.Mvc" Version="12.0.3" />
-        <PackageReference Include="EPiServer.CMS.UI.Core" Version="12.0.2" />
-        <PackageReference Include="EPiServer.Commerce.Core" Version="14.0.2" />
-        <PackageReference Include="EPiServer.Framework" Version="12.0.3" />
+        <PackageReference Include="EPiServer.CMS.AspNetCore" Version="13.1.0" />
+        <PackageReference Include="EPiServer.CMS.AspNetCore.Mvc" Version="13.1.0" />
+        <PackageReference Include="EPiServer.CMS.UI.Core" Version="13.1.0" />
+        <PackageReference Include="EPiServer.Commerce.Core" Version="15.0.0" />
+        <PackageReference Include="EPiServer.Framework" Version="13.1.0" />
     </ItemGroup>
 
     <ItemGroup>

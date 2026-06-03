@@ -56,6 +56,7 @@ namespace Geta.Optimizely.Sitemaps.XML
         protected static XNamespace SitemapXhtmlNamespace => @"http://www.w3.org/1999/xhtml";
 
         public bool IsDebugMode { get; set; }
+        public string LastError { get; private set; }
 
         private readonly Regex _dashRegex = new("[-]+", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
 
@@ -112,7 +113,6 @@ namespace Geta.Optimizely.Sitemaps.XML
                 var sitemapSiteUri = new Uri(SitemapData.SiteUrl);
                 SiteSettings = GetSiteDefinitionFromSiteUri(sitemapSiteUri);
                 HostLanguageBranch = GetHostLanguageBranch();
-                SiteDefinition.Current = SiteSettings;
                 var sitemap = CreateSitemapXmlContents(out entryCount);
 
                 var doc = new XDocument(new XDeclaration("1.0", "utf-8", null));
@@ -135,6 +135,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             }
             catch (Exception e)
             {
+                LastError = e.Message;
                 _logger.LogError(e, "Error on generating xml sitemap");
                 entryCount = 0;
                 return false;
@@ -286,12 +287,15 @@ namespace Geta.Optimizely.Sitemaps.XML
         {
             var cacheKey = $"HrefLangData-{contentLink.ToReferenceWithoutVersion()}";
 
-            if (_objectCache.Get(cacheKey) is IEnumerable<HrefLangData> cachedObject) return cachedObject;
+            if (_objectCache.Get(cacheKey) is IEnumerable<HrefLangData> cachedObject)
+            {
+                return cachedObject;
+            }
 
             cachedObject = GetHrefLangData(contentLink);
             var policy = new CacheEvictionPolicy(TimeSpan.FromMinutes(10),
                                                  CacheTimeoutType.Absolute,
-                                                 new[] { "SitemapGenerationKey" });
+                                                 new[] { SitemapCreateJob.SitemapGenerationCacheKey });
             _objectCache.Insert(cacheKey, cachedObject, policy);
 
             return cachedObject;
@@ -518,11 +522,12 @@ namespace Geta.Optimizely.Sitemaps.XML
 
         public SiteDefinition GetSiteDefinitionFromSiteUri(Uri sitemapSiteUri)
         {
-            return SiteDefinitionRepository
-                .List()
-                .FirstOrDefault(siteDef => siteDef.SiteUrl == sitemapSiteUri || siteDef.Hosts.Any(
-                                    hostDef => hostDef.Name.Equals(sitemapSiteUri.Authority,
-                                                                   StringComparison.InvariantCultureIgnoreCase)));
+            var siteDefinitions = SiteDefinitionRepository.List().ToList();
+
+            return siteDefinitions
+                       .FirstOrDefault(siteDef => siteDef.SiteUrl == sitemapSiteUri || siteDef.Hosts.Any(
+                                           hostDef => hostDef.Name.Equals(sitemapSiteUri.Authority,
+                                                                          StringComparison.InvariantCultureIgnoreCase)));
         }
 
         protected string GetHostLanguageBranch()
@@ -658,7 +663,10 @@ namespace Geta.Optimizely.Sitemaps.XML
 
         private string EnsureCorrectUrlHostLanguage(ILocalizable localizableContent, string url)
         {
-            if (string.IsNullOrEmpty(url)) return url;
+            if (string.IsNullOrEmpty(url))
+            {
+                return url;
+            }
 
             // Make 100% sure we remove the language part in the URL if the sitemap host is mapped to the page's LanguageBranch.
             if (HostLanguageBranch != null

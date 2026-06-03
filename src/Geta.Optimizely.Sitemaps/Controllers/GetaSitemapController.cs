@@ -21,6 +21,7 @@ public class GetaSitemapController : Controller
     private readonly ISitemapRepository _sitemapRepository;
     private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
     private readonly IContentCacheKeyCreator _contentCacheKeyCreator;
+    private readonly ISynchronizedObjectInstanceCache _objectCache;
     private readonly ILogger<GetaSitemapController> _logger;
     private readonly SitemapOptions _configuration;
 
@@ -28,12 +29,14 @@ public class GetaSitemapController : Controller
         ISitemapRepository sitemapRepository,
         SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory,
         IContentCacheKeyCreator contentCacheKeyCreator,
+        ISynchronizedObjectInstanceCache objectCache,
         IOptions<SitemapOptions> options,
         ILogger<GetaSitemapController> logger)
     {
         _sitemapRepository = sitemapRepository;
         _sitemapXmlGeneratorFactory = sitemapXmlGeneratorFactory;
         _contentCacheKeyCreator = contentCacheKeyCreator;
+        _objectCache = objectCache;
         _logger = logger;
         _configuration = options.Value;
     }
@@ -109,12 +112,12 @@ public class GetaSitemapController : Controller
         var cacheExpiration = TimeSpan.FromMinutes(Math.Max(0, _configuration.RealtimeCacheExpirationInMinutes));
         var cachePolicy = new CacheEvictionPolicy(cacheExpiration, CacheTimeoutType.Absolute, new[] { _contentCacheKeyCreator.VersionKey });
 
-        CacheManager.Insert(cacheKey, sitemapData.Data, cachePolicy);
+        _objectCache.Insert(cacheKey, sitemapData.Data, cachePolicy);
     }
 
-    private static byte[] GetCachedSitemapData(string cacheKey)
+    private byte[] GetCachedSitemapData(string cacheKey)
     {
-        return CacheManager.Get(cacheKey) as byte[];
+        return _objectCache.Get(cacheKey) as byte[];
     }
 
     private string GetCacheKey(SitemapData sitemapData)

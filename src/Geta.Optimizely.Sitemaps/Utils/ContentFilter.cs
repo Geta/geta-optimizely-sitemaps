@@ -2,7 +2,6 @@
 // Licensed under Apache-2.0. See the LICENSE file in the project root for more information
 
 using System;
-using AspNetCore;
 using EPiServer.Core;
 using EPiServer.Framework.Web;
 using EPiServer.Security;
@@ -108,7 +107,9 @@ namespace Geta.Optimizely.Sitemaps.Utils
             {
                 var page = content as PageData;
                 if (page == null)
+                {
                     return true;
+                }
 
                 var seoProperty = page.GetType().GetProperty(PropertySEOSitemaps.PropertyName);
                 if (seoProperty?.GetValue(page) is PropertySEOSitemaps) //check unlikely situation when the property name is the same as defined for SEOSiteMaps

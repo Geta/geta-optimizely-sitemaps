@@ -1,15 +1,14 @@
-﻿@using EPiServer.Shell.Navigation
+@using EPiServer.Framework.Web.Mvc.Html
+@using EPiServer.Shell.Navigation
+@addTagHelper *, EPiServer.Shell.UI
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>Sitemaps</title>
 </head>
 <body>
-    @Html.CreatePlatformNavigationMenu()
-    <div id="root" @Html.ApplyPlatformNavigation()>
+    <platform-navigation />
+    <div id="root">
         <div id="container">
             @RenderBody()
         </div>

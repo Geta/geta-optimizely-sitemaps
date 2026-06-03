@@ -8,6 +8,7 @@ namespace Geta.Optimizely.Sitemaps.XML
     public interface ISitemapXmlGenerator
     {
         bool IsDebugMode { get; set; }
+        string LastError { get; }
         bool Generate(SitemapData sitemapData, bool persistData, out int entryCount);
         void Stop();
     }
