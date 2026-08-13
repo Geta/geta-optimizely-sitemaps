@@ -3,10 +3,10 @@
 
 using System.Xml.Linq;
 using EPiServer;
+using EPiServer.Applications;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
 using EPiServer.Framework.Cache;
-using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Services;
@@ -22,7 +22,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             ISitemapRepository sitemapRepository,
             IContentRepository contentRepository,
             UrlResolver urlResolver,
-            ISiteDefinitionRepository siteDefinitionRepository,
+            IApplicationRepository applicationRepository,
             ILanguageBranchRepository languageBranchRepository,
             IContentFilter contentFilter,
             IUriAugmenterService uriAugmenterService,
@@ -33,7 +33,7 @@ namespace Geta.Optimizely.Sitemaps.XML
                 sitemapRepository,
                 contentRepository,
                 urlResolver,
-                siteDefinitionRepository,
+                applicationRepository,
                 languageBranchRepository,
                 contentFilter,
                 uriAugmenterService,

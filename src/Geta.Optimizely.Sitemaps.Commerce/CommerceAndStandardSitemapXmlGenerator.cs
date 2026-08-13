@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using EPiServer;
+using EPiServer.Applications;
 using EPiServer.DataAbstraction;
 using EPiServer.Framework.Cache;
-using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Services;
@@ -30,7 +30,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
             ISitemapRepository sitemapRepository,
             IContentRepository contentRepository,
             IUrlResolver urlResolver,
-            ISiteDefinitionRepository siteDefinitionRepository,
+            IApplicationRepository applicationRepository,
             ILanguageBranchRepository languageBranchRepository,
             ReferenceConverter referenceConverter,
             IContentFilter contentFilter,
@@ -42,7 +42,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
                 sitemapRepository,
                 contentRepository,
                 urlResolver,
-                siteDefinitionRepository,
+                applicationRepository,
                 languageBranchRepository,
                 referenceConverter,
                 contentFilter,
@@ -55,9 +55,9 @@ namespace Geta.Optimizely.Sitemaps.Commerce
 
         protected override IEnumerable<XElement> GetSitemapXmlElements()
         {
-            var contentDescendants = ContentRepository.GetDescendents(this.SiteSettings.StartPage).ToList();
+            var contentDescendants = ContentRepository.GetDescendents(this.CurrentSite.EntryPoint).ToList();
 
-            contentDescendants.Insert(0, SiteSettings.StartPage);
+            contentDescendants.Insert(0, CurrentSite.EntryPoint);
 
             var contentElements = GenerateXmlElements(contentDescendants);
             return contentElements.Union(base.GetSitemapXmlElements());

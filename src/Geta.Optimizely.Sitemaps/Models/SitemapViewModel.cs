@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using EPiServer;
+using EPiServer.Applications;
 using EPiServer.DataAbstraction;
-using EPiServer.Web;
 using Geta.Mapping;
 using Geta.Optimizely.Sitemaps.Entities;
 
@@ -30,10 +31,12 @@ namespace Geta.Optimizely.Sitemaps.Models
         public class MapperFromEntity : Mapper<SitemapData, SitemapViewModel>
         {
             private readonly ILanguageBranchRepository _languageBranchRepository;
+            private readonly IApplicationResolver _applicationResolver;
 
-            public MapperFromEntity(ILanguageBranchRepository languageBranchRepository)
+            public MapperFromEntity(ILanguageBranchRepository languageBranchRepository, IApplicationResolver applicationResolver)
             {
                 _languageBranchRepository = languageBranchRepository;
+                _applicationResolver = applicationResolver;
             }
 
             public override void Map(SitemapData @from, SitemapViewModel to)
@@ -57,7 +60,7 @@ namespace Geta.Optimizely.Sitemaps.Models
 
             private string GetLanguage(string language)
             {
-                if (string.IsNullOrWhiteSpace(language) || SiteDefinition.WildcardHostName.Equals(language))
+                if (string.IsNullOrWhiteSpace(language))
                 {
                     return string.Empty;
                 }
@@ -75,9 +78,16 @@ namespace Geta.Optimizely.Sitemaps.Models
                     return $"{sitemapData.SiteUrl}{language}{sitemapData.Host}";
                 }
 
-                var site = SiteDefinition.Current.SiteUrl.ToString();
+                var siteUrl = new Url(sitemapData.SiteUrl);
+                var app = _applicationResolver.GetByHostname(siteUrl.Host, true).Application;
 
-                return $"{site}{language}{sitemapData.Host}";
+                if (app is IRoutableApplication site)
+                {
+                    return $"{site.Url}{language}{sitemapData.Host}";
+                }
+
+                site = _applicationResolver.GetByContext() as IRoutableApplication;
+                return site != null ? $"{site.Url}{language}{sitemapData.Host}" : string.Empty;
             }
 
             private static string GetRelativePathEditPart(string hostName)

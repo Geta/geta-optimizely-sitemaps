@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EPiServer.Framework.Cache;
-using EPiServer.PlugIn;
 using EPiServer.Scheduler;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Repositories;
@@ -15,7 +14,7 @@ using Geta.Optimizely.Sitemaps.XML;
 
 namespace Geta.Optimizely.Sitemaps
 {
-    [ScheduledPlugIn(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
+    [ScheduledJob(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
     public class SitemapCreateJob : ScheduledJobBase
     {
         public const string SitemapGenerationCacheKey = "SitemapGenerationKey";

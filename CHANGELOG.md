@@ -1,6 +1,17 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [5.0.0]
+
+- Switch from SiteDefinition to the new Application framework
+- Remove remaining obsolete warnings
+
+### Breaking changes
+
+- IContentFilter: Signature changed on ShouldExcludeContent (removed SiteDefinition parameter) 
+- All use of ISiteDefinitionRepository replaced by IApplicationRepository
+- XmlGenerator: SiteDefinition property replaced by CurrentSite
+- HostDefinitionExtensions removed
 
 ## [4.0.0]
 

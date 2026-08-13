@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using EPiServer.Applications;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
-using EPiServer.Web;
 using Geta.Mapping;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Models;
@@ -19,20 +19,20 @@ namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps;
 public class IndexModel : PageModel
 {
     private readonly ISitemapRepository _sitemapRepository;
-    private readonly ISiteDefinitionRepository _siteDefinitionRepository;
+    private readonly IApplicationRepository _applicationRepository;
     private readonly ILanguageBranchRepository _languageBranchRepository;
     private readonly IMapper<SitemapViewModel, SitemapData> _modelToEntityMapper;
     private readonly ICreateFrom<SitemapData, SitemapViewModel> _entityToModelCreator;
 
     public IndexModel(
         ISitemapRepository sitemapRepository,
-        ISiteDefinitionRepository siteDefinitionRepository,
+        IApplicationRepository applicationRepository,
         ILanguageBranchRepository languageBranchRepository,
         IMapper<SitemapViewModel, SitemapData> modelToEntityMapper,
         ICreateFrom<SitemapData, SitemapViewModel> entityToModelCreator)
     {
         _sitemapRepository = sitemapRepository;
-        _siteDefinitionRepository = siteDefinitionRepository;
+        _applicationRepository = applicationRepository;
         _languageBranchRepository = languageBranchRepository;
         _modelToEntityMapper = modelToEntityMapper;
         _entityToModelCreator = entityToModelCreator;
@@ -161,36 +161,39 @@ public class IndexModel : PageModel
 
     private void LoadSiteHosts()
     {
-        var hosts = _siteDefinitionRepository.List().ToList();
+        var sites = _applicationRepository
+            .List()
+            .OfType<IRoutableApplication>()
+            .ToList();
 
-        var siteUrls = new List<SelectListItem>(hosts.Count);
-
-        foreach (var siteInformation in hosts)
+        var urls = new List<SelectListItem>();
+        foreach (var site in sites)
         {
-            var siteUrl = siteInformation.SiteUrl.ToString();
-            siteUrls.Add(new()
+            if (site.Url != null)
             {
-                Text = siteUrl,
-                Value = siteUrl
-            });
+                var port = site.Url.IsDefaultPort ? string.Empty : $":{site.Url.Port}";
+                urls.Add(new SelectListItem
+                {
+                    Text = site.Url.Host,
+                    Value = $"{site.Url.Scheme}://{site.Url.Host}{port}/"
+                });
+            }
 
-            var hostUrls = siteInformation.Hosts
-                .Where(host => ShouldAddToSiteHosts(host, siteInformation))
-                .Select(host => host.GetUri())
-                .Select(hostUri => new SelectListItem { Text = hostUri.ToString(), Value = hostUri.ToString() });
-            siteUrls.AddRange(hostUrls);
+            foreach (var host in site.Hosts.Where(x => x.Url != null))
+            {
+                if (UriComparer.SchemeAndServerEquals(site.Url, host.Url))
+                {
+                    continue;
+                }
+
+                urls.Add(new SelectListItem
+                {
+                    Text = host.Url!.ToString(),
+                    Value = host.Url!.ToString()
+                });
+            }
         }
-
-        SiteHosts = siteUrls;
-    }
-
-    private static bool ShouldAddToSiteHosts(HostDefinition host, SiteDefinition siteInformation)
-    {
-        if (host.Name == "*")
-        {
-            return false;
-        }
-        return !UriComparer.SchemeAndServerEquals(host.GetUri(), siteInformation.SiteUrl);
+        SiteHosts = urls;
     }
 
     private void PopulateHostListControl(string selected = null)

@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Linq;
 using EPiServer;
+using EPiServer.Applications;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
 using EPiServer.Framework.Cache;
@@ -39,7 +40,7 @@ namespace Geta.Optimizely.Sitemaps.XML
         protected readonly ISitemapRepository SitemapRepository;
         protected readonly IContentRepository ContentRepository;
         protected readonly IUrlResolver UrlResolver;
-        protected readonly ISiteDefinitionRepository SiteDefinitionRepository;
+        protected readonly IApplicationRepository ApplicationRepository;
         protected readonly ILanguageBranchRepository LanguageBranchRepository;
         protected readonly IContentFilter ContentFilter;
         private readonly IUriAugmenterService _uriAugmenterService;
@@ -48,7 +49,7 @@ namespace Geta.Optimizely.Sitemaps.XML
         private readonly ILogger<SitemapXmlGenerator> _logger;
 
         protected SitemapData SitemapData { get; set; }
-        protected SiteDefinition SiteSettings { get; set; }
+        protected IRoutableApplication CurrentSite { get; set; }
         protected IEnumerable<LanguageBranch> EnabledLanguages { get; set; }
         protected IEnumerable<CurrentLanguageContent> HrefLanguageContents { get; set; }
 
@@ -64,7 +65,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             ISitemapRepository sitemapRepository,
             IContentRepository contentRepository,
             IUrlResolver urlResolver,
-            ISiteDefinitionRepository siteDefinitionRepository,
+            IApplicationRepository applicationRepository,
             ILanguageBranchRepository languageBranchRepository,
             IContentFilter contentFilter,
             IUriAugmenterService uriAugmenterService,
@@ -75,7 +76,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             SitemapRepository = sitemapRepository;
             ContentRepository = contentRepository;
             UrlResolver = urlResolver;
-            SiteDefinitionRepository = siteDefinitionRepository;
+            ApplicationRepository = applicationRepository;
             LanguageBranchRepository = languageBranchRepository;
             EnabledLanguages = LanguageBranchRepository.ListEnabled();
             UrlSet = new HashSet<string>();
@@ -111,7 +112,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             {
                 SitemapData = sitemapData;
                 var sitemapSiteUri = new Uri(SitemapData.SiteUrl);
-                SiteSettings = GetSiteDefinitionFromSiteUri(sitemapSiteUri);
+                CurrentSite = GetApplicationFromSiteUri(sitemapSiteUri);
                 HostLanguageBranch = GetHostLanguageBranch();
                 var sitemap = CreateSitemapXmlContents(out entryCount);
 
@@ -166,12 +167,12 @@ namespace Geta.Optimizely.Sitemaps.XML
 
         protected virtual IEnumerable<XElement> GetSitemapXmlElements()
         {
-            if (SiteSettings == null)
+            if (CurrentSite == null)
             {
                 return Enumerable.Empty<XElement>();
             }
 
-            var rootPage = SitemapData.RootPageId < 0 ? SiteSettings.StartPage : new ContentReference(SitemapData.RootPageId);
+            var rootPage = SitemapData.RootPageId < 0 ? CurrentSite.EntryPoint : new ContentReference(SitemapData.RootPageId);
 
             var descendants = ContentRepository.GetDescendents(rootPage).ToList();
 
@@ -353,7 +354,7 @@ namespace Geta.Optimizely.Sitemaps.XML
 
             var data = new HrefLangData();
 
-            if (languageUrl.Equals(masterLanguageUrl) && content.ContentLink.CompareToIgnoreWorkID(SiteSettings.StartPage))
+            if (languageUrl.Equals(masterLanguageUrl) && content.ContentLink.CompareToIgnoreWorkID(CurrentSite.EntryPoint))
             {
                 data.HrefLang = "x-default";
             }
@@ -440,7 +441,7 @@ namespace Geta.Optimizely.Sitemaps.XML
             CurrentLanguageContent languageContentInfo,
             IList<XElement> xmlElements)
         {
-            if (ContentFilter.ShouldExcludeContent(languageContentInfo, SiteSettings, SitemapData))
+            if (ContentFilter.ShouldExcludeContent(languageContentInfo, SitemapData))
             {
                 return;
             }
@@ -520,20 +521,20 @@ namespace Geta.Optimizely.Sitemaps.XML
             return CultureInfo.InvariantCulture;
         }
 
-        public SiteDefinition GetSiteDefinitionFromSiteUri(Uri sitemapSiteUri)
+        public IRoutableApplication GetApplicationFromSiteUri(Uri sitemapSiteUri)
         {
-            var siteDefinitions = SiteDefinitionRepository.List().ToList();
-
-            return siteDefinitions
-                       .FirstOrDefault(siteDef => siteDef.SiteUrl == sitemapSiteUri || siteDef.Hosts.Any(
-                                           hostDef => hostDef.Name.Equals(sitemapSiteUri.Authority,
-                                                                          StringComparison.InvariantCultureIgnoreCase)));
+            var sites = ApplicationRepository.List().OfType<IRoutableApplication>().ToList();
+            return sites.FirstOrDefault(s =>
+                s.Url == sitemapSiteUri ||
+                s.Hosts.Any(i =>
+                    !string.IsNullOrWhiteSpace(i.Authority) &&
+                    i.Authority.Equals(sitemapSiteUri.Authority, StringComparison.InvariantCultureIgnoreCase)));
         }
 
         protected string GetHostLanguageBranch()
         {
-            var hostDefinition = GetHostDefinition();
-            return hostDefinition?.Language?.Name;
+            var appHost = GetApplicationHost();
+            return appHost?.Locale?.Name;
         }
 
         protected bool HostDefinitionExistsForLanguage(string languageBranch)
@@ -547,24 +548,33 @@ namespace Geta.Optimizely.Sitemaps.XML
             }
 
             cachedObject =
-                SiteSettings.Hosts.Any(
+                CurrentSite.Hosts.Any(
                     x =>
-                        x.Language != null
-                        && x.Language.ToString().Equals(languageBranch, StringComparison.InvariantCultureIgnoreCase));
+                        x.Locale != null
+                        && x.Locale.Name.Equals(languageBranch, StringComparison.InvariantCultureIgnoreCase));
 
             _memoryCache.Set(cacheKey, cachedObject, DateTime.Now.AddMinutes(10));
 
             return (bool)cachedObject;
         }
 
-        protected HostDefinition GetHostDefinition()
+        protected ApplicationHost GetApplicationHost()
         {
             var siteUrl = new Uri(SitemapData.SiteUrl);
             var sitemapHost = siteUrl.Authority;
 
-            var hosts = SiteSettings?.Hosts;
-            return hosts?.FirstOrDefault(x => x.Name.Equals(sitemapHost, StringComparison.InvariantCultureIgnoreCase)) ??
-                   hosts?.FirstOrDefault(x => x.Name.Equals(SiteDefinition.WildcardHostName));
+            if (CurrentSite == null)
+            {
+                return null;
+            }
+
+            var host = CurrentSite.Hosts.FirstOrDefault(x =>
+                !string.IsNullOrWhiteSpace(x.Authority) &&
+                x.Authority.Equals(sitemapHost, StringComparison.InvariantCultureIgnoreCase));
+
+            return host ??
+                CurrentSite.Hosts.FirstOrDefault(x => x.Type == ApplicationHostType.Primary) ??
+                CurrentSite.Hosts.FirstOrDefault(x => x.Type == ApplicationHostType.Default);
         }
 
         protected bool ExcludeContentLanguageFromSitemap(CultureInfo language)
