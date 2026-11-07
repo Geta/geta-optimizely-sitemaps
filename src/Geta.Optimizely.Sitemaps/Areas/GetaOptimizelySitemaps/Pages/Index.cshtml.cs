@@ -3,39 +3,52 @@ using System.Linq;
 using EPiServer.Applications;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
+using EPiServer.Scheduler;
 using Geta.Mapping;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Models;
 using Geta.Optimizely.Sitemaps.Repositories;
-using Geta.Optimizely.Sitemaps.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Options;
 
 namespace Geta.Optimizely.Sitemaps.Pages.Geta.Optimizely.Sitemaps;
 
 [Authorize(Constants.PolicyName)]
 public class IndexModel : PageModel
 {
+    // The scheduler's own limit before it treats a running job as dead.
+    private const int MissedPingsBeforeJobIsDead = 4;
+
     private readonly ISitemapRepository _sitemapRepository;
     private readonly IApplicationRepository _applicationRepository;
     private readonly ILanguageBranchRepository _languageBranchRepository;
     private readonly IMapper<SitemapViewModel, SitemapData> _modelToEntityMapper;
     private readonly ICreateFrom<SitemapData, SitemapViewModel> _entityToModelCreator;
+    private readonly IScheduledJobRepository _scheduledJobRepository;
+    private readonly IScheduledJobExecutor _scheduledJobExecutor;
+    private readonly SchedulerOptions _schedulerOptions;
 
     public IndexModel(
         ISitemapRepository sitemapRepository,
         IApplicationRepository applicationRepository,
         ILanguageBranchRepository languageBranchRepository,
         IMapper<SitemapViewModel, SitemapData> modelToEntityMapper,
-        ICreateFrom<SitemapData, SitemapViewModel> entityToModelCreator)
+        ICreateFrom<SitemapData, SitemapViewModel> entityToModelCreator,
+        IScheduledJobRepository scheduledJobRepository,
+        IScheduledJobExecutor scheduledJobExecutor,
+        IOptions<SchedulerOptions> schedulerOptions)
     {
         _sitemapRepository = sitemapRepository;
         _applicationRepository = applicationRepository;
         _languageBranchRepository = languageBranchRepository;
         _modelToEntityMapper = modelToEntityMapper;
         _entityToModelCreator = entityToModelCreator;
+        _scheduledJobRepository = scheduledJobRepository;
+        _scheduledJobExecutor = scheduledJobExecutor;
+        _schedulerOptions = schedulerOptions.Value;
     }
 
     public bool CreateMenuIsVisible { get; set; }
@@ -43,6 +56,7 @@ public class IndexModel : PageModel
     [BindProperty] public IList<SelectListItem> SiteHosts { get; set; }
     public bool ShowHostsDropDown { get; set; }
     public string HostLabel { get; set; }
+    [TempData] public string StatusMessage { get; set; }
     [BindProperty] public IList<SelectListItem> LanguageBranches { get; set; }
     [BindProperty] public SitemapViewModel SitemapViewModel { get; set; }
     [BindProperty] public IList<SitemapViewModel> SitemapViewModels { get; set; }
@@ -138,6 +152,43 @@ public class IndexModel : PageModel
         return RedirectToPage();
     }
 
+    public IActionResult OnPostRunJob()
+    {
+        StatusMessage = StartJob();
+        return RedirectToPage();
+    }
+
+    private string StartJob()
+    {
+        var job = _scheduledJobRepository.Get<SitemapCreateJob>();
+
+        if (job == null)
+        {
+            return "The sitemap job isn't registered as a scheduled job.";
+        }
+
+        if (IsRunning(job))
+        {
+            return "The sitemap job is already running.";
+        }
+
+        // Not awaited: a large site can take longer to generate than a request should last. The job logs its own result.
+        var execution = _scheduledJobExecutor.StartAsync(job, new JobExecutionOptions { Trigger = ScheduledJobTrigger.User });
+
+        return execution.IsCompletedSuccessfully && execution.Result.Status == ScheduledJobExecutionStatus.UnableToStart
+            ? execution.Result.Message
+            : "The sitemap job has started. Its result will be in the scheduled job's history.";
+    }
+
+    /// <summary>
+    /// The stored flag stays set if the process dies during a run, but a live run on any server keeps pinging.
+    /// </summary>
+    private bool IsRunning(ScheduledJob job)
+    {
+        return job.IsRunning
+               && job.SecondsAfterLastPing < MissedPingsBeforeJobIsDead * _schedulerOptions.PingTime.TotalSeconds;
+    }
+
     private void LoadLanguageBranches()
     {
         LanguageBranches = _languageBranchRepository.ListEnabled().Select(x => new SelectListItem
@@ -161,43 +212,33 @@ public class IndexModel : PageModel
 
     private void LoadSiteHosts()
     {
-        var sites = _applicationRepository
+        SiteHosts = _applicationRepository
             .List()
             .OfType<IRoutableApplication>()
+            .SelectMany(GetSitemapUrls)
+            .Distinct()
+            .Select(url => new SelectListItem { Text = url, Value = url })
             .ToList();
+    }
 
-        var urls = new List<SelectListItem>();
-        foreach (var site in sites)
-        {
-            if (site.Url != null)
-            {
-                var port = site.Url.IsDefaultPort ? string.Empty : $":{site.Url.Port}";
-                urls.Add(new SelectListItem
-                {
-                    Text = site.Url.Host,
-                    Value = $"{site.Url.Scheme}://{site.Url.Host}{port}/"
-                });
-            }
+    private static IEnumerable<string> GetSitemapUrls(IRoutableApplication site)
+    {
+        // Edit, preview, media and redirect hosts don't serve the site's pages, so a sitemap can't live on them.
+        var hostUrls = site.Hosts
+            .Where(x => x.Type is ApplicationHostType.Primary or ApplicationHostType.Default)
+            .Select(x => x.Url);
 
-            foreach (var host in site.Hosts.Where(x => x.Url != null))
-            {
-                if (UriComparer.SchemeAndServerEquals(site.Url, host.Url))
-                {
-                    continue;
-                }
-
-                urls.Add(new SelectListItem
-                {
-                    Text = host.Url!.ToString(),
-                    Value = host.Url!.ToString()
-                });
-            }
-        }
-        SiteHosts = urls;
+        return hostUrls.Prepend(site.Url).Where(url => url != null).Select(url => url.ToString());
     }
 
     private void PopulateHostListControl(string selected = null)
     {
+        // A dropdown without the saved URL shows its first option, and saving would silently change the sitemap's host.
+        if (!string.IsNullOrEmpty(selected) && SiteHosts.All(x => x.Value != selected))
+        {
+            SiteHosts.Insert(0, new SelectListItem { Text = selected, Value = selected });
+        }
+
         if (SiteHosts.Count > 1)
         {
             ShowHostsDropDown = true;

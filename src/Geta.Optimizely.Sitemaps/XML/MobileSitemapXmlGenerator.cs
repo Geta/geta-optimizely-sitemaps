@@ -6,12 +6,10 @@ using EPiServer;
 using EPiServer.Applications;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
-using EPiServer.Framework.Cache;
 using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Services;
 using Geta.Optimizely.Sitemaps.Utils;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Geta.Optimizely.Sitemaps.XML
@@ -26,8 +24,6 @@ namespace Geta.Optimizely.Sitemaps.XML
             ILanguageBranchRepository languageBranchRepository,
             IContentFilter contentFilter,
             IUriAugmenterService uriAugmenterService,
-            ISynchronizedObjectInstanceCache objectCache,
-            IMemoryCache cache,
             ILogger<MobileSitemapXmlGenerator> logger)
             : base(
                 sitemapRepository,
@@ -37,8 +33,6 @@ namespace Geta.Optimizely.Sitemaps.XML
                 languageBranchRepository,
                 contentFilter,
                 uriAugmenterService,
-                objectCache,
-                cache,
                 logger)
         {
         }

@@ -8,8 +8,17 @@
                 asp-page-handler="new">
             <span data-feather="plus"></span> New sitemap
         </button>
+        <button type="submit" class="btn btn-secondary"
+                asp-page-handler="runJob">
+            <span data-feather="play"></span> Generate sitemaps
+        </button>
     </form>
 </div>
+
+@if (!string.IsNullOrEmpty(Model.StatusMessage))
+{
+    <div class="alert alert-info mt-3" role="status">@Model.StatusMessage</div>
+}
 
 <div class="table-responsive mt-3">
     <table class="table table-hover" aria-label="Sitemaps">
@@ -72,6 +81,7 @@
                                     <span data-feather="edit"></span> Edit
                                 </button>
                                 <button type="submit" class="btn btn-danger"
+                                        data-confirm="Delete the sitemap @sitemapViewModel.SitemapUrl?"
                                         asp-page-handler="delete" asp-route-id="@sitemapViewModel.Id">
                                     <span data-feather="trash-2"></span> Delete
                                 </button>

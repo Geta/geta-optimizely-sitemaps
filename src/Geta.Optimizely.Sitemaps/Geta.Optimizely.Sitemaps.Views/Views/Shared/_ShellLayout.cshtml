@@ -7,6 +7,9 @@
     <title>Sitemaps</title>
 </head>
 <body>
+    @* Tells the platform navigation how to send the antiforgery token below. Without it, its notification request fails. *@
+    <episerver-common-settings></episerver-common-settings>
+    @Html.AntiForgeryToken()
     <platform-navigation />
     <div id="root">
         <div id="container">

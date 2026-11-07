@@ -3,19 +3,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using EPiServer;
 using EPiServer.Applications;
 using EPiServer.Core;
 using EPiServer.DataAbstraction;
-using EPiServer.Framework.Cache;
 using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Services;
 using Geta.Optimizely.Sitemaps.Utils;
 using Geta.Optimizely.Sitemaps.XML;
 using Mediachase.Commerce.Catalog;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Geta.Optimizely.Sitemaps.Commerce
@@ -26,7 +25,7 @@ namespace Geta.Optimizely.Sitemaps.Commerce
     /// </summary>
     public class CommerceSitemapXmlGenerator : SitemapXmlGenerator, ICommerceSitemapXmlGenerator
     {
-        private readonly ReferenceConverter _referenceConverter;
+        protected readonly ReferenceConverter ReferenceConverter;
 
         public CommerceSitemapXmlGenerator(
             ISitemapRepository sitemapRepository,
@@ -37,8 +36,6 @@ namespace Geta.Optimizely.Sitemaps.Commerce
             ReferenceConverter referenceConverter,
             IContentFilter contentFilter,
             IUriAugmenterService uriAugmenterService,
-            ISynchronizedObjectInstanceCache objectCache,
-            IMemoryCache memoryCache,
             ILogger<CommerceSitemapXmlGenerator> logger)
             : base(
                 sitemapRepository,
@@ -48,26 +45,30 @@ namespace Geta.Optimizely.Sitemaps.Commerce
                 languageBranchRepository,
                 contentFilter,
                 uriAugmenterService,
-                objectCache,
-                memoryCache,
                 logger)
         {
-            _referenceConverter = referenceConverter ?? throw new ArgumentNullException(nameof(referenceConverter));
+            ReferenceConverter = referenceConverter ?? throw new ArgumentNullException(nameof(referenceConverter));
         }
 
         protected override IEnumerable<XElement> GetSitemapXmlElements()
         {
-            var rootContentReference = _referenceConverter.GetRootLink();
+            // Other negative values are real IDs: a catalog's content ID is always negative.
+            var root = SitemapData.RootPageId is 0 or Constants.DefaultRootPageId
+                ? ReferenceConverter.GetRootLink()
+                : new ContentReference(SitemapData.RootPageId) { ProviderName = ReferenceConverter.CatalogProviderKey };
 
-            if (SitemapData.RootPageId != Constants.DefaultRootPageId)
+            return GenerateCatalogXmlElements(root);
+        }
+
+        protected IEnumerable<XElement> GenerateCatalogXmlElements(ContentReference root)
+        {
+            var descendants = ContentRepository.GetDescendents(root).ToList();
+
+            // The catalog root is only a container, but a selected catalog or node is listed along with its descendants.
+            if (!ReferenceConverter.GetRootLink().CompareToIgnoreWorkID(root))
             {
-                rootContentReference = new ContentReference(SitemapData.RootPageId)
-                {
-                    ProviderName = "CatalogContent"
-                };
+                descendants.Insert(0, root);
             }
-
-            var descendants = ContentRepository.GetDescendents(rootContentReference);
 
             return GenerateXmlElements(descendants);
         }

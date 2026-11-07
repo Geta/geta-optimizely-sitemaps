@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using EPiServer.Framework.Cache;
 using EPiServer.Scheduler;
 using Geta.Optimizely.Sitemaps.Entities;
 using Geta.Optimizely.Sitemaps.Repositories;
@@ -17,25 +16,20 @@ namespace Geta.Optimizely.Sitemaps
     [ScheduledJob(GUID = "EC74D2A3-9D77-4265-B4FF-A1935E3C3110", DisplayName = "Generate search engine sitemaps")]
     public class SitemapCreateJob : ScheduledJobBase
     {
-        public const string SitemapGenerationCacheKey = "SitemapGenerationKey";
-
         private readonly ISitemapRepository _sitemapRepository;
         private readonly SitemapXmlGeneratorFactory _sitemapXmlGeneratorFactory;
-        private readonly ISynchronizedObjectInstanceCache _objectCache;
         private ISitemapXmlGenerator _currentGenerator;
 
         private bool _stopSignaled;
 
         public SitemapCreateJob(
             ISitemapRepository sitemapRepository,
-            SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory,
-            ISynchronizedObjectInstanceCache objectCache)
+            SitemapXmlGeneratorFactory sitemapXmlGeneratorFactory)
         {
             IsStoppable = true;
 
             _sitemapRepository = sitemapRepository;
             _sitemapXmlGeneratorFactory = sitemapXmlGeneratorFactory;
-            _objectCache = objectCache;
         }
 
         public override string Execute()
@@ -50,28 +44,24 @@ namespace Geta.Optimizely.Sitemaps
             if (sitemapConfigs.Count == 0)
             {
                 _sitemapRepository.Save(CreateDefaultConfig());
+                sitemapConfigs = _sitemapRepository.GetAllSitemapData();
             }
-
-            _objectCache.Insert(SitemapGenerationCacheKey, DateTime.Now.Ticks, CacheEvictionPolicy.Empty);
 
             // create xml sitemap for each configuration
             foreach (var sitemapConfig in sitemapConfigs)
             {
                 if (_stopSignaled)
                 {
-                    _objectCache.Remove(SitemapGenerationCacheKey);
-                    return "Stop of job was called.";
+                    break;
                 }
 
-                OnStatusChanged($"Generating {sitemapConfig.SiteUrl}{_sitemapRepository.GetHostWithLanguage(sitemapConfig)}.");
+                OnStatusChanged($"Generating {_sitemapRepository.GetSitemapUrl(sitemapConfig)}.");
                 results.Add(GenerateSitemaps(sitemapConfig, message));
             }
 
-            _objectCache.Remove(SitemapGenerationCacheKey);
-
             if (_stopSignaled)
             {
-                return "Stop of job was called.";
+                return $"Stop of job was called.<br/>{message}";
             }
 
             if (results.Any(x => !x))
@@ -84,17 +74,46 @@ namespace Geta.Optimizely.Sitemaps
 
         private bool GenerateSitemaps(SitemapData sitemapConfig, StringBuilder message)
         {
-            _currentGenerator = _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapConfig);
-            var success = _currentGenerator.Generate(sitemapConfig, true, out var entryCount);
+            var success = false;
+            string resultText;
 
-            var sitemapDisplayName = $"{sitemapConfig.SiteUrl}{_sitemapRepository.GetHostWithLanguage(sitemapConfig)}";
-            var resultText = success
-                ? $"Success - {entryCount} entries included"
-                : $"An error occurred while generating sitemap: {_currentGenerator.LastError}";
+            // One sitemap that can't be generated, such as a Commerce format without AddSitemapsCommerce, must not stop the others.
+            try
+            {
+                _currentGenerator = _sitemapXmlGeneratorFactory.GetSitemapXmlGenerator(sitemapConfig);
+                success = _currentGenerator.Generate(sitemapConfig, true, out var entryCount);
+                resultText = success ? GetSuccessText(sitemapConfig, entryCount) : GetErrorText(_currentGenerator.LastError);
+            }
+            catch (Exception e)
+            {
+                resultText = GetErrorText(e.Message);
+            }
 
-            message.Append($"<br/>{sitemapDisplayName}: {resultText}");
+            // Generating can have filled in the site URL.
+            message.Append($"<br/>{_sitemapRepository.GetSitemapUrl(sitemapConfig)}: {resultText}");
 
             return success;
+        }
+
+        private static string GetSuccessText(SitemapData sitemapConfig, int entryCount)
+        {
+            var text = $"Success - {entryCount} entries included";
+
+            if (sitemapConfig.ExceedsMaximumEntryCount)
+            {
+                return $"{text}. This is the maximum for one sitemap, so the remaining content was left out. Split it over several sitemaps by root page or paths.";
+            }
+
+            return entryCount == 0
+                ? $"{text}. Check the sitemap's root page, paths, language and host. Only published content that the Everyone role can read is included."
+                : text;
+        }
+
+        private static string GetErrorText(string lastError)
+        {
+            const string error = "An error occurred while generating sitemap";
+
+            return string.IsNullOrEmpty(lastError) ? error : $"{error}: {lastError}";
         }
 
         private static SitemapData CreateDefaultConfig()
