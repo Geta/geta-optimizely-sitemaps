@@ -31,6 +31,12 @@ All notable changes to this project will be documented in this file.
 - Fix the sitemaps tab failing when a sitemap's language has been deleted
 - Fix the property editor failing when it's used without SeoSitemapEditorDescriptor
 
+### Upgrading from 4.x
+
+- Requires Optimizely CMS 13.1 or later. A site created from the CMS 13.0 Alloy template has to upgrade `EPiServer.CMS` first.
+- Custom generators, content filters and anything else built on the classes below need their constructors and overrides updated.
+- Check "Standard and commerce" sitemaps whose root page ID points at a catalog node: change it to a page ID, or -1.
+
 ### Breaking changes
 
 - IContentFilter: Signature changed on ShouldExcludeContent (removed SiteDefinition parameter)
