@@ -11,7 +11,7 @@ This tool allows you to generate xml sitemaps for search engines to better index
 
 ## Features
 
-- sitemap generation as a scheduled job
+- sitemap generation as a scheduled job, or from the admin page with the "Generate sitemaps" button
 - filtering pages by virtual directories
 - ability to include pages that are in a different branch than the one of the start page
 - ability to generate sitemaps for mobile pages
@@ -21,6 +21,8 @@ This tool allows you to generate xml sitemaps for search engines to better index
 See the [editor guide](docs/editor-guide.md) for more information.
 
 ## Installation
+
+Version 5 requires Optimizely CMS 13.1 or later, and the Commerce package requires Optimizely Commerce 15. The packages are published to the [Optimizely NuGet feed](https://nuget.optimizely.com/), `https://api.nuget.optimizely.com/v3/index.json`.
 
 The command below will install Sitemaps into your Optimizely project.
 
@@ -99,11 +101,17 @@ It is also possible to configure the application in `appsettings.json` file. A c
 }
 ```
 
-Also, you have to add Razor pages routing support.
+Also, you have to add Razor pages routing support. In a `Startup` class, map them in `UseEndpoints`:
 
 ```csharp
-app.MapRazorPages();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapContent();
+    endpoints.MapRazorPages();
+});
 ```
+
+With the minimal hosting model, where everything is in `Program.cs`, call `app.MapRazorPages();` instead.
 
 ## Usage
 
@@ -111,7 +119,9 @@ app.MapRazorPages();
 
 Credits to [jarihaa](https://github.com/jarihaa) for [contributing](https://github.com/Geta/SEO.Sitemaps/pull/87) this.
 
-```
+```csharp
+using Geta.Optimizely.Sitemaps.SpecializedProperties;
+
 [UIHint("SeoSitemap")]
 [BackingType(typeof(PropertySEOSitemaps))]
 public virtual string SEOSitemaps { get; set; }
@@ -119,7 +129,7 @@ public virtual string SEOSitemaps { get; set; }
 
 #### Translate the editor
 
-The property editor's labels can be translated with a language file. These are the keys and their defaults:
+The property editor's labels can be translated with a language file, for example an embedded XML file registered with `AddEmbeddedLocalization`. The editor uses the editor's UI language, and keys that aren't translated keep their English default. These are the keys and their defaults:
 
 ```xml
 <languages>
@@ -165,7 +175,9 @@ public override void SetDefaultValues(ContentType contentType)
 
 Implement the `IExcludeFromSitemap` interface to ignore page types in the sitemap.
 
-```
+```csharp
+using Geta.Optimizely.Sitemaps.Models;
+
 public class OrderConfirmationPage : PageData, IExcludeFromSitemap
 ```
 
@@ -173,21 +185,35 @@ public class OrderConfirmationPage : PageData, IExcludeFromSitemap
 
 If you need more control to exclude content from the sitemap you can make your own implementation of IContentFilter. Make sure to inherit from ContentFilter and call the `ShouldExcludeContent` method of the base class.
 
-```
+```csharp
+using EPiServer.Web;
+using Geta.Optimizely.Sitemaps.Configuration;
+using Geta.Optimizely.Sitemaps.Utils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
 public class SiteContentFilter : ContentFilter
+{
+    public SiteContentFilter(
+        TemplateResolver templateResolver,
+        ILogger<ContentFilter> logger,
+        IOptions<SitemapOptions> sitemapOptions)
+        : base(templateResolver, logger, sitemapOptions)
     {
-        public override bool ShouldExcludeContent(IContent content)
-        {
-            if (base.ShouldExcludeContent(content))
-            {
-                return true;
-            }
-
-            // Custom logic here
-
-            return false;
-        }
     }
+
+    public override bool ShouldExcludeContent(IContent content)
+    {
+        if (base.ShouldExcludeContent(content))
+        {
+            return true;
+        }
+
+        // Custom logic here
+
+        return false;
+    }
+}
 ```
 
 Register in your DI container. Be sure to register you custom ContentFilter _after_ calling ```services.AddSitemaps()```, otherwise the default ContentFilter will be used.
