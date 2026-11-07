@@ -58,6 +58,16 @@ services.AddSitemaps(x =>
 }, p => p.RequireRole(Roles.Administrators));
 ```
 
+If your site uses Opti ID and the sitemaps tab redirects to a login page that refuses to load in the frame, or its buttons do nothing, the policy needs the Opti ID authentication scheme. The tab is hosted outside the CMS's own paths, so it doesn't get the scheme from the CMS:
+
+```csharp
+services.AddSitemaps(x => { }, p =>
+{
+    p.AddAuthenticationSchemes(OptimizelyIdentityDefaults.SchemeName);
+    p.RequireRole(Roles.CmsAdmins);
+});
+```
+
 And for the Commerce support add a call to:
 ```csharp
 services.AddSitemapsCommerce();
@@ -75,6 +85,8 @@ services.AddSitemaps(options =>
     options.SetAugmenterService<SitemapUriParameterAugmenterService>();
 });
 ```
+
+The service is called for all content that goes into the sitemap, so return the original `Uri` for content it shouldn't change. Content that gets no URLs from the service is left out of the sitemap.
 
 It is also possible to configure the application in `appsettings.json` file. A configuration from the `appsettings.json` will override configuration configured in Startup. Below is an `appsettings.json` configuration example.
 
@@ -103,6 +115,35 @@ Credits to [jarihaa](https://github.com/jarihaa) for [contributing](https://gith
 [UIHint("SeoSitemap")]
 [BackingType(typeof(PropertySEOSitemaps))]
 public virtual string SEOSitemaps { get; set; }
+```
+
+#### Translate the editor
+
+The property editor's labels can be translated with a language file. These are the keys and their defaults:
+
+```xml
+<languages>
+  <language name="Svenska" id="sv">
+    <seositemaps>
+      <editor>
+        <enabled>Enabled</enabled>
+        <changefrequency>Change frequency</changefrequency>
+        <priority>Priority</priority>
+        <always>Always</always>
+        <hourly>Hourly</hourly>
+        <daily>Daily</daily>
+        <weekly>Weekly</weekly>
+        <monthly>Monthly</monthly>
+        <yearly>Yearly</yearly>
+        <never>Never</never>
+        <low>Low</low>
+        <medium>Medium</medium>
+        <mediumhigh>Medium-High</mediumhigh>
+        <high>High</high>
+      </editor>
+    </seositemaps>
+  </language>
+</languages>
 ```
 
 #### Set default value
@@ -157,7 +198,7 @@ services.AddTransient<IContentFilter, SiteContentFilter>();
 
 ## Limitations
 
-- Each sitemap will contain max 50k entries (according to [sitemaps.org protocol](http://www.sitemaps.org/protocol.html#index)) so if the site in which you are using this plugin contains more active pages then you should split them over multiple sitemaps (by specifying a different root page or include/avoid paths for each).
+- Each sitemap will contain max 50k entries (according to [sitemaps.org protocol](http://www.sitemaps.org/protocol.html#index)). Sitemaps are not split automatically: entries over the limit are left out, and the scheduled job's result says so. If the site in which you are using this plugin contains more active pages then you should split them over multiple sitemaps (by specifying a different root page or include/avoid paths for each).
 
 ## 🏁 Getting Started
 

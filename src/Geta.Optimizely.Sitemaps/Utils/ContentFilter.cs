@@ -83,7 +83,7 @@ namespace Geta.Optimizely.Sitemaps.Utils
             return false;
         }
 
-        public virtual bool ShouldExcludeContent(CurrentLanguageContent languageContentInfo, SiteDefinition siteSettings, SitemapData sitemapData)
+        public virtual bool ShouldExcludeContent(CurrentLanguageContent languageContentInfo, SitemapData sitemapData)
         {
             return ShouldExcludeContent(languageContentInfo.Content);
         }

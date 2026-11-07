@@ -21,28 +21,25 @@ namespace Geta.Optimizely.Sitemaps.Web.Services
 
         public IEnumerable<Uri> GetAugmentUris(IContent content, CurrentLanguageContent languageContentInfo, Uri fullUri)
         {
-            if (content is PageData pageContent)
+            // Anything else, such as catalog content, has to keep its own URL or it drops out of the sitemap.
+            if (content is not PageData { PageTypeName: nameof(Foundation.Features.People.PersonListPage) })
             {
-                if (pageContent.PageTypeName == nameof(Foundation.Features.People.PersonListPage))
-                {
-                    var fullUriString = fullUri.ToString();
+                yield return fullUri;
+                yield break;
+            }
 
-                    var personPageType = _contentTypeRepository.Load<PersonPage>();
-                    var usages = _contentModelUsage.ListContentOfContentType(personPageType).Select(c => _contentRepository.Get<PersonPage>(c.ContentLink));
-                    // Group all of the results by the querystring parameters that drive the page.
-                    var nameSectorLocations = usages.GroupBy(k => new { k.Name, k.Sector, k.Location });
+            var fullUriString = fullUri.ToString();
 
-                    // Enumerate the total set of expected name/sectors/locations in ordr for them to be indexed.
-                    foreach (var nameSectorLocation in nameSectorLocations)
-                    {
-                        var augmentedUri = new Uri($"{fullUriString}?name={nameSectorLocation.Key.Name}&sector={nameSectorLocation.Key.Sector}&location={nameSectorLocation.Key.Location}");
-                        yield return augmentedUri;
-                    }
-                }
-                else
-                {
-                    yield return fullUri;
-                }
+            var personPageType = _contentTypeRepository.Load<PersonPage>();
+            var usages = _contentModelUsage.ListContentOfContentType(personPageType).Select(c => _contentRepository.Get<PersonPage>(c.ContentLink));
+            // Group all of the results by the querystring parameters that drive the page.
+            var nameSectorLocations = usages.GroupBy(k => new { k.Name, k.Sector, k.Location });
+
+            // Enumerate the total set of expected name/sectors/locations in ordr for them to be indexed.
+            foreach (var nameSectorLocation in nameSectorLocations)
+            {
+                var augmentedUri = new Uri($"{fullUriString}?name={nameSectorLocation.Key.Name}&sector={nameSectorLocation.Key.Sector}&location={nameSectorLocation.Key.Location}");
+                yield return augmentedUri;
             }
         }
     }

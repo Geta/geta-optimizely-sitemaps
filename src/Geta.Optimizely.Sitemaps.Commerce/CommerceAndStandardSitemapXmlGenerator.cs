@@ -5,16 +5,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using EPiServer;
+using EPiServer.Applications;
+using EPiServer.Core;
 using EPiServer.DataAbstraction;
-using EPiServer.Framework.Cache;
-using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Geta.Optimizely.Sitemaps.Repositories;
 using Geta.Optimizely.Sitemaps.Services;
 using Geta.Optimizely.Sitemaps.Utils;
 using Geta.Optimizely.Sitemaps.XML;
 using Mediachase.Commerce.Catalog;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace Geta.Optimizely.Sitemaps.Commerce
@@ -30,37 +29,36 @@ namespace Geta.Optimizely.Sitemaps.Commerce
             ISitemapRepository sitemapRepository,
             IContentRepository contentRepository,
             IUrlResolver urlResolver,
-            ISiteDefinitionRepository siteDefinitionRepository,
+            IApplicationRepository applicationRepository,
             ILanguageBranchRepository languageBranchRepository,
             ReferenceConverter referenceConverter,
             IContentFilter contentFilter,
             IUriAugmenterService uriAugmenterService,
-            ISynchronizedObjectInstanceCache objectCache,
-            IMemoryCache memoryCache,
             ILogger<CommerceAndStandardSitemapXmlGenerator> logger)
             : base(
                 sitemapRepository,
                 contentRepository,
                 urlResolver,
-                siteDefinitionRepository,
+                applicationRepository,
                 languageBranchRepository,
                 referenceConverter,
                 contentFilter,
                 uriAugmenterService,
-                objectCache,
-                memoryCache,
                 logger)
         {
         }
 
         protected override IEnumerable<XElement> GetSitemapXmlElements()
         {
-            var contentDescendants = ContentRepository.GetDescendents(this.SiteSettings.StartPage).ToList();
+            var rootPage = GetRootPageLink();
+            var contentDescendants = ContentRepository.GetDescendents(rootPage).ToList();
 
-            contentDescendants.Insert(0, SiteSettings.StartPage);
+            contentDescendants.Insert(0, rootPage);
 
             var contentElements = GenerateXmlElements(contentDescendants);
-            return contentElements.Union(base.GetSitemapXmlElements());
+
+            // The root page ID of this format selects the CMS branch, so it can't also select a catalog.
+            return contentElements.Concat(GenerateCatalogXmlElements(ReferenceConverter.GetRootLink()));
         }
     }
 }

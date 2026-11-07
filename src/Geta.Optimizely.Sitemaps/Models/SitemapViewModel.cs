@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using EPiServer.Applications;
 using EPiServer.DataAbstraction;
-using EPiServer.Web;
 using Geta.Mapping;
 using Geta.Optimizely.Sitemaps.Entities;
 
@@ -23,6 +23,7 @@ namespace Geta.Optimizely.Sitemaps.Models
         public string PathsToAvoid { get; set; }
         public string PathsToInclude { get; set; }
         public bool IncludeDebugInfo { get; set; }
+        public bool ExcludeChangeFrequencyAndPriority { get; set; }
         public string RootPageId { get; set; } = Constants.DefaultRootPageId.ToString();
         public string SitemapFormat { get; set; }
         public bool CanView { get; set; }
@@ -30,10 +31,12 @@ namespace Geta.Optimizely.Sitemaps.Models
         public class MapperFromEntity : Mapper<SitemapData, SitemapViewModel>
         {
             private readonly ILanguageBranchRepository _languageBranchRepository;
+            private readonly IApplicationResolver _applicationResolver;
 
-            public MapperFromEntity(ILanguageBranchRepository languageBranchRepository)
+            public MapperFromEntity(ILanguageBranchRepository languageBranchRepository, IApplicationResolver applicationResolver)
             {
                 _languageBranchRepository = languageBranchRepository;
+                _applicationResolver = applicationResolver;
             }
 
             public override void Map(SitemapData @from, SitemapViewModel to)
@@ -49,6 +52,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                 to.PathsToAvoid = from.PathsToAvoid != null ? string.Join("; ", from.PathsToAvoid) : string.Empty;
                 to.PathsToInclude = from.PathsToInclude != null ? string.Join("; ", from.PathsToInclude) : string.Empty;
                 to.IncludeDebugInfo = from.IncludeDebugInfo;
+                to.ExcludeChangeFrequencyAndPriority = from.ExcludeChangeFrequencyAndPriority;
                 to.RootPageId = from.RootPageId.ToString();
                 to.SitemapFormat = from.SitemapFormat.ToString();
                 to.LanguageBranch = from.Language;
@@ -57,13 +61,14 @@ namespace Geta.Optimizely.Sitemaps.Models
 
             private string GetLanguage(string language)
             {
-                if (string.IsNullOrWhiteSpace(language) || SiteDefinition.WildcardHostName.Equals(language))
+                if (string.IsNullOrWhiteSpace(language))
                 {
                     return string.Empty;
                 }
 
+                // The language can have been deleted since the sitemap was saved.
                 var languageBranch = _languageBranchRepository.Load(language);
-                return $"{languageBranch.URLSegment}/";
+                return languageBranch != null ? $"{languageBranch.URLSegment}/" : string.Empty;
             }
 
             private string GetSitemapUrl(SitemapData sitemapData)
@@ -75,9 +80,9 @@ namespace Geta.Optimizely.Sitemaps.Models
                     return $"{sitemapData.SiteUrl}{language}{sitemapData.Host}";
                 }
 
-                var site = SiteDefinition.Current.SiteUrl.ToString();
-
-                return $"{site}{language}{sitemapData.Host}";
+                return _applicationResolver.GetByContext() is IRoutableApplication site
+                    ? $"{site.Url}{language}{sitemapData.Host}"
+                    : string.Empty;
             }
 
             private static string GetRelativePathEditPart(string hostName)
@@ -105,6 +110,7 @@ namespace Geta.Optimizely.Sitemaps.Models
                 to.PathsToAvoid = GetList(from.PathsToAvoid);
                 to.PathsToInclude = GetList(from.PathsToInclude);
                 to.IncludeDebugInfo = from.IncludeDebugInfo;
+                to.ExcludeChangeFrequencyAndPriority = from.ExcludeChangeFrequencyAndPriority;
                 to.RootPageId = TryParse(from.RootPageId);
                 to.SitemapFormat = GetSitemapFormat(from.SitemapFormat);
             }

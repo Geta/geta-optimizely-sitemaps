@@ -33,6 +33,8 @@ namespace Geta.Optimizely.Sitemaps.Entities
 
         public bool IncludeDebugInfo { get; set; }
 
+        public bool ExcludeChangeFrequencyAndPriority { get; set; }
+
         public SitemapFormat SitemapFormat { get; set; }
 
         public int RootPageId { get; set; }

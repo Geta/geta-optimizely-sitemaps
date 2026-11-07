@@ -10,11 +10,11 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using EPiServer.Core;
-using EPiServer.PlugIn;
+using EPiServer.DataAnnotations;
 
 namespace Geta.Optimizely.Sitemaps.SpecializedProperties
 {
-    [PropertyDefinitionTypePlugIn(DisplayName = "SEOSitemaps")]
+    [PropertyDefinitionType(DisplayName = "SEOSitemaps")]
     public class PropertySEOSitemaps : PropertyString
     {
         public const string PropertyName = "SEOSitemaps";

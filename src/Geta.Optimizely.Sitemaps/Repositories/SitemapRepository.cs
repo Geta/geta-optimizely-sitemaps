@@ -5,27 +5,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EPiServer;
+using EPiServer.Applications;
 using EPiServer.Data;
 using EPiServer.DataAbstraction;
-using EPiServer.Web;
 using Geta.Optimizely.Sitemaps.Entities;
+using Geta.Optimizely.Sitemaps.Utils;
 
 namespace Geta.Optimizely.Sitemaps.Repositories
 {
     public class SitemapRepository : ISitemapRepository
     {
         private readonly ILanguageBranchRepository _languageBranchRepository;
-        private readonly ISiteDefinitionResolver _siteDefinitionResolver;
+        private readonly IApplicationResolver _applicationResolver;
         private readonly ISitemapLoader _sitemapLoader;
 
 
         public SitemapRepository(
             ILanguageBranchRepository languageBranchRepository,
-            ISiteDefinitionResolver siteDefinitionResolver,
+            IApplicationResolver applicationResolver,
             ISitemapLoader sitemapLoader)
         {
             _languageBranchRepository = languageBranchRepository ?? throw new ArgumentNullException(nameof(languageBranchRepository));
-            _siteDefinitionResolver = siteDefinitionResolver ?? throw new ArgumentNullException(nameof(siteDefinitionResolver));
+            _applicationResolver = applicationResolver ?? throw new ArgumentNullException(nameof(applicationResolver));
             _sitemapLoader = sitemapLoader ?? throw new ArgumentNullException(nameof(sitemapLoader));
         }
 
@@ -46,30 +47,41 @@ namespace Geta.Optimizely.Sitemaps.Repositories
             // contains the sitemap URL, for example en/sitemap.xml
             var host = url.Path.TrimStart('/').ToLowerInvariant();
 
-            //Get the site based on just the host
-            var siteDefinition = _siteDefinitionResolver.GetByHostname(url.Host, true, out _);
-            if (siteDefinition == null)
-            {
-                //If that didn't work, also include the port
-                siteDefinition = _siteDefinitionResolver.GetByHostname($"{url.Host}:{url.Port}", true, out _);
-            }
-            if (siteDefinition == null)
+            // First attempt to get the site based on just the host.
+            // If that fails, try to include the port and fallback to default if none is found.
+            var app = _applicationResolver.GetByHostname(url.Host, false).Application ??
+                _applicationResolver.GetByHostname($"{url.Host}:{url.Port}", true).Application;
+
+            if (app is not IRoutableApplication site)
             {
                 return null;
             }
 
             var sitemapData = GetAllSitemapData()?.Where(x =>
-                GetHostWithLanguage(x) == host &&
-                (x.SiteUrl == null || siteDefinition.Hosts.Any(h => h.Name == new Url(x.SiteUrl).Authority))).ToList();
+                GetHostWithLanguage(x) == host && BelongsToSite(x, site)).ToList();
 
             if (sitemapData?.Count == 1)
             {
                 return sitemapData.FirstOrDefault();
             }
 
-            // Could happen that we found multiple sitemaps when for each host in the SiteDefinition a Sitemap is created.
+            // Could happen that we found multiple sitemaps when for each host of a site a Sitemap is created.
             // In that case, use the requestURL to get the correct SiteMapData
-            return sitemapData?.FirstOrDefault(x => new Url(x.SiteUrl).Authority == url.Authority);
+            return sitemapData?.FirstOrDefault(x => x.SiteUrl != null && new Url(x.SiteUrl).Authority == url.Authority)
+                   ?? sitemapData?.FirstOrDefault(x => x.SiteUrl == null);
+        }
+
+        private static bool BelongsToSite(SitemapData sitemapData, IRoutableApplication site)
+        {
+            // A configuration without a host is generated for the default site, so that's the only site that can serve it.
+            if (sitemapData.SiteUrl == null)
+            {
+                return site.IsDefault;
+            }
+
+            var authority = new Url(sitemapData.SiteUrl).Authority;
+
+            return site.Hosts.Any(x => x.HasAuthority(authority));
         }
 
         public string GetSitemapUrl(SitemapData sitemapData)
